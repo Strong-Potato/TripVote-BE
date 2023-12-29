@@ -1,0 +1,46 @@
+name: CI - test
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  build:
+    name: Build and test project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+
+      - name: Grant execute permission for gradlewhttps://github.com/Strong-Potato/TripVote-BE/commit/c9a5cc23fd8e3c280dc7b5e256b950f6bca8086a
+        run: |
+          chmod +x ./gradlew
+
+      - name: Test with Gradle
+        run: |
+          ./gradlew test
+
+      - name: Publish result of unit test
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: "**/build/test-results/test/TEST-*.xml"
+
+      - name: Publish failure of unit test
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
