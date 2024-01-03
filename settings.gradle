@@ -1,1 +1,4 @@
 rootProject.name = 'TripVote'
+include 'app'
+include 'notification'
+include 'openapi'
