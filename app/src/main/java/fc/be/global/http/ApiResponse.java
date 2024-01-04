@@ -1,18 +1,29 @@
 package fc.be.global.http;
 
+import org.springframework.http.HttpStatus;
+
 public record ApiResponse<T>(
         int status,
         String message,
         T data
 ) {
-    private static final int DEFAULT_STATUS = 200;
+    private static final HttpStatus OK = HttpStatus.OK;
+    private static final HttpStatus CREATED = HttpStatus.CREATED;
     private static final String DEFAULT_MESSAGE = "SUCCESS";
 
-    public static <T> ApiResponse success() {
-        return new ApiResponse(DEFAULT_STATUS, DEFAULT_MESSAGE, null);
+    public static ApiResponse ok() {
+        return new ApiResponse(OK.value(), DEFAULT_MESSAGE, null);
     }
 
-    public static <T> ApiResponse success(T data) {
-        return new ApiResponse(DEFAULT_STATUS, DEFAULT_MESSAGE, data);
+    public static <T> ApiResponse ok(T data) {
+        return new ApiResponse(OK.value(), DEFAULT_MESSAGE, data);
+    }
+
+    public static ApiResponse created() {
+        return new ApiResponse(CREATED.value(), DEFAULT_MESSAGE, null);
+    }
+
+    public static <T> ApiResponse created(T data) {
+        return new ApiResponse(CREATED.value(), DEFAULT_MESSAGE, data);
     }
 }
