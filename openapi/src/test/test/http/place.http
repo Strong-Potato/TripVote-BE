@@ -1,0 +1,21 @@
+## 장소 상세 정보
+### spot
+GET http://localhost:8080/place/{{spotId}}?contentTypeId={{spotTypeId}}
+
+### facility
+GET http://localhost:8080/place/{{facilityId}}?contentTypeId={{facilityTypeId}}
+
+### festival
+GET http://localhost:8080/place/{{festivalId}}?contentTypeId={{festivalTypeId}}
+
+### leports
+GET http://localhost:8080/place/{{leportsId}}?contentTypeId={{leportsTypeId}}
+
+### stay
+GET http://localhost:8080/place/{{stayId}}?contentTypeId={{stayTypeId}}
+
+### shop
+GET http://localhost:8080/place/{{shopId}}?contentTypeId={{shopTypeId}}
+
+### restaurant
+GET http://localhost:8080/place/{{restaurantId}}?contentTypeId={{restaurantTypeId}}
