@@ -1,8 +1,13 @@
 package fc.be.domain.place;
 
 import jakarta.persistence.Embeddable;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
+@Getter
+@NoArgsConstructor
 @Embeddable
 public class Location {
     @Comment("주소")
@@ -28,4 +33,16 @@ public class Location {
 
     @Comment("경도")
     private Double longitude;
+
+    @Builder
+    public Location(String address, String addressDetail, String phone, Integer areaCode, Integer sigunguCode, Integer zipCode, Double latitude, Double longitude) {
+        this.address = address;
+        this.addressDetail = addressDetail;
+        this.phone = phone;
+        this.areaCode = areaCode;
+        this.sigunguCode = sigunguCode;
+        this.zipCode = zipCode;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 }

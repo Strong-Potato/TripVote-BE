@@ -1,0 +1,10 @@
+tourapi:
+  base-url: "https://apis.data.go.kr/B551011/KorService1/"
+  area-based-sync-list: "areaBasedSyncList1"
+  detail-common: "detailCommon1"
+  detail-image: "detailImage1"
+  detail-intro: "detailIntro1"
+  search-keyword: "searchKeyword1"
+  mobile-os: "ETC"
+  mobile-app: "TripVote"
+  render-type: "json"
