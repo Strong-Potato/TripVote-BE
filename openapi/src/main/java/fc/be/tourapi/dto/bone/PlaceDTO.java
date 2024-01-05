@@ -1,7 +1,6 @@
 package fc.be.tourapi.dto.bone;
 
 import fc.be.tourapi.constant.ContentTypeId;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuperBuilder
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
 @Getter
 public class PlaceDTO {
     private Integer id;
