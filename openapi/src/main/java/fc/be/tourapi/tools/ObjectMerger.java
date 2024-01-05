@@ -30,7 +30,6 @@ public class ObjectMerger {
             }
             return objectMapper.convertValue(targetNode, clazz);
         } catch (ClassCastException e) {
-            e.fillInStackTrace();
             throw new ClassCastException("병합하는 객체들의 타입이 일치하지 않습니다.");
         }
     }
