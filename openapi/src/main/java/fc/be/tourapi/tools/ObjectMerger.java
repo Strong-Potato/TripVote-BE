@@ -16,7 +16,6 @@ public class ObjectMerger {
         objectMapper.registerModule(new JavaTimeModule());
     }
 
-    @SafeVarargs
     public static <T extends Place> T merge(Class<T> clazz, Place target, Place... updates) {
         try {
             ObjectNode targetNode = objectMapper.valueToTree(target);
