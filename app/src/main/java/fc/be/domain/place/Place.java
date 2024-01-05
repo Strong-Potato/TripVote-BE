@@ -21,7 +21,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
 @Comment("장소")
-public class Place {
+public abstract class Place {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
