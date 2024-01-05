@@ -47,7 +47,7 @@ public class Place {
     @Convert(converter = ListImagesConverter.class)
     @Column(length = Short.MAX_VALUE)
     @Comment("장소 정보 추가 진열 이미지")
-    private List<String> gallery = new ArrayList<>();
+    private final List<String> gallery = new ArrayList<>();
 
     @Comment("장소 등록일")
     private LocalDateTime createdTime;
