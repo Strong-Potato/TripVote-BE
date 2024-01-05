@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fc.be.tourapi.dto.form.diff_property.detail_intro1.item.*;
 
-import static fc.be.tourapi.TourAPIProperties.*;
+import static fc.be.config.TourAPIProperties.*;
 
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,

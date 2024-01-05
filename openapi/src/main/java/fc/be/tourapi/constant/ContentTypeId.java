@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static fc.be.tourapi.TourAPIProperties.*;
+import static fc.be.config.TourAPIProperties.*;
 
 @Getter
 @AllArgsConstructor

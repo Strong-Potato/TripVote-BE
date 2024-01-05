@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-import static fc.be.tourapi.TourAPIProperties.formattter;
+import static fc.be.config.TourAPIProperties.FORMATTTER;
 
 @Component
 public class AreaBasedSyncMapper implements TourAPIMapper<Place, AreaBasedSyncList1Response.Item> {
@@ -30,8 +30,8 @@ public class AreaBasedSyncMapper implements TourAPIMapper<Place, AreaBasedSyncLi
                         .build())
                 .thumbnail(item.firstimage())
                 .originalImage(item.firstimage2())
-                .createdTime(LocalDateTime.parse(item.createdtime(), formattter))
-                .modifiedTime(LocalDateTime.parse(item.modifiedtime(), formattter))
+                .createdTime(LocalDateTime.parse(item.createdtime(), FORMATTTER))
+                .modifiedTime(LocalDateTime.parse(item.modifiedtime(), FORMATTTER))
                 .build();
     }
 }

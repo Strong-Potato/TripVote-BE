@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-import static fc.be.tourapi.TourAPIProperties.formattter;
+import static fc.be.config.TourAPIProperties.FORMATTTER;
 
 
 @Component
@@ -32,8 +32,8 @@ public class DetailCommonMapper implements TourAPIMapper<Place, DetailCommon1Res
                         .build())
                 .thumbnail(item.firstimage())
                 .originalImage(item.firstimage2())
-                .createdTime(LocalDateTime.parse(item.createdtime(), formattter))
-                .modifiedTime(LocalDateTime.parse(item.modifiedtime(), formattter))
+                .createdTime(LocalDateTime.parse(item.createdtime(), FORMATTTER))
+                .modifiedTime(LocalDateTime.parse(item.modifiedtime(), FORMATTTER))
                 .build();
     }
 }
