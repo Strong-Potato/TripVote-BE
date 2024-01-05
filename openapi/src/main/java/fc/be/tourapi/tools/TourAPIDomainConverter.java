@@ -16,6 +16,7 @@ import fc.be.tourapi.dto.mapper.SearchKeywordMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -55,12 +56,17 @@ public class TourAPIDomainConverter {
         return result;
     }
 
+    @SuppressWarnings("all")
     public <T> T buildDetailImageListFromItem(
             List<DetailImage1Response.Item> items,
             final Class<T> detailImageListClass
     ) {
         try {
-            T result = detailImageListClass.getDeclaredConstructor().newInstance();
+            Constructor<T> constructor = detailImageListClass.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            T result = constructor.newInstance();
+            constructor.setAccessible(false);
+
             if (result instanceof Place place) {
                 for (var item : items) {
                     place.addImageToGallery(item.originimgurl());

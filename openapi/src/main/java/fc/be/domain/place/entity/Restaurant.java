@@ -12,7 +12,7 @@ import org.hibernate.annotations.Comment;
 @SuperBuilder
 @Entity
 @DiscriminatorValue("Restaurant")
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Comment("음식점")
 public class Restaurant extends Place {
