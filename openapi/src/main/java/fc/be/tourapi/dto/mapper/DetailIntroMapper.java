@@ -1,16 +1,15 @@
 package fc.be.tourapi.dto.mapper;
 
-import fc.be.domain.place.entity.*;
+import fc.be.tourapi.dto.bone.*;
 import fc.be.tourapi.constant.ContentTypeId;
-import fc.be.domain.place.Place;
 import fc.be.tourapi.dto.form.diff_property.detail_intro1.Item;
 import fc.be.tourapi.dto.form.diff_property.detail_intro1.item.*;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DetailIntroMapper implements TourAPIMapper<Place, Item> {
+public class DetailIntroMapper implements TourAPIMapper<PlaceDTO, Item> {
     @Override
-    public Place generate(Item item) {
+    public PlaceDTO generate(Item item) {
         return switch (item) {
             case AccommodationItemDetailIntro accommodation -> generate(accommodation);
             case FacilityItemDetailIntro facility -> generate(facility);
@@ -23,8 +22,8 @@ public class DetailIntroMapper implements TourAPIMapper<Place, Item> {
         };
     }
 
-    public Accommodation generate(AccommodationItemDetailIntro item) {
-        return Accommodation.builder()
+    public AccommodationDTO generate(AccommodationItemDetailIntro item) {
+        return AccommodationDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
                 .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
                 .infoCenter(item.infocenterlodging())
@@ -35,8 +34,8 @@ public class DetailIntroMapper implements TourAPIMapper<Place, Item> {
                 .build();
     }
 
-    public Facility generate(FacilityItemDetailIntro item) {
-        return Facility.builder()
+    public FacilityDTO generate(FacilityItemDetailIntro item) {
+        return FacilityDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
                 .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
                 .infoCenter(item.infocenterculture())
@@ -47,8 +46,8 @@ public class DetailIntroMapper implements TourAPIMapper<Place, Item> {
                 .build();
     }
 
-    public Festival generate(FestivalItemDetailIntro item) {
-        return Festival.builder()
+    public FestivalDTO generate(FestivalItemDetailIntro item) {
+        return FestivalDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
                 .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
                 .sponsor(item.sponsor1())
@@ -62,8 +61,8 @@ public class DetailIntroMapper implements TourAPIMapper<Place, Item> {
                 .build();
     }
 
-    public Leports generate(LeportsItemDetailIntro item) {
-        return Leports.builder()
+    public LeportsDTO generate(LeportsItemDetailIntro item) {
+        return LeportsDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
                 .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
                 .infoCenter(item.infocenterleports())
@@ -75,8 +74,8 @@ public class DetailIntroMapper implements TourAPIMapper<Place, Item> {
                 .build();
     }
 
-    public Restaurant generate(RestaurantItemDetailIntro item) {
-        return Restaurant.builder()
+    public RestaurantDTO generate(RestaurantItemDetailIntro item) {
+        return RestaurantDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
                 .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
                 .firstMenu(item.firstmenu())
@@ -87,8 +86,8 @@ public class DetailIntroMapper implements TourAPIMapper<Place, Item> {
                 .build();
     }
 
-    public Shop generate(ShopItemDetailIntro item) {
-        return Shop.builder()
+    public ShopDTO generate(ShopItemDetailIntro item) {
+        return ShopDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
                 .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
                 .infoCenter(item.infocentershopping())
@@ -98,8 +97,8 @@ public class DetailIntroMapper implements TourAPIMapper<Place, Item> {
                 .build();
     }
 
-    public Spot generate(SpotItemDetailIntro item) {
-        return Spot.builder()
+    public SpotDTO generate(SpotItemDetailIntro item) {
+        return SpotDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
                 .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
                 .infoCenter(item.infocenter())

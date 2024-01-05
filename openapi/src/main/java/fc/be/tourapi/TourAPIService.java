@@ -1,6 +1,6 @@
 package fc.be.tourapi;
 
-import fc.be.domain.place.Place;
+import fc.be.tourapi.dto.bone.PlaceDTO;
 import fc.be.tourapi.exception.NoItemsFromAPIException;
 import fc.be.tourapi.tools.TourAPICommunicator;
 import fc.be.tourapi.tools.TourAPIDomainConverter;
@@ -106,7 +106,7 @@ public class TourAPIService {
         return tourAPIDomainConverter.buildDetailIntroFromItem(item, detailIntroClass);
     }
 
-    public <T extends Place> T bringDetailImageDomains(
+    public <T extends PlaceDTO> T bringDetailImageDomains(
             final int contentId,
             final Class<T> detailImageListClass
     ) {

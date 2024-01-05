@@ -1,8 +1,8 @@
 package fc.be.tourapi.dto.mapper;
 
 import fc.be.tourapi.constant.ContentTypeId;
-import fc.be.domain.place.Location;
-import fc.be.domain.place.Place;
+import fc.be.tourapi.dto.bone.LocationDTO;
+import fc.be.tourapi.dto.bone.PlaceDTO;
 import fc.be.tourapi.dto.form.same_property.area_based_sync_list1.AreaBasedSyncList1Response;
 import org.springframework.stereotype.Component;
 
@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 import static fc.be.config.TourAPIProperties.FORMATTTER;
 
 @Component
-public class AreaBasedSyncMapper implements TourAPIMapper<Place, AreaBasedSyncList1Response.Item> {
+public class AreaBasedSyncMapper implements TourAPIMapper<PlaceDTO, AreaBasedSyncList1Response.Item> {
 
-    public Place generate(AreaBasedSyncList1Response.Item item) {
-        return Place.builder()
+    public PlaceDTO generate(AreaBasedSyncList1Response.Item item) {
+        return PlaceDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
                 .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
                 .title(item.title())
-                .location(Location.builder()
+                .locationDTO(LocationDTO.builder()
                         .address(item.addr1())
                         .addressDetail(item.addr2())
                         .phone(item.tel())
