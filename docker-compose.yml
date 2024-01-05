@@ -6,7 +6,7 @@ services:
       context: ./database
       dockerfile: Dockerfile
     ports:
-      - "4406:3306"
+      - "3306:3306"
     restart: always
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
