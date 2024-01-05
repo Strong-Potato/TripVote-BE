@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import fc.be.domain.place.Place;
+import fc.be.tourapi.dto.bone.PlaceDTO;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
@@ -16,10 +16,10 @@ public class ObjectMerger {
         objectMapper.registerModule(new JavaTimeModule());
     }
 
-    public static <T extends Place> T merge(Class<T> clazz, Place target, Place... updates) {
+    public static <T extends PlaceDTO> T merge(Class<T> clazz, PlaceDTO target, PlaceDTO... updates) {
         try {
             ObjectNode targetNode = objectMapper.valueToTree(target);
-            for (Place update : updates) {
+            for (PlaceDTO update : updates) {
                 JsonNode updateNode = objectMapper.valueToTree(update);
                 updateNode.fields().forEachRemaining(field -> {
                     if (!field.getValue().isNull()) {

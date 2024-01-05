@@ -1,8 +1,8 @@
 package fc.be.domain.place;
 
 import fc.be.tourapi.constant.ContentTypeId;
-import fc.be.tourapi.tools.ContentTypeIdConverter;
-import fc.be.tourapi.tools.ListImagesConverter;
+import fc.be.global.util.ContentTypeIdConverter;
+import fc.be.global.util.ListImagesConverter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,7 +21,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
 @Comment("장소")
-public class Place {
+public abstract class Place {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

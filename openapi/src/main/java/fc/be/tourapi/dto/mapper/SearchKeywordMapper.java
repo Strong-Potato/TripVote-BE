@@ -1,8 +1,8 @@
 package fc.be.tourapi.dto.mapper;
 
+import fc.be.tourapi.dto.bone.PlaceDTO;
 import fc.be.tourapi.constant.ContentTypeId;
-import fc.be.domain.place.Location;
-import fc.be.domain.place.Place;
+import fc.be.tourapi.dto.bone.LocationDTO;
 import fc.be.tourapi.dto.form.same_property.search_keyword1.SearchKeyword1Response;
 import org.springframework.stereotype.Component;
 
@@ -11,15 +11,15 @@ import java.time.LocalDateTime;
 import static fc.be.config.TourAPIProperties.FORMATTTER;
 
 @Component
-public class SearchKeywordMapper implements TourAPIMapper<Place, SearchKeyword1Response.Item> {
+public class SearchKeywordMapper implements TourAPIMapper<PlaceDTO, SearchKeyword1Response.Item> {
 
     @Override
-    public Place generate(SearchKeyword1Response.Item item) {
-        return Place.builder()
+    public PlaceDTO generate(SearchKeyword1Response.Item item) {
+        return PlaceDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
                 .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
                 .title(item.title())
-                .location(Location.builder()
+                .locationDTO(LocationDTO.builder()
                         .address(item.addr1())
                         .addressDetail(item.addr2())
                         .phone(item.tel())

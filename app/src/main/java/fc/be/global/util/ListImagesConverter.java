@@ -1,4 +1,4 @@
-package fc.be.tourapi.tools;
+package fc.be.global.util;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

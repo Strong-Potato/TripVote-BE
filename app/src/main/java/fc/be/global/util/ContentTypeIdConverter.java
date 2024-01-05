@@ -1,4 +1,4 @@
-package fc.be.tourapi.tools;
+package fc.be.global.util;
 
 import fc.be.tourapi.constant.ContentTypeId;
 import jakarta.persistence.AttributeConverter;

@@ -3,7 +3,7 @@ package fc.be.tourapi.tools;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import fc.be.domain.place.Place;
+import fc.be.tourapi.dto.bone.PlaceDTO;
 import fc.be.tourapi.dto.form.diff_property.detail_intro1.Item;
 import fc.be.tourapi.dto.form.same_property.area_based_sync_list1.AreaBasedSyncList1Response;
 import fc.be.tourapi.dto.form.same_property.detail_common1.DetailCommon1Response;
@@ -67,9 +67,9 @@ public class TourAPIDomainConverter {
             T result = constructor.newInstance();
             constructor.setAccessible(false);
 
-            if (result instanceof Place place) {
+            if (result instanceof PlaceDTO placeDTO) {
                 for (var item : items) {
-                    place.addImageToGallery(item.originimgurl());
+                    placeDTO.addImageToGallery(item.originimgurl());
                 }
             }
             return result;
@@ -91,7 +91,7 @@ public class TourAPIDomainConverter {
         return result;
     }
 
-    private <T, U> T generateAndCastItem(U item, Function<U, Place> generator, Class<T> itemClass) {
+    private <T, U> T generateAndCastItem(U item, Function<U, PlaceDTO> generator, Class<T> itemClass) {
         var generatedItem = generator.apply(item);
 
         String jsonString;

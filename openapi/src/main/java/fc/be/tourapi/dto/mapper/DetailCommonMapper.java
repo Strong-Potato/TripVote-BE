@@ -1,8 +1,8 @@
 package fc.be.tourapi.dto.mapper;
 
+import fc.be.tourapi.dto.bone.PlaceDTO;
 import fc.be.tourapi.constant.ContentTypeId;
-import fc.be.domain.place.Location;
-import fc.be.domain.place.Place;
+import fc.be.tourapi.dto.bone.LocationDTO;
 import fc.be.tourapi.dto.form.same_property.detail_common1.DetailCommon1Response;
 import org.springframework.stereotype.Component;
 
@@ -12,15 +12,15 @@ import static fc.be.config.TourAPIProperties.FORMATTTER;
 
 
 @Component
-public class DetailCommonMapper implements TourAPIMapper<Place, DetailCommon1Response.Item> {
+public class DetailCommonMapper implements TourAPIMapper<PlaceDTO, DetailCommon1Response.Item> {
 
     @Override
-    public Place generate(DetailCommon1Response.Item item) {
-        return Place.builder()
+    public PlaceDTO generate(DetailCommon1Response.Item item) {
+        return PlaceDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
                 .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
                 .title(item.title())
-                .location(Location.builder()
+                .locationDTO(LocationDTO.builder()
                         .address(item.addr1())
                         .addressDetail(item.addr2())
                         .phone(item.tel())
