@@ -2,6 +2,7 @@ package fc.be.tourapi.tools;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fc.be.config.TourAPIProperties;
 import fc.be.tourapi.dto.form.diff_property.detail_intro1.DetailIntro1Response;
 import fc.be.tourapi.dto.form.same_property.area_based_sync_list1.AreaBasedSyncList1Response;
 import fc.be.tourapi.dto.form.same_property.detail_common1.DetailCommon1Response;
@@ -13,8 +14,7 @@ import fc.be.tourapi.exception.WrongXMLFormatException;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +22,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpMessageConverterExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -29,15 +30,18 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import static fc.be.tourapi.TourAPIProperties.*;
+import static fc.be.tourapi.tools.TourAPIKeyChanger.changeNextKey;
+import static fc.be.tourapi.tools.TourAPIKeyChanger.getEncodedKey;
 
 /**
  * Tour API 통신을 위한 유틸리티 클래스
  */
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Component
+@RequiredArgsConstructor
 public class TourAPICommunicator {
     private static final RestTemplate restTemplate = new RestTemplate();
+    private final TourAPIProperties properties;
 
     static {
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
@@ -61,15 +65,15 @@ public class TourAPICommunicator {
      * @param contentId     컨텐츠 ID
      * @return 생성된 URL
      */
-    private static StringBuilder buildEssentialUrl(
+    private StringBuilder buildEssentialUrl(
             final String endpoint,
             final int contentTypeId,
             final int contentId
     ) {
-        StringBuilder url = new StringBuilder(BASE_URL + endpoint);
-        url.append("?MobileOS=").append(MOBILE_OS);
-        url.append("&MobileApp=").append(MOBILE_APP);
-        url.append("&_type=").append(RENDER_TYPE);
+        StringBuilder url = new StringBuilder(properties.getBaseUrl() + endpoint);
+        url.append("?MobileOS=").append(properties.getMobileOs());
+        url.append("&MobileApp=").append(properties.getMobileApp());
+        url.append("&_type=").append(properties.getRenderType());
 
         if (contentTypeId != 0) {
             url.append("&contentTypeId=").append(contentTypeId);
@@ -93,7 +97,7 @@ public class TourAPICommunicator {
      * @param responseType 반환할 DTO 타입
      * @return TourAPI 통신 결과
      */
-    private static <T> T fetchDataFromAPI(
+    private <T> T fetchDataFromAPI(
             final String url,
             final Class<T> responseType
     ) {
@@ -134,7 +138,7 @@ public class TourAPICommunicator {
         );
     }
 
-    public static SearchKeyword1Response callSearchKeyword(
+    public SearchKeyword1Response callSearchKeyword(
             final int pageNo,
             final int numOfRows,
             final int areaCode,
@@ -142,7 +146,7 @@ public class TourAPICommunicator {
             final String keyword,
             final int contentTypeId
     ) {
-        StringBuilder url = buildEssentialUrl(SEARCH_KEYWORD, contentTypeId, 0);
+        StringBuilder url = buildEssentialUrl(properties.getSearchKeyword(), contentTypeId, 0);
         url.append("&keyword=").append(keyword == null ? "_" : URLEncoder.encode(keyword, StandardCharsets.UTF_8));
 
         if (pageNo != 0 && numOfRows != 0) {
@@ -166,11 +170,11 @@ public class TourAPICommunicator {
         );
     }
 
-    public static DetailCommon1Response callDetailCommon(
+    public DetailCommon1Response callDetailCommon(
             final int contentId,
             final int contentTypeId
     ) {
-        StringBuilder url = buildEssentialUrl(DETAIL_COMMON, contentTypeId, contentId);
+        StringBuilder url = buildEssentialUrl(properties.getDetailCommon(), contentTypeId, contentId);
         url.append("&defaultYN=").append("Y");
         url.append("&firstImageYN=").append("Y");
         url.append("&areacodeYN=").append("Y");
@@ -185,11 +189,11 @@ public class TourAPICommunicator {
         );
     }
 
-    public static DetailIntro1Response callDetailIntro(
+    public DetailIntro1Response callDetailIntro(
             final int contentId,
             final int contentTypeId
     ) {
-        StringBuilder url = buildEssentialUrl(DETAIL_INTRO, contentTypeId, contentId);
+        StringBuilder url = buildEssentialUrl(properties.getDetailIntro(), contentTypeId, contentId);
 
         return fetchDataFromAPI(
                 url.toString(),
@@ -197,10 +201,10 @@ public class TourAPICommunicator {
         );
     }
 
-    public static DetailImage1Response callDetailImage(
+    public DetailImage1Response callDetailImage(
             final int contentId
     ) {
-        StringBuilder url = buildEssentialUrl(DETAIL_IMAGE, 0, contentId);
+        StringBuilder url = buildEssentialUrl(properties.getDetailImage(), 0, contentId);
         url.append("&imageYN=").append("Y");
         url.append("&subImageYN=").append("Y");
 
@@ -210,14 +214,14 @@ public class TourAPICommunicator {
         );
     }
 
-    public static AreaBasedSyncList1Response callAreaBasedSync(
+    public AreaBasedSyncList1Response callAreaBasedSync(
             final int pageNo,
             final int numOfRows,
             final int areaCode,
             final int sigunguCode,
             final int contentTypeId
     ) {
-        StringBuilder url = buildEssentialUrl(AREA_BASED_SYNC_LIST, contentTypeId, 0);
+        StringBuilder url = buildEssentialUrl(properties.getAreaBasedSyncList(), contentTypeId, 0);
         url.append("&pageNo=").append(pageNo);
         url.append("&numOfRows=").append(numOfRows);
         url.append("&showflag=").append("1");

@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TourAPIService {
     private final TourAPIDomainConverter tourAPIDomainConverter;
+    private final TourAPICommunicator tourAPICommunicator;
 
     public <T> List<T> bringAreaBasedSyncDomains(
             final int pageNo,
@@ -24,7 +25,7 @@ public class TourAPIService {
             final int contentTypeId,
             final Class<T> areaBasedSyncListClass
     ) {
-        var result = TourAPICommunicator.callAreaBasedSync(
+        var result = tourAPICommunicator.callAreaBasedSync(
                 pageNo, numOfRows,
                 areaCode, sigunguCode,
                 contentTypeId
@@ -51,7 +52,7 @@ public class TourAPIService {
             final String keyword,
             final Class<T> searchKeywordClass
     ) {
-        var result = TourAPICommunicator.callSearchKeyword(
+        var result = tourAPICommunicator.callSearchKeyword(
                 pageNo, numOfRows,
                 areaCode, sigunguCode,
                 keyword,
@@ -74,7 +75,7 @@ public class TourAPIService {
             final int contentTypeId,
             final Class<T> detailCommonClass
     ) {
-        var result = TourAPICommunicator.callDetailCommon(contentId, contentTypeId);
+        var result = tourAPICommunicator.callDetailCommon(contentId, contentTypeId);
 
         var body = result.response().body();
 
@@ -92,7 +93,7 @@ public class TourAPIService {
             final int contentTypeId,
             final Class<T> detailIntroClass
     ) {
-        var result = TourAPICommunicator.callDetailIntro(contentId, contentTypeId);
+        var result = tourAPICommunicator.callDetailIntro(contentId, contentTypeId);
 
         var body = result.response().body();
 
@@ -109,7 +110,7 @@ public class TourAPIService {
             final int contentId,
             final Class<T> detailImageListClass
     ) {
-        var result = TourAPICommunicator.callDetailImage(contentId);
+        var result = tourAPICommunicator.callDetailImage(contentId);
 
         var body = result.response().body();
 
