@@ -23,23 +23,12 @@ import java.util.List;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final MemberRepository memberRepository;
-
-
-    @Transactional
-    public void createReview(Long placeId, String thumbnail, ContentTypeId contentTypeId, String title,
-                             Integer areaCode, String content, Integer rating, List<String> images, LocalDate visitedAt) {
-        Review review = Review.builder().place()
-                .member().content(content).images(images).visitedAt(visitedAt).rating(rating).build();
-
-        reviewRepository.save(review);
-    }
-
+    //private final MemberRepository memberRepository;
 
 
     @Transactional
     public Review createReview(ReviewCreateRequest reviewCreateRequest) {
-
+        //Member member = memberRepository.findById(memberId); //todo Security 적용
         return reviewRepository.save(
                 reviewCreateRequest.toEntity(reviewCreateRequest)
         );
@@ -61,22 +50,10 @@ public class ReviewService {
         return null;
     }
 
-    public List<ReviewResponse> getMemberReviews(Long memberId) {
-        return null;
-    }
-
-
-    private Class func(ContentTypeId contentTypeId){
-        return switch(contentTypeId.getId()){
-            case 12 -> Spot.class;
-            case 14 -> Facility.class;
-            case 15 -> Festival.class;
-            case 28 -> Leports.class;
-            case 32 -> Accommodation.class;
-            case 38 -> Shop.class;
-            case 39 -> Restaurant.class;
-
-            default -> throw new ReviewException(ReviewErrorCode.CONTENT_TYPE_NOT_MATCH);
-        };
+    public ReviewResponse getMemberReviews() {
+        Long memberId = 1L; //todo Security 적용
+        return ReviewResponse.from(
+                reviewRepository.findByMemberId(memberId)
+        );
     }
 }
