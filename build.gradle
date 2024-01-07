@@ -47,6 +47,9 @@ subprojects {
 
         // yml 설정파일 가져오도록 도와줌
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+        // jackson LocalDateTime mapping 용 플러그인
+        implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:+'
     }
 
     test {
