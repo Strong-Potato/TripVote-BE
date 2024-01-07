@@ -12,9 +12,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record ReviewCreateRequest(
-        @NotNull Long placeId,
-        @NotNull String thumbnail, //장소 썸네일 사진 1장
-        @NotNull ContentTypeId contentTypeId, //레코드에 이넘 ㄱㅊ?
+        PlaceDTO placeDTO,
+        @Positive Integer placeId,
+        String thumbnail,
+        @NotNull ContentTypeId contentTypeId,
         @NotNull String title,
         @NotNull Integer areaCode,
         @Min(1) Integer rating,

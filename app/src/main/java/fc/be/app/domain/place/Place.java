@@ -1,8 +1,8 @@
-package fc.be.app.domain.place;
+package fc.be.domain.place;
 
-import fc.be.app.global.util.ContentTypeIdConverter;
-import fc.be.app.global.util.ListImagesConverter;
-import fc.be.openapi.tourapi.constant.ContentTypeId;
+import fc.be.global.util.ContentTypeIdConverter;
+import fc.be.global.util.ListImagesConverter;
+import fc.be.tourapi.constant.ContentTypeId;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -47,7 +47,7 @@ public class Place {
     @Convert(converter = ListImagesConverter.class)
     @Column(length = Short.MAX_VALUE)
     @Comment("장소 정보 추가 진열 이미지")
-    private final List<String> gallery = new ArrayList<>();
+    private List<String> gallery;
 
     @Comment("장소 등록일")
     private LocalDateTime createdTime;
@@ -56,6 +56,9 @@ public class Place {
     private LocalDateTime modifiedTime;
 
     public void addImageToGallery(String subImage) {
+        if (gallery == null) {
+            gallery = new ArrayList<>();
+        }
         gallery.add(subImage);
     }
 }
