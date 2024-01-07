@@ -1,6 +1,5 @@
 package fc.be.openapi.tourapi.dto.bone;
 
-import fc.be.openapi.tourapi.constant.ContentTypeId;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -14,7 +13,7 @@ import java.util.List;
 @Getter
 public class PlaceDTO {
     private Integer id;
-    private ContentTypeId contentTypeId;
+    private Integer contentTypeId;
     private String title;
     private LocationDTO locationDTO;
     private String thumbnail;
