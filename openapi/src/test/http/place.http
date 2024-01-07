@@ -19,3 +19,13 @@ GET http://localhost:8080/places/{{shopId}}?contentTypeId={{shopTypeId}}
 
 ### restaurant
 GET http://localhost:8080/places/{{restaurantId}}?contentTypeId={{restaurantTypeId}}
+
+## 장소 검색
+### 전체
+GET http://localhost:8080/places/search/{{pageNo}}
+
+### ContentTypeId 만 포함
+GET http://localhost:8080/places/search/{{pageNo}}?contentTypeId={{spotTypeId}}
+
+### keyword 포함
+GET http://localhost:8080/places/search/{{pageNo}}?arrange=R&contentTypeId={{accommodationTypeId}}
