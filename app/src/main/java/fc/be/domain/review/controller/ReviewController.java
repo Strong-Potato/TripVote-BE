@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/reviews")
@@ -21,14 +20,7 @@ public class ReviewController {
 
     @PostMapping
     public ApiResponse createReview(@Valid @RequestBody ReviewCreateRequest reviewCreateRequest) {
-
-/*        reviewService.createReview(reviewCreateRequest.placeId(), reviewCreateRequest.thumbnail(), reviewCreateRequest.contentTypeId(),
-                reviewCreateRequest.title(), reviewCreateRequest.areaCode(), reviewCreateRequest.content(), reviewCreateRequest.rating(),
-                reviewCreateRequest.images(), reviewCreateRequest.visitedAt());*/
-
-        return ApiResponse.ok(
-                reviewService.createReview(reviewCreateRequest)
-        );
+        return ApiResponse.ok(reviewService.createReview(reviewCreateRequest));
     }
 
     @PatchMapping
@@ -47,9 +39,8 @@ public class ReviewController {
         return ApiResponse.ok(reviewService.getPlaceReviews(placeId));
     }
 
-    @GetMapping("/my/{member_Id}")
-    public ApiResponse<List<ReviewResponse>> getMemberReviews(@PathVariable Long member_Id) {
-        return ApiResponse.ok(reviewService.getMemberReviews(member_Id));
+    @GetMapping("/my")
+    public ApiResponse<List<ReviewResponse>> getMemberReviews() {
+        return ApiResponse.ok(reviewService.getMemberReviews());
     }
-
 }
