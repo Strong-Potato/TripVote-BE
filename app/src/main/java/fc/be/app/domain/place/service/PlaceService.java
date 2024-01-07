@@ -2,6 +2,7 @@ package fc.be.app.domain.place.service;
 
 import fc.be.app.domain.place.dto.PlaceInfoGetResponse;
 import fc.be.app.domain.place.dto.PlaceInfoInsertRequest;
+import fc.be.app.domain.place.dto.PlaceNearbyResponse;
 import fc.be.app.domain.place.dto.PlaceSearchResponse;
 import fc.be.app.domain.place.exception.PlaceException;
 import fc.be.app.domain.place.repository.PlaceRepository;
@@ -75,6 +76,25 @@ public class PlaceService {
         }
 
         return PlaceSearchResponse.from(places);
+    }
+
+    public PlaceNearbyResponse bringNearbyPlaces(
+            int numOfRows, int areaCode,
+            int sigunguCode, int contentTypeId
+    ) {
+        int defaultPageNo = 1;
+
+        List<PlaceDTO> places = tourAPIService.bringAreaBasedSyncDomains(
+                defaultPageNo, numOfRows,
+                areaCode, sigunguCode,
+                contentTypeId
+        );
+
+        if (places == null) {
+            throw new PlaceException(PLACE_NOT_LOADED);
+        }
+
+        return PlaceNearbyResponse.from(places);
     }
 
 }
