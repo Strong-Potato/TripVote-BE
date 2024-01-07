@@ -8,9 +8,8 @@ import fc.be.openapi.tourapi.dto.form.same_property.area_based_sync_list1.AreaBa
 import fc.be.openapi.tourapi.dto.form.same_property.detail_common1.DetailCommon1Response;
 import fc.be.openapi.tourapi.dto.form.same_property.detail_image1.DetailImage1Response;
 import fc.be.openapi.tourapi.dto.form.same_property.search_keyword1.SearchKeyword1Response;
+import fc.be.openapi.tourapi.exception.TourAPIError;
 import fc.be.openapi.tourapi.exception.TourAPIXMLErrorResponse;
-import fc.be.openapi.tourapi.exception.WrongRequestException;
-import fc.be.openapi.tourapi.exception.WrongXMLFormatException;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -30,6 +29,8 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+import static fc.be.openapi.tourapi.exception.TourAPIErrorCode.COMMUNICATOR_WRONG_REQUEST;
+import static fc.be.openapi.tourapi.exception.TourAPIErrorCode.WRONG_XML_FORMAT;
 import static fc.be.openapi.tourapi.tools.TourAPIKeyChanger.changeNextKey;
 import static fc.be.openapi.tourapi.tools.TourAPIKeyChanger.getEncodedKey;
 
@@ -122,12 +123,13 @@ public class TourAPICommunicator {
                             JAXBContext jaxbContext = JAXBContext.newInstance(TourAPIXMLErrorResponse.class);
                             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
                             TourAPIXMLErrorResponse tourAPIXMLErrorResponse = (TourAPIXMLErrorResponse) unmarshaller.unmarshal(clientHttpResponse.getBody());
-                            log.error("공공포털 오류 XML 반환 : {}", tourAPIXMLErrorResponse);
 
                             String errorMessage = tourAPIXMLErrorResponse.getErrorHeader().getReturnAuthMsg();
-                            throw new WrongRequestException(errorMessage);
+                            new TourAPIError(COMMUNICATOR_WRONG_REQUEST, errorMessage);
+                            return null;
                         } catch (JAXBException e) {
-                            throw new WrongXMLFormatException(e);
+                            new TourAPIError(WRONG_XML_FORMAT, e.getCause());
+                            return null;
                         }
                     }
 

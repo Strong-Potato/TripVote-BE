@@ -7,7 +7,4 @@ dependencies {
 
     // xml jaxb
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:+'
-
-    // jackson LocalDateTime mapping 용 플러그인
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:+'
 }

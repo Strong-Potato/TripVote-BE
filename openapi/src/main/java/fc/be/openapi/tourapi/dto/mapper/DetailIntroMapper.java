@@ -1,10 +1,12 @@
 package fc.be.openapi.tourapi.dto.mapper;
 
 import fc.be.openapi.tourapi.dto.bone.*;
-import fc.be.openapi.tourapi.constant.ContentTypeId;
 import fc.be.openapi.tourapi.dto.form.diff_property.detail_intro1.Item;
 import fc.be.openapi.tourapi.dto.form.diff_property.detail_intro1.item.*;
+import fc.be.openapi.tourapi.exception.TourAPIError;
 import org.springframework.stereotype.Component;
+
+import static fc.be.openapi.tourapi.exception.TourAPIErrorCode.NO_CONTENTTPYEID;
 
 @Component
 public class DetailIntroMapper implements TourAPIMapper<PlaceDTO, Item> {
@@ -18,14 +20,17 @@ public class DetailIntroMapper implements TourAPIMapper<PlaceDTO, Item> {
             case RestaurantItemDetailIntro restaurant -> generate(restaurant);
             case ShopItemDetailIntro shop -> generate(shop);
             case SpotItemDetailIntro spot -> generate(spot);
-            default -> throw new IllegalStateException("등록되지 않은 아이템: " + item.getClass().getSimpleName());
+            default -> {
+                new TourAPIError(NO_CONTENTTPYEID);
+                yield null;
+            }
         };
     }
 
     public AccommodationDTO generate(AccommodationItemDetailIntro item) {
         return AccommodationDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
-                .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
+                .contentTypeId(Integer.parseInt(item.contenttypeid()))
                 .infoCenter(item.infocenterlodging())
                 .checkIn(item.checkintime())
                 .checkOut(item.checkouttime())
@@ -37,7 +42,7 @@ public class DetailIntroMapper implements TourAPIMapper<PlaceDTO, Item> {
     public FacilityDTO generate(FacilityItemDetailIntro item) {
         return FacilityDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
-                .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
+                .contentTypeId(Integer.parseInt(item.contenttypeid()))
                 .infoCenter(item.infocenterculture())
                 .usefee(item.usefee())
                 .usetime(item.usetimeculture())
@@ -49,7 +54,7 @@ public class DetailIntroMapper implements TourAPIMapper<PlaceDTO, Item> {
     public FestivalDTO generate(FestivalItemDetailIntro item) {
         return FestivalDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
-                .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
+                .contentTypeId(Integer.parseInt(item.contenttypeid()))
                 .sponsor(item.sponsor1())
                 .sponsorTel(item.sponsor1tel())
                 .startDate(item.eventstartdate())
@@ -64,7 +69,7 @@ public class DetailIntroMapper implements TourAPIMapper<PlaceDTO, Item> {
     public LeportsDTO generate(LeportsItemDetailIntro item) {
         return LeportsDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
-                .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
+                .contentTypeId(Integer.parseInt(item.contenttypeid()))
                 .infoCenter(item.infocenterleports())
                 .openPeriod(item.openperiod())
                 .restDate(item.restdateleports())
@@ -77,7 +82,7 @@ public class DetailIntroMapper implements TourAPIMapper<PlaceDTO, Item> {
     public RestaurantDTO generate(RestaurantItemDetailIntro item) {
         return RestaurantDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
-                .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
+                .contentTypeId(Integer.parseInt(item.contenttypeid()))
                 .firstMenu(item.firstmenu())
                 .openTime(item.opentimefood())
                 .restDate(item.restdatefood())
@@ -89,7 +94,7 @@ public class DetailIntroMapper implements TourAPIMapper<PlaceDTO, Item> {
     public ShopDTO generate(ShopItemDetailIntro item) {
         return ShopDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
-                .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
+                .contentTypeId(Integer.parseInt(item.contenttypeid()))
                 .infoCenter(item.infocentershopping())
                 .restDate(item.restdateshopping())
                 .openTime(item.opentime())
@@ -100,7 +105,7 @@ public class DetailIntroMapper implements TourAPIMapper<PlaceDTO, Item> {
     public SpotDTO generate(SpotItemDetailIntro item) {
         return SpotDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
-                .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
+                .contentTypeId(Integer.parseInt(item.contenttypeid()))
                 .infoCenter(item.infocenter())
                 .restDate(item.restdate())
                 .useTime(item.usetime())

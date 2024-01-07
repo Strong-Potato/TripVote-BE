@@ -1,0 +1,67 @@
+NO_CONTENTTPYEID:
+  title: No Content-Type ID
+  detail: Content-Type ID가 없습니다.
+
+IMAGE_ERROR:
+  title: Image Error
+  detail: 이미지를 변환하는 과정에서 문제가 발생했습니다.
+
+NO_ITEMS_FROM_API:
+  title: No Items From API
+  detail: 결과가 반환된 것이 없습니다.
+
+APPLICATION_ERROR:
+  title: Application Error
+  detail: Tour API 서버 어플리케이션 에러입니다.
+
+HTTP_ERROR:
+  title: HTTP Error
+  detail: Tour API 서버 HTTP 에러입니다.
+
+NO_OPENAPI_SERVICE:
+  title: No OpenAPI Service
+  detail: 해당 Tour API 서비스가 없거나 폐기되었습니다.
+
+SERVICE_ACCESS_DENIED:
+  title: Service Access Denied
+  detail: Tour API 서비스 접근이 거부되었습니다.
+
+LIMITED_NUMBER_OF_SERVICE_REQUESTS_EXCEEDS:
+  title: Limited Number Of Service Requests Exceeds
+  detail: Tour API 서비스 요청 제한 횟수를 초과하였습니다.
+
+SERVICE_KEY_IS_NOT_REGISTERED:
+  title: Service Key Is Not Registered
+  detail: 등록되지 않은 Tour API 서비스 키입니다.
+
+DEADLINE_HAS_EXPIRED:
+  title: Deadline Has Expired
+  detail: Tour API 서비스 활용 기간이 만료되었습니다.
+
+UNREGISTERED_IP:
+  title: Unregistered IP
+  detail: 등록되지 않은 Tour API 서비스 IP입니다.
+
+UNKNOWN:
+  title: Unknown
+  detail: Tour API 서버 알 수 없는 에러입니다.
+
+COMMUNICATOR_WRONG_REQUEST:
+  title: Communicator Wrong Request
+  detail: Tour API 통신 요청이 잘못되었습니다.
+
+WRONG_XML_FORMAT:
+  title: Wrong XML Format
+  detail: Tour API XML 포맷이 잘못되었습니다.
+
+OBJECT_TYPE_ERROR:
+  title: Object Type Error
+  detail: 병합하는 객체들의 타입이 일치하지 않습니다.
+
+CLASS_CAST_ERROR:
+  title: Class Cast Error
+  detail: 클래스 캐스팅에 실패했습니다.
+
+JSON_PARSING_ERROR:
+  title: JSON Parsing Error
+  detail: JSON 파싱에 실패했습니다.
