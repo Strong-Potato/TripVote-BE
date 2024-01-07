@@ -1,20 +1,15 @@
 package fc.be.domain.review.service;
 
-import fc.be.domain.place.Place;
-import fc.be.domain.place.entity.*;
+import fc.be.domain.member.entity.Member;
 import fc.be.domain.review.dto.ReviewCreateRequest;
 import fc.be.domain.review.dto.ReviewEditRequest;
 import fc.be.domain.review.dto.ReviewResponse;
 import fc.be.domain.review.entity.Review;
-import fc.be.domain.review.exception.ReviewErrorCode;
-import fc.be.domain.review.exception.ReviewException;
 import fc.be.domain.review.repository.ReviewRepository;
-import fc.be.tourapi.constant.ContentTypeId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -30,8 +25,7 @@ public class ReviewService {
     public Review createReview(ReviewCreateRequest reviewCreateRequest) {
         //Member member = memberRepository.findById(memberId); //todo Security 적용
         return reviewRepository.save(
-                reviewCreateRequest.toEntity(reviewCreateRequest)
-        );
+                reviewCreateRequest.to(reviewCreateRequest, Member.builder().build()));
     }
 
     @Transactional
@@ -46,8 +40,10 @@ public class ReviewService {
         reviewRepository.deleteById(reviewId);
     }
 
-    public List<ReviewResponse> getPlaceReviews(Long placeId) {
-        return null;
+    public ReviewResponse getPlaceReviews(Long placeId) {
+        return ReviewResponse.from(
+                reviewRepository.findByPlaceId(placeId)
+        );
     }
 
     public ReviewResponse getMemberReviews() {
