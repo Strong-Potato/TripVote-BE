@@ -1,8 +1,7 @@
 package fc.be.openapi.tourapi.dto.mapper;
 
-import fc.be.openapi.tourapi.dto.bone.PlaceDTO;
-import fc.be.openapi.tourapi.constant.ContentTypeId;
 import fc.be.openapi.tourapi.dto.bone.LocationDTO;
+import fc.be.openapi.tourapi.dto.bone.PlaceDTO;
 import fc.be.openapi.tourapi.dto.form.same_property.search_keyword1.SearchKeyword1Response;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,7 @@ public class SearchKeywordMapper implements TourAPIMapper<PlaceDTO, SearchKeywor
     public PlaceDTO generate(SearchKeyword1Response.Item item) {
         return PlaceDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
-                .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
+                .contentTypeId(Integer.parseInt(item.contenttypeid()))
                 .title(item.title())
                 .locationDTO(LocationDTO.builder()
                         .address(item.addr1())

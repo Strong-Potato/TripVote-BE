@@ -1,6 +1,5 @@
 package fc.be.openapi.tourapi.dto.mapper;
 
-import fc.be.openapi.tourapi.constant.ContentTypeId;
 import fc.be.openapi.tourapi.dto.bone.LocationDTO;
 import fc.be.openapi.tourapi.dto.bone.PlaceDTO;
 import fc.be.openapi.tourapi.dto.form.same_property.area_based_sync_list1.AreaBasedSyncList1Response;
@@ -16,7 +15,7 @@ public class AreaBasedSyncMapper implements TourAPIMapper<PlaceDTO, AreaBasedSyn
     public PlaceDTO generate(AreaBasedSyncList1Response.Item item) {
         return PlaceDTO.builder()
                 .id(Integer.parseInt(item.contentid()))
-                .contentTypeId(ContentTypeId.of(Integer.parseInt(item.contenttypeid())))
+                .contentTypeId(Integer.parseInt(item.contenttypeid()))
                 .title(item.title())
                 .locationDTO(LocationDTO.builder()
                         .address(item.addr1())
