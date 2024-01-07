@@ -3,6 +3,7 @@ package fc.be.app.domain.place.controller;
 import fc.be.app.domain.place.dto.PlaceInfoGetResponse;
 import fc.be.app.domain.place.dto.PlaceInfoInsertRequest;
 import fc.be.app.domain.place.dto.PlaceInfoInsertResponse;
+import fc.be.app.domain.place.dto.PlaceSearchResponse;
 import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
@@ -35,6 +36,27 @@ public class PlaceController {
     ) {
         return ApiResponse.ok(
                 placeService.insertPlaceInfo(placeId, placeInfoInsertRequest)
+        );
+    }
+
+    @GetMapping("/search/{pageNo}")
+    public ApiResponse<PlaceSearchResponse> sendSearchKeywordResults(
+            @PathVariable int pageNo,
+            @RequestParam(defaultValue = "10") int numOfRows,
+            @RequestParam(defaultValue = "0") int areaCode,
+            @RequestParam(defaultValue = "0") int sigunguCode,
+            @RequestParam(defaultValue = "0") int contentTypeId,
+            @RequestParam(defaultValue = "_") String keyword,
+            @RequestParam(defaultValue = "R") char arrange
+    ) {
+        return ApiResponse.ok(
+                placeService.bringSearchKeywordResults(
+                        pageNo, numOfRows,
+                        areaCode, sigunguCode,
+                        contentTypeId,
+                        keyword,
+                        arrange
+                )
         );
     }
 }
