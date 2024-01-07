@@ -55,13 +55,15 @@ public class TourAPIService {
             final int areaCode,
             final int sigunguCode,
             final int contentTypeId,
-            final String keyword
+            final String keyword,
+            final char sortedBy
     ) {
         var result = tourAPICommunicator.callSearchKeyword(
                 pageNo, numOfRows,
                 areaCode, sigunguCode,
                 keyword,
-                contentTypeId
+                contentTypeId,
+                sortedBy
         );
 
         if (result == null) {

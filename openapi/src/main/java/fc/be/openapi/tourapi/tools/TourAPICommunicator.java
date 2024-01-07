@@ -146,7 +146,8 @@ public class TourAPICommunicator {
             final int areaCode,
             final int sigunguCode,
             final String keyword,
-            final int contentTypeId
+            final int contentTypeId,
+            char sortedBy
     ) {
         StringBuilder url = buildEssentialUrl(properties.getSearchKeyword(), contentTypeId, 0);
         url.append("&keyword=").append(keyword == null ? "_" : URLEncoder.encode(keyword, StandardCharsets.UTF_8));
@@ -164,7 +165,9 @@ public class TourAPICommunicator {
             url.append("&sigunguCode=").append(sigunguCode);
         }
 
-        url.append("&arrange=").append("Q");
+        if(sortedBy == 'O' || sortedBy == 'Q' || sortedBy == 'R'){
+            url.append("&arrange=").append(sortedBy);
+        }
 
         return fetchDataFromAPI(
                 url.toString(),
