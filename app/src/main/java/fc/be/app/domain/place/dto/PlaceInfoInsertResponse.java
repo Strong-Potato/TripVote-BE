@@ -1,6 +1,6 @@
 package fc.be.app.domain.place.dto;
 
-import fc.be.domain.place.Place;
+import fc.be.app.domain.place.Place;
 import fc.be.openapi.tourapi.dto.bone.LocationDTO;
 
 public record PlaceInfoInsertResponse(

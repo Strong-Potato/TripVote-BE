@@ -1,7 +1,7 @@
 package fc.be.app.domain.place.dto;
 
 import fc.be.app.domain.place.Location;
-import fc.be.domain.place.Place;
+import fc.be.app.domain.place.Place;
 import fc.be.openapi.tourapi.constant.ContentTypeId;
 import fc.be.openapi.tourapi.dto.bone.LocationDTO;
 

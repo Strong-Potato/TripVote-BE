@@ -1,6 +1,6 @@
 package fc.be.app.domain.place.entity;
 
-import fc.be.domain.place.Place;
+import fc.be.app.domain.place.Place;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;

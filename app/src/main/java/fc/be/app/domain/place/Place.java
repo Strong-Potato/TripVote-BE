@@ -1,7 +1,6 @@
-package fc.be.domain.place;
+package fc.be.app.domain.place;
 
 
-import fc.be.app.domain.place.Location;
 import fc.be.app.global.util.ContentTypeIdConverter;
 import fc.be.app.global.util.ListImagesConverter;
 import fc.be.openapi.tourapi.constant.ContentTypeId;
@@ -26,7 +25,6 @@ import java.util.List;
 public class Place {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("장소 id")
     private Integer id;
 
