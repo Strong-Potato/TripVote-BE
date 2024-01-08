@@ -16,13 +16,4 @@ public record ReviewEditRequest(
         List<String> images,
         @PastOrPresent LocalDate visitedAt
 ) {
-
-    public Review toEntity(ReviewEditRequest reviewEditRequest) {
-        return Review.builder()
-                .content(reviewEditRequest.content)
-                .images(reviewEditRequest.images)
-                .rating(reviewEditRequest.rating)
-                .visitedAt(reviewEditRequest.visitedAt)
-                .build();
-    }
 }
