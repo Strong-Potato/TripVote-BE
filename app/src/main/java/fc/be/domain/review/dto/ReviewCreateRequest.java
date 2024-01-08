@@ -15,8 +15,7 @@ import java.util.List;
 public record ReviewCreateRequest(
         PlaceDTO placeDTO,
         @Positive Integer placeId,
-        String thumbnail,
-        @NotNull ContentTypeId contentTypeId,
+        @NotNull Integer contentTypeId,
         @NotNull String title,
         @NotNull Integer areaCode,
         @Min(1) Integer rating,
@@ -47,7 +46,7 @@ public record ReviewCreateRequest(
                 .originalImage(placeDTO.getOriginalImage())
                 .createdTime(placeDTO.getCreatedTime())
                 .modifiedTime(placeDTO.getModifiedTime())
-                .gallery(placeDTO.getGallery()) //todo gallery List 확인 필요
+                .gallery(placeDTO.getGallery()) //todo [Review] gallery List 확인 필요
                 .build();
     }
 

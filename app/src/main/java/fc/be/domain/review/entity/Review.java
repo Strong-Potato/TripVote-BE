@@ -2,6 +2,9 @@ package fc.be.domain.review.entity;
 
 import fc.be.domain.member.entity.Member;
 import fc.be.domain.place.Place;
+import fc.be.domain.review.dto.ReviewCreateResponse;
+import fc.be.domain.review.dto.ReviewEditRequest;
+import fc.be.domain.review.dto.ReviewEditResponse;
 import fc.be.global.entity.BaseTimeEntity;
 import fc.be.global.util.ListImagesConverter;
 import jakarta.persistence.*;
@@ -65,10 +68,10 @@ public class Review extends BaseTimeEntity {
         this.isGoogle = isGoogle;
     }
 
-    public void editReview(Integer rating, String content, List<String> images, LocalDate visitedAt) {
-        this.rating = rating;
-        this.content = content;
-        this.images = images;
-        this.visitedAt = visitedAt;
+    public void editReview(ReviewEditRequest reviewEditRequest) {
+        this.rating = reviewEditRequest.rating();
+        this.content = reviewEditRequest.content();
+        this.images = reviewEditRequest.images();
+        this.visitedAt = reviewEditRequest.visitedAt();
     }
 }
