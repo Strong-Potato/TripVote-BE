@@ -59,4 +59,20 @@ public class PlaceController {
                 )
         );
     }
+
+    @GetMapping("/nearby")
+    public ApiResponse<PlaceSearchResponse> sendNearbyPlaces(
+            @RequestParam(defaultValue = "10") int numOfRows,
+            @RequestParam int areaCode,
+            @RequestParam int sigunguCode,
+            @RequestParam int contentTypeId
+    ) {
+        return ApiResponse.ok(
+                placeService.bringNearbyPlaces(
+                        numOfRows,
+                        areaCode, sigunguCode,
+                        contentTypeId
+                )
+        );
+    }
 }
