@@ -29,3 +29,11 @@ GET http://localhost:8080/places/search/{{pageNo}}?contentTypeId={{spotTypeId}}
 
 ### keyword 포함
 GET http://localhost:8080/places/search/{{pageNo}}?arrange=R&contentTypeId={{accommodationTypeId}}
+
+
+## 주변 장소 목록(areaSyncBased)
+### spot
+GET http://localhost:8080/places/nearby?areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&contentTypeId={{spotTypeId}}
+
+### accommodation
+GET http://localhost:8080/places/nearby?areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&contentTypeId={{accommodationTypeId}}&numOfRows=2
