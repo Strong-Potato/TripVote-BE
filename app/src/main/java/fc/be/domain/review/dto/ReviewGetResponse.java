@@ -5,22 +5,22 @@ import fc.be.domain.review.entity.Review;
 import java.util.ArrayList;
 import java.util.List;
 
-public record ReviewResponse(List<Item> reviews) {
+public record ReviewGetResponse(List<Item> reviews) {
 
-    public static ReviewResponse from(List<Review> reviews) {
+    public static ReviewGetResponse from(List<Review> reviews) {
         List<Item> items = new ArrayList<>();
         for(var review : reviews){
             items.add(
                     new Item(
                             review.getMember().getNickname(),
-                            null, //review.getMember().getProfile(),
+                            null, // todo [Review] Member Filed 추가되면 작업 필요
                             review.getRating(),
                             review.getContent(),
                             review.getIsGoogle()
                     )
             );
         }
-        return new ReviewResponse(items);
+        return new ReviewGetResponse(items);
     }
 
     private record Item(

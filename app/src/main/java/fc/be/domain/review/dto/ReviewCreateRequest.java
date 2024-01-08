@@ -1,21 +1,18 @@
 package fc.be.domain.review.dto;
 
-import fc.be.domain.member.entity.Member;
-import fc.be.domain.place.Location;
-import fc.be.domain.place.Place;
+import fc.be.app.domain.member.entity.Member;
+import fc.be.app.domain.place.Place;
 import fc.be.domain.review.entity.Review;
-import fc.be.tourapi.constant.ContentTypeId;
-import fc.be.tourapi.dto.bone.LocationDTO;
-import fc.be.tourapi.dto.bone.PlaceDTO;
-import jakarta.validation.constraints.*;
 
+import fc.be.openapi.tourapi.constant.ContentTypeId;
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 
 public record ReviewCreateRequest(
-        @NotNull Long placeId,
-        @NotNull String thumbnail, //장소 썸네일 사진 1장
-        @NotNull ContentTypeId contentTypeId, //레코드에 이넘 ㄱㅊ?
+        @NotNull Integer placeId,
+        @NotNull String thumbnail,
+        @NotNull ContentTypeId contentTypeId,
         @NotNull String title,
         @NotNull Integer areaCode,
         @Min(1) Integer rating,
@@ -28,7 +25,7 @@ public record ReviewCreateRequest(
     public Review to(ReviewCreateRequest reviewCreateRequest, Member member) {
         return Review.builder()
                 .member(member)
-                .place(convertPlace(reviewCreateRequest.placeDTO))
+                .place(convertPlace(reviewCreateRequest))
                 .visitedAt(reviewCreateRequest.visitedAt)
                 .rating(reviewCreateRequest.rating)
                 .content(reviewCreateRequest.content)
@@ -36,32 +33,12 @@ public record ReviewCreateRequest(
                 .build();
     }
 
-    private Place convertPlace(PlaceDTO placeDTO){
+    private Place convertPlace(ReviewCreateRequest reviewCreateRequest){
         return Place.builder()
-                .id(placeDTO.getId())
-                .contentTypeId(placeDTO.getContentTypeId())
-                .title(placeDTO.getTitle())
-                .location(convertLocation(placeDTO.getLocationDTO()))
-                .thumbnail(placeDTO.getThumbnail())
-                .originalImage(placeDTO.getOriginalImage())
-                .createdTime(placeDTO.getCreatedTime())
-                .modifiedTime(placeDTO.getModifiedTime())
-                .gallery(placeDTO.getGallery()) //todo gallery List 확인 필요
+                .id(reviewCreateRequest.placeId)
+                .contentTypeId(reviewCreateRequest.contentTypeId)
+                .title(reviewCreateRequest.title)
+                .thumbnail(reviewCreateRequest.thumbnail)
                 .build();
     }
-
-    private Location convertLocation(LocationDTO locationDTO){
-        return Location.builder()
-                .address(locationDTO.getAddress())
-                .addressDetail(locationDTO.getAddressDetail())
-                .phone(locationDTO.getPhone())
-                .areaCode(locationDTO.getAreaCode())
-                .sigunguCode(locationDTO.getSigunguCode())
-                .zipCode(locationDTO.getZipCode())
-                .latitude(locationDTO.getLatitude())
-                .longitude(locationDTO.getLongitude())
-                .build();
-    }
-
-
 }
