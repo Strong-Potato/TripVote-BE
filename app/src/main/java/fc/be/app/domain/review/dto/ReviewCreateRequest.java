@@ -3,15 +3,16 @@ package fc.be.app.domain.review.dto;
 
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.place.Location;
-import fc.be.domain.place.Place;
+import fc.be.app.domain.place.Place;
 import fc.be.app.domain.review.entity.Review;
-
 import fc.be.openapi.tourapi.dto.bone.LocationDTO;
 import fc.be.openapi.tourapi.dto.bone.PlaceDTO;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static java.lang.Boolean.*;
 
 public record ReviewCreateRequest(
         PlaceDTO placeDTO,
@@ -26,32 +27,33 @@ public record ReviewCreateRequest(
 ) {
 
     // todo [Review] Member 관련 Security 확인 되는 대로 dto 수정 하겠음 - 민균
-    public Review to(ReviewCreateRequest reviewCreateRequest, Member member) {
+    public Review to(Member member) {
         return Review.builder()
                 .member(member)
-                .place(convertPlace(reviewCreateRequest.placeDTO))
-                .visitedAt(reviewCreateRequest.visitedAt)
-                .rating(reviewCreateRequest.rating)
-                .content(reviewCreateRequest.content)
+                .place(convertPlace(placeDTO))
+                .visitedAt(visitedAt)
+                .rating(rating)
+                .content(content)
                 .images(images)
+                .isGoogle(FALSE) //앱 내 리뷰이므로 기본 값 FALSE
                 .build();
     }
 
-    private Place convertPlace(PlaceDTO placeDTO){
+    private Place convertPlace(PlaceDTO placeDTO) {
         return Place.builder()
                 .id(placeDTO.getId())
-                .contentTypeId(null)// todo placeDTO.getContentTypeId()
+                .contentTypeId(null)// todo placeDTO.getContentTypeId() 재욱님께 물어보기 Integer or Enum
                 .title(placeDTO.getTitle())
                 .location(convertLocation(placeDTO.getLocationDTO()))
                 .thumbnail(placeDTO.getThumbnail())
                 .originalImage(placeDTO.getOriginalImage())
                 .createdTime(placeDTO.getCreatedTime())
                 .modifiedTime(placeDTO.getModifiedTime())
-                .gallery(placeDTO.getGallery()) //todo [Review] gallery List 확인 필요
+                .gallery(placeDTO.getGallery())
                 .build();
     }
 
-    private Location convertLocation(LocationDTO locationDTO){
+    private Location convertLocation(LocationDTO locationDTO) {
         return Location.builder()
                 .address(locationDTO.getAddress())
                 .addressDetail(locationDTO.getAddressDetail())
@@ -63,6 +65,4 @@ public record ReviewCreateRequest(
                 .longitude(locationDTO.getLongitude())
                 .build();
     }
-
-
 }
