@@ -36,4 +36,9 @@ GET http://localhost:8080/places/search/{{pageNo}}?arrange=R&contentTypeId={{acc
 GET http://localhost:8080/places/nearby?areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&contentTypeId={{spotTypeId}}
 
 ### accommodation
-GET http://localhost:8080/places/nearby?areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&contentTypeId={{accommodationTypeId}}&numOfRows=2
+GET http://localhost:8080/places/nearby?areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&contentTypeId={{accommodationTypeId}}
+
+
+## 30일간 인기 장소 목록
+### 모든 장소
+GET http://localhost:8080/places/popular
