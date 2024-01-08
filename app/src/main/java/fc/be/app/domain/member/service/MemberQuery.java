@@ -1,8 +1,7 @@
 package fc.be.app.domain.member.service;
 
 import fc.be.app.domain.member.vo.AuthProvider;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Optional;
@@ -13,21 +12,22 @@ public interface MemberQuery {
     Optional<MemberResponse> find(ProviderMemberRequest request);
 
     record MemberRequest(
-            @Min(value = 1)
-            Long id
+            @Email
+            String email
     ) {
     }
 
     record ProviderMemberRequest(
             @NotNull
             AuthProvider provider,
-            @NotBlank
-            String providedId
+            @Email
+            String email
     ) {
     }
 
     record MemberResponse(
             Long id,
+            String password,
             String email,
             String nickname,
             String profile,

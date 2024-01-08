@@ -2,6 +2,7 @@ package fc.be.app.domain.member.service;
 
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.repository.MemberRepository;
+import fc.be.app.domain.member.vo.AuthProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,13 +17,14 @@ public class MemberQueryHandler implements MemberQuery {
 
     @Override
     public Optional<MemberResponse> find(MemberRequest request) {
-        Member findMember = memberRepository.findById(request.id()).orElse(null);
+        Member findMember = memberRepository.findByProviderAndEmail(AuthProvider.NONE, request.email()).orElse(null);
         if (findMember == null) {
             return Optional.empty();
         }
         return Optional.of(
                 new MemberResponse(
                         findMember.getId(),
+                        findMember.getPassword(),
                         findMember.getEmail(),
                         findMember.getNickname(),
                         findMember.getProfile(),
@@ -33,13 +35,14 @@ public class MemberQueryHandler implements MemberQuery {
 
     @Override
     public Optional<MemberResponse> find(ProviderMemberRequest request) {
-        Member findProviderMember = memberRepository.findByProviderAndProvidedId(request.provider(), request.providedId()).orElse(null);
+        Member findProviderMember = memberRepository.findByProviderAndEmail(request.provider(), request.email()).orElse(null);
         if (findProviderMember == null) {
             return Optional.empty();
         }
         return Optional.of(
                 new MemberResponse(
                         findProviderMember.getId(),
+                        findProviderMember.getPassword(),
                         findProviderMember.getEmail(),
                         findProviderMember.getNickname(),
                         findProviderMember.getProfile(),
