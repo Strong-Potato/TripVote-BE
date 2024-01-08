@@ -1,6 +1,9 @@
 package fc.be.app.domain.place.controller;
 
-import fc.be.app.domain.place.dto.*;
+import fc.be.app.domain.place.dto.PlaceInfoGetResponse;
+import fc.be.app.domain.place.dto.PlaceInfoInsertRequest;
+import fc.be.app.domain.place.dto.PlaceInfoInsertResponse;
+import fc.be.app.domain.place.dto.PlaceSearchResponse;
 import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
@@ -53,33 +56,6 @@ public class PlaceController {
                         contentTypeId,
                         keyword,
                         arrange
-                )
-        );
-    }
-
-    @GetMapping("/nearby")
-    public ApiResponse<PlaceSearchResponse> sendNearbyPlaces(
-            @RequestParam(defaultValue = "10") int numOfRows,
-            @RequestParam int areaCode,
-            @RequestParam int sigunguCode,
-            @RequestParam int contentTypeId
-    ) {
-        return ApiResponse.ok(
-                placeService.bringNearbyPlaces(
-                        numOfRows,
-                        areaCode, sigunguCode,
-                        contentTypeId
-                )
-        );
-    }
-
-    @GetMapping("/popular")
-    public ApiResponse<PlacePopularGetResponse> sendPopularPlaces(
-            @RequestParam(defaultValue = "10") int numOfRows
-    ) {
-        return ApiResponse.ok(
-                placeService.bringPopularPlaces(
-                        numOfRows
                 )
         );
     }
