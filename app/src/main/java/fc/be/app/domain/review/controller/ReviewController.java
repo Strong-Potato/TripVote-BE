@@ -1,15 +1,14 @@
-package fc.be.domain.review.controller;
+package fc.be.app.domain.review.controller;
 
-import fc.be.domain.review.dto.ReviewCreateRequest;
-import fc.be.domain.review.dto.ReviewEditRequest;
-import fc.be.domain.review.dto.ReviewGetResponse;
-import fc.be.domain.review.service.ReviewService;
-import fc.be.global.http.ApiResponse;
+import fc.be.app.domain.review.dto.ReviewCreateRequest;
+import fc.be.app.domain.review.dto.ReviewCreateResponse;
+import fc.be.app.domain.review.dto.ReviewEditRequest;
+import fc.be.app.domain.review.dto.ReviewGetResponse;
+import fc.be.app.domain.review.service.ReviewService;
+import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,12 +18,12 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public ApiResponse createReview(@Valid @RequestBody ReviewCreateRequest reviewCreateRequest) {
+    public ApiResponse<ReviewCreateResponse> createReview(@Valid @RequestBody ReviewCreateRequest reviewCreateRequest) {
         return ApiResponse.ok(reviewService.createReview(reviewCreateRequest));
     }
 
     @PatchMapping
-    public ApiResponse editReview(@Valid @RequestBody ReviewEditRequest reviewEditRequest) {
+    public ApiResponse<ReviewCreateResponse> editReview(@Valid @RequestBody ReviewEditRequest reviewEditRequest) {
         return ApiResponse.ok(reviewService.editReview(reviewEditRequest));
     }
 

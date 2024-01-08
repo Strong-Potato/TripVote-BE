@@ -1,8 +1,10 @@
 package fc.be.domain.place;
 
-import fc.be.global.util.ContentTypeIdConverter;
-import fc.be.global.util.ListImagesConverter;
-import fc.be.tourapi.constant.ContentTypeId;
+
+import fc.be.app.domain.place.Location;
+import fc.be.app.global.util.ContentTypeIdConverter;
+import fc.be.app.global.util.ListImagesConverter;
+import fc.be.openapi.tourapi.constant.ContentTypeId;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

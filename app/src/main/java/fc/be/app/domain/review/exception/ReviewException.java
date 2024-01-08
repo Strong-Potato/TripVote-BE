@@ -1,6 +1,7 @@
-package fc.be.domain.review.exception;
+package fc.be.app.domain.review.exception;
 
-import fc.be.global.exception.BizException;
+
+import fc.be.app.global.exception.BizException;
 
 public class ReviewException extends BizException {
     public ReviewException(ReviewErrorCode errorCode) {

@@ -1,6 +1,5 @@
-package fc.be.domain.review.dto;
+package fc.be.app.domain.review.dto;
 
-import fc.be.domain.review.entity.Review;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

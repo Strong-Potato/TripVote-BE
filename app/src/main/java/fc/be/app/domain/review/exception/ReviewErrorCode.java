@@ -1,4 +1,4 @@
-package fc.be.domain.review.exception;
+package fc.be.app.domain.review.exception;
 
 import lombok.Getter;
 

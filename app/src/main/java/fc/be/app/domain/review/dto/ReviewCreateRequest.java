@@ -1,12 +1,13 @@
-package fc.be.domain.review.dto;
+package fc.be.app.domain.review.dto;
 
-import fc.be.domain.member.entity.Member;
-import fc.be.domain.place.Location;
+
+import fc.be.app.domain.member.entity.Member;
+import fc.be.app.domain.place.Location;
 import fc.be.domain.place.Place;
-import fc.be.domain.review.entity.Review;
-import fc.be.tourapi.constant.ContentTypeId;
-import fc.be.tourapi.dto.bone.LocationDTO;
-import fc.be.tourapi.dto.bone.PlaceDTO;
+import fc.be.app.domain.review.entity.Review;
+
+import fc.be.openapi.tourapi.dto.bone.LocationDTO;
+import fc.be.openapi.tourapi.dto.bone.PlaceDTO;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
@@ -39,7 +40,7 @@ public record ReviewCreateRequest(
     private Place convertPlace(PlaceDTO placeDTO){
         return Place.builder()
                 .id(placeDTO.getId())
-                .contentTypeId(placeDTO.getContentTypeId())
+                .contentTypeId(null)// todo placeDTO.getContentTypeId()
                 .title(placeDTO.getTitle())
                 .location(convertLocation(placeDTO.getLocationDTO()))
                 .thumbnail(placeDTO.getThumbnail())
