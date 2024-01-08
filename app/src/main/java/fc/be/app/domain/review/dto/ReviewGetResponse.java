@@ -1,6 +1,6 @@
-package fc.be.domain.review.dto;
+package fc.be.app.domain.review.dto;
 
-import fc.be.domain.review.entity.Review;
+import fc.be.app.domain.review.entity.Review;
 
 import java.util.ArrayList;
 import java.util.List;

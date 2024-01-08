@@ -1,6 +1,6 @@
-package fc.be.domain.review.repository;
+package fc.be.app.domain.review.repository;
 
-import fc.be.domain.review.entity.Review;
+import fc.be.app.domain.review.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
