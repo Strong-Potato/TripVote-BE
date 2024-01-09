@@ -24,23 +24,15 @@ public class AuthenticationDetails extends WebAuthenticationDetails {
     }
 
     private static String extractClientIp(HttpServletRequest request) {
-        String ip = request.getHeader("X-Forwarded-For");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
+        String[] headerNames =
+                {"X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR"};
+        for (String header : headerNames) {
+            String ip = request.getHeader(header);
+            if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
+                return ip;
+            }
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_CLIENT_IP");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-        }
-        return ip;
+        return request.getRemoteAddr();
     }
 
     @Override
@@ -48,15 +40,14 @@ public class AuthenticationDetails extends WebAuthenticationDetails {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof AuthenticationDetails)) {
             return false;
         }
         if (!super.equals(o)) {
             return false;
         }
         AuthenticationDetails that = (AuthenticationDetails) o;
-        return Objects.equals(clientIp, that.clientIp) && Objects.equals(userAgent,
-                that.userAgent);
+        return Objects.equals(clientIp, that.clientIp) && Objects.equals(userAgent, that.userAgent);
     }
 
     @Override
@@ -66,12 +57,7 @@ public class AuthenticationDetails extends WebAuthenticationDetails {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName()).append(" [");
-        sb.append("RemoteIpAddress=").append(this.getRemoteAddress()).append(", ");
-        sb.append("SessionId=").append(this.getSessionId()).append(", ");
-        sb.append("clientIp=").append(this.getClientIp()).append(", ");
-        sb.append("userAgent=").append(this.getClientIp()).append("]");
-        return sb.toString();
+        return String.format("%s [RemoteIpAddress=%s, SessionId=%s, clientIp=%s, userAgent=%s]",
+                getClass().getSimpleName(), this.getRemoteAddress(), this.getSessionId(), this.getClientIp(), this.getUserAgent());
     }
 }
