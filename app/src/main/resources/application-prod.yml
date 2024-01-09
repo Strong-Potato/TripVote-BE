@@ -12,3 +12,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+  data:
+    redis:
+      host: ${REDISHOST}
+      port: ${REDISPORT}
