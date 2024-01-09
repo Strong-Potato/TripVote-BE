@@ -1,12 +1,11 @@
 package fc.be.app.global.config.security.converter;
 
-import fc.be.app.global.config.security.model.ProviderUser;
+import fc.be.app.global.config.security.exception.UnsupportedProviderException;
 import fc.be.app.global.config.security.model.KakaoOidcUser;
 import fc.be.app.global.config.security.model.KakaoUser;
 import fc.be.app.global.config.security.model.OAuth2ProviderUser;
-import org.springframework.lang.Nullable;
+import fc.be.app.global.config.security.model.ProviderUser;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,16 +39,14 @@ public class DelegatingProviderUserConverter implements Converter<ProviderUserCo
         this.converters = Collections.unmodifiableList(new LinkedList<>(converters));
     }
 
-    @Nullable
     @Override
     public ProviderUser convert(ProviderUserConvertRequest request) {
-        Assert.notNull(request, "providerUserRequest cannot be null");
         for (Converter<ProviderUserConvertRequest, ProviderUser> converter : converters) {
             ProviderUser providerUser = converter.convert(request);
             if (providerUser != null) {
                 return providerUser;
             }
         }
-        return null;
+        throw new UnsupportedProviderException("지원하지 않는 Provider 입니다.");
     }
 }

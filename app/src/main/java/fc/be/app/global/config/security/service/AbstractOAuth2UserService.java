@@ -22,9 +22,9 @@ public abstract class AbstractOAuth2UserService {
 
     protected void register(ClientRegistration clientRegistration, OAuth2User oAuth2User, OAuth2UserRequest userRequest)
             throws InternalAuthenticationServiceException {
+        ProviderUserConvertRequest convertRequest = new ProviderUserConvertRequest(clientRegistration, oAuth2User);
+        ProviderUser providerUser = converter.convert(convertRequest);
         try {
-            ProviderUserConvertRequest convertRequest = new ProviderUserConvertRequest(clientRegistration, oAuth2User);
-            ProviderUser providerUser = converter.convert(convertRequest);
             registerAsOurs(providerUser, userRequest);
         } catch (Exception exception) {
             throw new InternalAuthenticationServiceException("OAuth2인증에 성공하였으나, 우리 회원으로 등록하지 못했습니다.", exception);
