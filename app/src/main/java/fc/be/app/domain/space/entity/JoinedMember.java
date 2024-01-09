@@ -3,6 +3,7 @@ package fc.be.app.domain.space.entity;
 import fc.be.app.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -26,4 +27,22 @@ public class JoinedMember {
     @JoinColumn(name = "member_id")
     @Comment("여행 스페이스에 참여한 회원")
     private Member member;
+
+    @Comment("스페이스 나가기 여부")
+    private boolean leftSpace;
+
+    @Builder
+    private JoinedMember(Space space, Member member, boolean leftSpace) {
+        this.space = space;
+        this.member = member;
+        this.leftSpace = leftSpace;
+    }
+
+    public static JoinedMember create(Space space, Member member) {
+        return JoinedMember.builder()
+            .space(space)
+            .member(member)
+            .leftSpace(false)
+            .build();
+    }
 }
