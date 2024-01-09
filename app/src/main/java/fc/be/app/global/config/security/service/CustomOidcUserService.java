@@ -1,7 +1,6 @@
 package fc.be.app.global.config.security.service;
 
 import fc.be.app.domain.member.service.MemberCommand;
-import fc.be.app.domain.member.service.MemberQuery;
 import fc.be.app.global.config.security.converter.Converter;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
@@ -15,8 +14,8 @@ import org.springframework.stereotype.Service;
 public class CustomOidcUserService extends AbstractOAuth2UserService implements OAuth2UserService<OidcUserRequest, OidcUser> {
     private final OidcUserService defaultOidcUserService = new OidcUserService();
 
-    public CustomOidcUserService(MemberQuery memberQuery, MemberCommand memberCommand, Converter converter) {
-        super(memberQuery, memberCommand, converter);
+    public CustomOidcUserService(MemberCommand memberCommand, Converter converter) {
+        super(memberCommand, converter);
     }
 
     @Override

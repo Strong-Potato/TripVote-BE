@@ -1,7 +1,6 @@
 package fc.be.app.global.config.security.service;
 
 import fc.be.app.domain.member.service.MemberCommand;
-import fc.be.app.domain.member.service.MemberQuery;
 import fc.be.app.global.config.security.converter.Converter;
 import fc.be.app.global.config.security.model.ProviderUser;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -66,8 +65,8 @@ import org.springframework.stereotype.Service;
 public class CustomOAuth2UserService extends AbstractOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> defaultOAuth2UserService = new DefaultOAuth2UserService();
 
-    public CustomOAuth2UserService(MemberQuery memberQuery, MemberCommand memberCommand, Converter converter) {
-        super(memberQuery, memberCommand, converter);
+    public CustomOAuth2UserService(MemberCommand memberCommand, Converter converter) {
+        super(memberCommand, converter);
     }
 
     @Override

@@ -17,6 +17,10 @@ public class MemberCommandHandler implements MemberCommand {
 
     @Override
     public void register(MemberRegisterRequest request) {
+        boolean isExists = memberRepository.existsByProviderAndEmail(AuthProvider.NONE, request.email());
+        if (isExists) {
+            return;
+        }
         Member newMember = Member.builder()
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
@@ -30,6 +34,10 @@ public class MemberCommandHandler implements MemberCommand {
 
     @Override
     public void register(ProviderMemberRegisterRequest request) {
+        boolean isExists = memberRepository.existsByProviderAndEmail(request.provider(), request.email());
+        if (isExists) {
+            return;
+        }
         Member newProviderMember = Member.builder()
                 .email(request.email())
                 .password(passwordEncoder.encode("none"))
