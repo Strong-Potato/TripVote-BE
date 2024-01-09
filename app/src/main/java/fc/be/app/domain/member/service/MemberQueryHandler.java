@@ -17,37 +17,27 @@ public class MemberQueryHandler implements MemberQuery {
 
     @Override
     public Optional<MemberResponse> find(MemberRequest request) {
-        Member findMember = memberRepository.findByProviderAndEmail(AuthProvider.NONE, request.email()).orElse(null);
-        if (findMember == null) {
-            return Optional.empty();
-        }
-        return Optional.of(
-                new MemberResponse(
-                        findMember.getId(),
-                        findMember.getPassword(),
-                        findMember.getEmail(),
-                        findMember.getNickname(),
-                        findMember.getProfile(),
-                        findMember.getProvider()
-                )
-        );
+        Optional<Member> findMember = memberRepository.findByProviderAndEmail(AuthProvider.NONE, request.email());
+        return findMember
+                .map(member -> new MemberResponse(
+                        member.getId(),
+                        member.getPassword(),
+                        member.getEmail(),
+                        member.getNickname(),
+                        member.getProfile(),
+                        member.getProvider()));
     }
 
     @Override
     public Optional<MemberResponse> find(ProviderMemberRequest request) {
-        Member findProviderMember = memberRepository.findByProviderAndEmail(request.provider(), request.email()).orElse(null);
-        if (findProviderMember == null) {
-            return Optional.empty();
-        }
-        return Optional.of(
-                new MemberResponse(
-                        findProviderMember.getId(),
-                        findProviderMember.getPassword(),
-                        findProviderMember.getEmail(),
-                        findProviderMember.getNickname(),
-                        findProviderMember.getProfile(),
-                        findProviderMember.getProvider()
-                )
-        );
+        Optional<Member> findProviderMember = memberRepository.findByProviderAndEmail(request.provider(), request.email());
+        return findProviderMember
+                .map(member -> new MemberResponse(
+                        member.getId(),
+                        member.getPassword(),
+                        member.getEmail(),
+                        member.getNickname(),
+                        member.getProfile(),
+                        member.getProvider()));
     }
 }
