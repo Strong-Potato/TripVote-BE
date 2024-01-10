@@ -49,7 +49,7 @@ public class TokenProvider {
         String key = VERIFICATION_CODE_GENERATION_COUNT_PREFIX + email;
         Long count = redisTemplate.opsForValue().increment(key);
         redisTemplate.expire(key, VERIFICATION_CODE_GENERATION_COUNT_DURATION);
-        if (count >= 5) {
+        if (count != null && count >= 5) {
             addToBlockedEmail(email);
         }
     }
@@ -62,7 +62,7 @@ public class TokenProvider {
 
     public boolean isBlocked(String email) {
         String key = BLOCKED_EMAIL_PREFIX + email;
-        return redisTemplate.hasKey(key);
+        return redisTemplate.hasKey(key) != null ? redisTemplate.hasKey(key) : false;
     }
 
     private String generateSecureRandomCode(int length) {
