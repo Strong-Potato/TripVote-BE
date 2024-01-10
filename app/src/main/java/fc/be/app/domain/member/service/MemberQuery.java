@@ -1,15 +1,20 @@
 package fc.be.app.domain.member.service;
 
 import fc.be.app.domain.member.vo.AuthProvider;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Optional;
 
 public interface MemberQuery {
-    Optional<MemberResponse> find(MemberRequest request);
+    Optional<MemberResponse> find(@Valid MemberRequest request);
 
-    Optional<MemberResponse> find(ProviderMemberRequest request);
+    Optional<MemberResponse> find(@Valid ProviderMemberRequest request);
+
+    boolean exists(@Valid MemberRequest request);
+
+    boolean exists(@Valid ProviderMemberRequest request);
 
     record MemberRequest(
             @Email

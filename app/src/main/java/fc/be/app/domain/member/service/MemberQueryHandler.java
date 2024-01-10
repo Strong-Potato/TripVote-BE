@@ -3,7 +3,7 @@ package fc.be.app.domain.member.service;
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.member.vo.AuthProvider;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MemberQueryHandler implements MemberQuery {
     private final MemberRepository memberRepository;
 
@@ -39,5 +39,15 @@ public class MemberQueryHandler implements MemberQuery {
                         member.getNickname(),
                         member.getProfile(),
                         member.getProvider()));
+    }
+
+    @Override
+    public boolean exists(MemberRequest request) {
+        return memberRepository.existsByProviderAndEmail(AuthProvider.NONE, request.email());
+    }
+
+    @Override
+    public boolean exists(ProviderMemberRequest request) {
+        return memberRepository.existsByProviderAndEmail(request.provider(), request.email());
     }
 }

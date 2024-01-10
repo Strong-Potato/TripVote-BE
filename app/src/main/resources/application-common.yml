@@ -23,3 +23,13 @@ spring:
             jwk-set-uri: https://kauth.kakao.com/.well-known/jwks.json
             user-name-attribute: id
             #user-name-attribute: sub # oidc 설정시
+
+--- ## AWS SES 설정
+spring:
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2
+      credentials:
+        access-key: ${AWSSESACCESSKEY}
+        secret-key: ${AWSSESSECRETKEY}
