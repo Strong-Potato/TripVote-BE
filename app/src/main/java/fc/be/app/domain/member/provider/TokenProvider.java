@@ -6,15 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Base64;
-import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -93,7 +90,7 @@ public class TokenProvider {
         if (!verificationCode.equals(value)) {
             throw new AuthException(AuthErrorCode.INCORRECT_CODE);
         }
-        return verificationCode.equals(value);
+        return true;
     }
 
     /**
@@ -116,7 +113,7 @@ public class TokenProvider {
      *
      * @param email         email to be registered
      * @param registerToken token for member register
-     * @return
+     * @return true if registerToken matches requested email
      */
     public boolean authenticateRegisterToken(String email, String registerToken) {
         String verifiedEmail = redisTemplate.opsForValue().get(REGISTER_TOKEN_PREFIX + registerToken);
@@ -132,26 +129,6 @@ public class TokenProvider {
         redisTemplate.opsForValue().getAndDelete(REGISTER_TOKEN_PREFIX + registerToken);
     }
 
-    /**
-     * Set String Type
-     *
-     * @param key
-     * @param data
-     */
-    public void setValue(String key, String data) {
-        ValueOperations<String, String> operations = redisTemplate.opsForValue();
-        operations.set(key, data);
-    }
-
-    /**
-     * Get String Type
-     *
-     * @param key
-     */
-    public String getStringValue(String key) {
-        ValueOperations<String, String> operations = redisTemplate.opsForValue();
-        return operations.get(key);
-    }
 
     /**
      * Set Set Type
@@ -164,17 +141,6 @@ public class TokenProvider {
         for (String datum : data) {
             operations.add(key, datum);
         }
-    }
-
-    /**
-     * Get Set Type
-     *
-     * @param key
-     * @return
-     */
-    public Set<String> getSetValue(String key) {
-        SetOperations<String, String> operations = redisTemplate.opsForSet();
-        return operations.members(key);
     }
 
     /**
@@ -202,30 +168,6 @@ public class TokenProvider {
     }
 
     /**
-     * Set String Value And Expire Time
-     *
-     * @param key        user.id
-     * @param token      refreshToken
-     * @param expireDate expire date
-     */
-    public void setStringValueAndExpire(String key, String token, long expireDate) {
-        ValueOperations<String, String> operations = redisTemplate.opsForValue();
-        operations.set(key, token, expireDate, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * Delete Value With Key from Redis
-     *
-     * @param key
-     */
-    public void deleteKey(String key) {
-        redisTemplate.delete(key);
-//        if(redisTemplate.opsForValue().get(key) != null){
-//            redisTemplate.delete(key);
-//        }
-    }
-
-    /**
      * Delete Hash
      *
      * @param hashKey
@@ -233,17 +175,5 @@ public class TokenProvider {
      */
     public void deleteKey(String hashKey, String key) {
         redisTemplate.opsForHash().delete(hashKey, key);
-    }
-
-    /**
-     * Set Token BlackList to Redis
-     *
-     * @param token
-     * @param value
-     * @param expireTime
-     */
-    public void setTokenBlackList(String token, String value, long expireTime) {
-        ValueOperations<String, String> operations = redisTemplate.opsForValue();
-        operations.set(token, value, expireTime, TimeUnit.MILLISECONDS);
     }
 }
