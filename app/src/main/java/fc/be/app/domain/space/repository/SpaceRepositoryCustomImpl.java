@@ -32,10 +32,16 @@ public class SpaceRepositoryCustomImpl implements SpaceRepositoryCustom {
     }
 
     private BooleanExpression eqLeftSpaceAndMember(Boolean leftSpace, Long memberId) {
-        return joinedMember.leftSpace.eq(leftSpace).and(joinedMember.member.id.eq(memberId));
+        if (leftSpace != null && memberId != null) {
+            return joinedMember.leftSpace.eq(leftSpace).and(joinedMember.member.id.eq(memberId));
+        }
+        return null;
     }
 
     private BooleanExpression goeUpComingEndDate(LocalDate endDate, SpaceType type) {
+        if (endDate == null || type == null) {
+            return null;
+        }
         if (!SpaceType.UPCOMING.equals(type)) {
             return null;
         }
@@ -43,6 +49,9 @@ public class SpaceRepositoryCustomImpl implements SpaceRepositoryCustom {
     }
 
     private BooleanExpression ltPastEndDate(LocalDate endDate, SpaceType type) {
+        if (endDate == null || type == null) {
+            return null;
+        }
         if (!SpaceType.PAST.equals(type)) {
             return null;
         }
