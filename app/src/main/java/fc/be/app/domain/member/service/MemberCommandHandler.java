@@ -3,14 +3,14 @@ package fc.be.app.domain.member.service;
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.member.vo.AuthProvider;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MemberCommandHandler implements MemberCommand {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
