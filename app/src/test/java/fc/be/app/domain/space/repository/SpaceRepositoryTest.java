@@ -60,7 +60,7 @@ class SpaceRepositoryTest {
 
         // when
         List<Space> spaces = spaceRepository.findByEndDateAndMember(
-            LocalDate.of(2024, 1, 8), savedMember.getId(), false);
+            LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.PAST);
 
         // then
         assertThat(spaces).hasSize(2)
@@ -71,7 +71,7 @@ class SpaceRepositoryTest {
             );
     }
 
-    @DisplayName("주어진 날짜와 같거나 이후 날짜의 여행 스페이스들을 호촐한다.")
+    @DisplayName("기준일 기준하에 지난간 일정을 조회한다.")
     @Test
     void findByEndDateUpcoming() {
         // given
@@ -95,7 +95,7 @@ class SpaceRepositoryTest {
 
         // when
         List<Space> spaces = spaceRepository.findByEndDateAndMember(
-            LocalDate.of(2024, 1, 8), savedMember.getId(), true);
+            LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.UPCOMING);
 
         // then
         assertThat(spaces).hasSize(2)

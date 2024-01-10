@@ -1,10 +1,9 @@
 package fc.be.app.domain.space.service;
 
-import static fc.be.app.domain.member.exception.MemberErrorCode.*;
-import static fc.be.app.domain.space.exception.SpaceErrorCode.*;
+import static fc.be.app.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
+import static fc.be.app.domain.space.exception.SpaceErrorCode.SPACE_NOT_FOUND;
 
 import fc.be.app.domain.member.entity.Member;
-import fc.be.app.domain.member.exception.MemberErrorCode;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.space.dto.request.UpdateSpaceRequest.DateUpdateRequest;
@@ -55,7 +54,7 @@ public class SpaceService {
     public SpaceResponse updateSpaceByTitle(Long spaceId, TitleUpdateRequest updateRequest) {
         Space space = spaceRepository.findById(spaceId)
             .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
-        space.update(updateRequest.getTitle(), null, null);
+        space.updateByTitle(updateRequest.getTitle());
         return SpaceResponse.of(space);
     }
 
@@ -63,14 +62,12 @@ public class SpaceService {
     public SpaceResponse updateSpaceByDates(Long spaceId, DateUpdateRequest updateRequest) {
         Space space = spaceRepository.findById(spaceId)
             .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
-        space.update(null, updateRequest.getStartDate(), updateRequest.getEndDate());
+        space.updateByDates(updateRequest.getStartDate(), updateRequest.getEndDate());
         return SpaceResponse.of(space);
     }
 
     public List<SpaceResponse> findByEndDateAndMember(LocalDate currentDate, Long memberId, SpaceType type) {
-        boolean isUpcoming = SpaceType.UPCOMING.equals(type);
-
-        return spaceRepository.findByEndDateAndMember(currentDate, memberId, isUpcoming)
+        return spaceRepository.findByEndDateAndMember(currentDate, memberId, type)
             .stream()
             .map(SpaceResponse::of)
             .collect(Collectors.toList());

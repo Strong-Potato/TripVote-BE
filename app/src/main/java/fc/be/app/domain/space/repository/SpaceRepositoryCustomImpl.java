@@ -3,9 +3,10 @@ package fc.be.app.domain.space.repository;
 import static fc.be.app.domain.space.entity.QJoinedMember.joinedMember;
 import static fc.be.app.domain.space.entity.QSpace.space;
 
-import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import fc.be.app.domain.space.entity.Space;
+import fc.be.app.domain.space.vo.SpaceType;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,21 +18,34 @@ public class SpaceRepositoryCustomImpl implements SpaceRepositoryCustom {
 
     @Override
     public List<Space> findByEndDateAndMember(LocalDate endDate, Long memberId,
-        boolean isUpcoming) {
-        BooleanBuilder where = new BooleanBuilder();
-        where.and(joinedMember.leftSpace.eq(false)).and(joinedMember.member.id.eq(memberId));
-
-        if (isUpcoming) {
-            where.and(space.endDate.goe(endDate));
-        } else {
-            where.and(space.endDate.lt(endDate));
-        }
-
+        SpaceType type) {
         return queryFactory
             .selectFrom(space)
             .leftJoin(space.joinedMembers, joinedMember)
             .on(joinedMember.space.id.eq(space.id))
-            .where(where)
+            .where(
+                eqLeftSpaceAndMember(false, memberId),
+                goeUpComingEndDate(endDate, type),
+                ltPastEndDate(endDate, type)
+            )
             .fetch();
+    }
+
+    private BooleanExpression eqLeftSpaceAndMember(Boolean leftSpace, Long memberId) {
+        return joinedMember.leftSpace.eq(leftSpace).and(joinedMember.member.id.eq(memberId));
+    }
+
+    private BooleanExpression goeUpComingEndDate(LocalDate endDate, SpaceType type) {
+        if (!SpaceType.UPCOMING.equals(type)) {
+            return null;
+        }
+        return space.endDate.goe(endDate);
+    }
+
+    private BooleanExpression ltPastEndDate(LocalDate endDate, SpaceType type) {
+        if (!SpaceType.PAST.equals(type)) {
+            return null;
+        }
+        return space.endDate.lt(endDate);
     }
 }
