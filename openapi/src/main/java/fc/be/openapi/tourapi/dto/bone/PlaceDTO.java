@@ -1,5 +1,6 @@
 package fc.be.openapi.tourapi.dto.bone;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -15,6 +16,7 @@ public class PlaceDTO {
     private Integer id;
     private Integer contentTypeId;
     private String title;
+    @JsonProperty("location")
     private LocationDTO locationDTO;
     private String thumbnail;
     private String originalImage;
