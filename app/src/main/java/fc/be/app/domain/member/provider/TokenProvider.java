@@ -26,6 +26,7 @@ public class TokenProvider {
     private static final String BLOCKED_EMAIL_PREFIX = "blocked_email_";
     private static final Duration BLOCKED_EMAIL_DURATION = Duration.ofSeconds(300);
     private static final String REGISTER_TOKEN_PREFIX = "register_token_";
+    private static final Duration REGISTER_TOKEN_DURATION = Duration.ofMinutes(300);
 
     /**
      * generate and store code for later verification
@@ -102,7 +103,7 @@ public class TokenProvider {
     public String generateRegisterToken(String email) {
         String key = REGISTER_TOKEN_PREFIX + UUID.randomUUID();
         Boolean result;
-        while ((result = redisTemplate.opsForValue().setIfAbsent(key, email)) == null || result == false) {
+        while ((result = redisTemplate.opsForValue().setIfAbsent(key, email, REGISTER_TOKEN_DURATION)) == null || result == false) {
             key = REGISTER_TOKEN_PREFIX + UUID.randomUUID();
         }
         return key.substring(REGISTER_TOKEN_PREFIX.length());
@@ -114,10 +115,19 @@ public class TokenProvider {
      * @param email         email to be registered
      * @param registerToken token for member register
      * @return true if registerToken matches requested email
+     * @throws AuthException with TOKEN_EXPIRED when registerToken is outdated
+     * @throws AuthException when INCORRECT_CODE when registerToken is incorrect
      */
-    public boolean authenticateRegisterToken(String email, String registerToken) {
-        String verifiedEmail = redisTemplate.opsForValue().get(REGISTER_TOKEN_PREFIX + registerToken);
-        return email.equals(verifiedEmail);
+    public boolean authenticateRegisterToken(String email, String registerToken) throws AuthException {
+        String key = REGISTER_TOKEN_PREFIX + registerToken;
+        String verifiedEmail = redisTemplate.opsForValue().get(key);
+        if (verifiedEmail == null) {
+            throw new AuthException(AuthErrorCode.TOKEN_EXPIRED);
+        }
+        if (!verifiedEmail.equals(email)) {
+            throw new AuthException(AuthErrorCode.INCORRECT_CODE);
+        }
+        return true;
     }
 
     /**
@@ -126,7 +136,8 @@ public class TokenProvider {
      * @param registerToken token used for member register
      */
     public void removeRegisterToken(String registerToken) {
-        redisTemplate.opsForValue().getAndDelete(REGISTER_TOKEN_PREFIX + registerToken);
+        String key = REGISTER_TOKEN_PREFIX + registerToken;
+        redisTemplate.opsForValue().getAndDelete(key);
     }
 
 

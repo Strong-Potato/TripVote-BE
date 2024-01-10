@@ -1,6 +1,5 @@
 package fc.be.app.domain.member.service;
 
-import fc.be.app.domain.member.exception.AuthErrorCode;
 import fc.be.app.domain.member.exception.AuthException;
 import fc.be.app.domain.member.provider.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +25,7 @@ public class AuthCommandHandler implements AuthCommand {
 
     @Override
     public void authenticate(String email, String registerToken) throws AuthException {
-        boolean isAuthenticated = tokenProvider.authenticateRegisterToken(email, registerToken);
-        if (!isAuthenticated) {
-            throw new AuthException(AuthErrorCode.INCORRECT_TOKEN);
-        }
+        tokenProvider.authenticateRegisterToken(email, registerToken);
     }
 
     @Override
