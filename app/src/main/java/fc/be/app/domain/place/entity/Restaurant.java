@@ -30,4 +30,14 @@ public class Restaurant extends Place {
 
     @Comment("주차 시설")
     private String parking;
+
+    @SuppressWarnings("unused") // 실제 사용되나 인식 못함
+    public void update(Restaurant restaurant) {
+        super.update(restaurant);
+        this.firstMenu = restaurant.getFirstMenu();
+        this.openTime = restaurant.getOpenTime();
+        this.restDate = restaurant.getRestDate();
+        this.packing = restaurant.getPacking();
+        this.parking = restaurant.getParking();
+    }
 }

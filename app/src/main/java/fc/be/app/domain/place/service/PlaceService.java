@@ -3,7 +3,11 @@ package fc.be.app.domain.place.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import fc.be.app.domain.place.dto.*;
+import fc.be.app.domain.place.Place;
+import fc.be.app.domain.place.dto.PlaceInfoGetResponse;
+import fc.be.app.domain.place.dto.PlaceNearbyResponse;
+import fc.be.app.domain.place.dto.PlacePopularGetResponse;
+import fc.be.app.domain.place.dto.PlaceSearchResponse;
 import fc.be.app.domain.place.exception.PlaceException;
 import fc.be.app.domain.place.repository.PlaceRepository;
 import fc.be.openapi.tourapi.TourAPIService;
@@ -32,7 +36,30 @@ public class PlaceService {
     private final TourAPIDomainConverter tourAPIDomainConverter;
     private final PlaceRepository placeRepository;
 
+    @Transactional
+    public Place saveOrUpdatePlace(final int placeId, final int contentTypeId) {
+        Place newPlace = bringPlaceInfo(placeId, contentTypeId).toPlace();
+        Place existingPlace = placeRepository.findById(placeId).orElse(null);
+
+        if (existingPlace == null) {
+            log.info("새로운 여행지를 저장했습니다: {}", newPlace);
+            return placeRepository.save(newPlace);
+        } else if (newPlace.getModifiedTime().isAfter(existingPlace.getModifiedTime())) {
+            log.info("기존 여행지를 업데이트했습니다: {}", existingPlace);
+            existingPlace.update(newPlace);
+        } else {
+            log.info("기존 여행지가 최신입니다: {}", existingPlace);
+        }
+
+        return existingPlace;
+    }
+
     public PlaceInfoGetResponse bringPlaceInfo(final int placeId, final int contentTypeId) {
+        PlaceDTO place = getPlaceDTO(placeId, contentTypeId);
+        return new PlaceInfoGetResponse(place);
+    }
+
+    public PlaceDTO getPlaceDTO(int placeId, int contentTypeId) {
         Class<? extends PlaceDTO> placeChildClass = tourAPIDomainConverter.convertPlaceToChildDomain(contentTypeId);
 
         PlaceDTO place = ObjectMerger.merge(placeChildClass,
@@ -44,19 +71,7 @@ public class PlaceService {
         if (place == null) {
             throw new PlaceException(PLACE_NOT_LOADED);
         }
-
-        return new PlaceInfoGetResponse(place);
-    }
-
-    @Transactional
-    public boolean insertPlaceInfo(int placeId, PlaceInfoInsertRequest placeInfoInsertRequest) {
-        if (placeRepository.existsById(placeId)) {
-            log.info("이미 존재하는 placeId 입니다. Mysql DB에 저장되진 않습니다");
-            return false;
-        }
-
-        placeRepository.save(placeInfoInsertRequest.to(placeId));
-        return true;
+        return place;
     }
 
     public PlaceSearchResponse bringSearchKeywordResults(

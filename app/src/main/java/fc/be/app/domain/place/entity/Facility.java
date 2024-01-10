@@ -30,4 +30,14 @@ public class Facility extends Place {
 
     @Comment("주차 시설")
     private String parking;
+
+    @SuppressWarnings("unused") // 실제 사용되나 인식 못함
+    public void update(Facility facility) {
+        super.update(facility);
+        this.infoCenter = facility.getInfoCenter();
+        this.usefee = facility.getUsefee();
+        this.usetime = facility.getUsetime();
+        this.restdate = facility.getRestdate();
+        this.parking = facility.getParking();
+    }
 }

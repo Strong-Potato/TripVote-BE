@@ -24,7 +24,6 @@ import java.util.List;
 public class Place {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("장소 id")
     private Integer id;
 
@@ -55,7 +54,13 @@ public class Place {
     @Comment("장소 수정일")
     private LocalDateTime modifiedTime;
 
-    public void addImageToGallery(String subImage) {
-        gallery.add(subImage);
+    public void update(Place place) {
+        this.title = place.getTitle();
+        this.location = place.getLocation();
+        this.thumbnail = place.getThumbnail();
+        this.originalImage = place.getOriginalImage();
+        this.gallery.clear();
+        this.gallery.addAll(place.getGallery());
+        this.modifiedTime = place.getModifiedTime();
     }
 }

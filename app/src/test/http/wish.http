@@ -1,0 +1,26 @@
+## 찜(Wish)
+### 찜 추가 1 - 숙소
+POST http://localhost:8080/wishes
+Content-Type: application/json
+
+{
+  "memberId": {{memberId}},
+  "placeId": {{accommodationId}},
+  "contentTypeId": {{accommodationTypeId}}
+}
+
+### 찜 추가 2 - 음식점
+POST http://localhost:8080/wishes
+Content-Type: application/json
+
+{
+  "memberId": {{memberId}},
+  "placeId": {{restaurantId}},
+  "contentTypeId": {{restaurantTypeId}}
+}
+
+### 찜 목록 조회(다건)
+GET http://localhost:8080/wishes?page={{page}}&size={{size}}
+
+### 찜 목록 삭제(단건)
+DELETE http://localhost:8080/wishes/{{accommodationId}}

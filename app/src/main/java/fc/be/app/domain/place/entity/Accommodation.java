@@ -30,4 +30,14 @@ public class Accommodation extends Place {
 
     @Comment("주차 시설")
     private String parking;
+
+    @SuppressWarnings("unused") // 실제 사용되나 인식 못함
+    public void update(Accommodation accommodation) {
+        super.update(accommodation);
+        this.infoCenter = accommodation.getInfoCenter();
+        this.checkIn = accommodation.getCheckIn();
+        this.checkOut = accommodation.getCheckOut();
+        this.reservationUrl = accommodation.getReservationUrl();
+        this.parking = accommodation.getParking();
+    }
 }
