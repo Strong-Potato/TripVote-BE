@@ -8,7 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
+@DynamicUpdate
 @SuperBuilder
 @Entity
 @DiscriminatorValue("Leports")
@@ -33,4 +35,15 @@ public class Leports extends Place {
 
     @Comment("주차 시설")
     private String parking;
+
+    @SuppressWarnings("unused") // 실제 사용되나 인식 못함
+    public void update(Leports leports) {
+        super.update(leports);
+        this.infoCenter = leports.getInfoCenter();
+        this.openPeriod = leports.getOpenPeriod();
+        this.restDate = leports.getRestDate();
+        this.useTime = leports.getUseTime();
+        this.useFee = leports.getUseFee();
+        this.parking = leports.getParking();
+    }
 }

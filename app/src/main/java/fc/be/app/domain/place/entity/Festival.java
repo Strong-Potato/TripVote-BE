@@ -8,7 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
+@DynamicUpdate
 @SuperBuilder
 @Entity
 @DiscriminatorValue("Festival")
@@ -39,4 +41,17 @@ public class Festival extends Place {
 
     @Comment("이용 시간")
     private String usetime;
+
+    @SuppressWarnings("unused") // 실제 사용되나 인식 못함
+    public void update(Festival festival) {
+        super.update(festival);
+        this.sponsor = festival.getSponsor();
+        this.sponsorTel = festival.getSponsorTel();
+        this.startDate = festival.getStartDate();
+        this.endDate = festival.getEndDate();
+        this.playtime = festival.getPlaytime();
+        this.eventPlace = festival.getEventPlace();
+        this.homepage = festival.getHomepage();
+        this.usetime = festival.getUsetime();
+    }
 }
