@@ -17,3 +17,6 @@ spring:
     redis:
       host: ${REDISHOST}
       port: ${REDISPORT}
+
+cors:
+  allowed-origins: https://tripvote.site
