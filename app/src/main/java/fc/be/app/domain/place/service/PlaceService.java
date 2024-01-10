@@ -47,7 +47,6 @@ public class PlaceService {
         } else if (newPlace.getModifiedTime().isAfter(existingPlace.getModifiedTime())) {
             log.info("기존 여행지를 업데이트했습니다: {}", existingPlace);
             existingPlace.update(newPlace);
-            return placeRepository.save(existingPlace);
         } else {
             log.info("기존 여행지가 최신입니다: {}", existingPlace);
         }
