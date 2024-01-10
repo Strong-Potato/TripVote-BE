@@ -8,9 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.DynamicUpdate;
 
-@DynamicUpdate
 @SuperBuilder
 @Entity
 @DiscriminatorValue("Leports")
