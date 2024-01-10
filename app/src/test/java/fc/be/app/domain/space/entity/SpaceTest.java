@@ -12,13 +12,14 @@ class SpaceTest {
 
     @DisplayName("Space 엔티티의 title, date 값이 변경되는것을 체크한다.")
     @Test
-    void update() {
+    void updateByTitleAndDates() {
         // given
         Space space = Space.builder()
             .build();
 
         // when
-        space.update("여행", LocalDate.of(2024, 1, 3), LocalDate.of(2024, 1, 8));
+        space.updateByTitle("여행");
+        space.updateByDates(LocalDate.of(2024, 1, 3), LocalDate.of(2024, 1, 8));
 
         // then
         assertThat(space.getTitle()).isEqualTo("여행");
@@ -34,7 +35,7 @@ class SpaceTest {
             .build();
 
         // when then
-        assertThatThrownBy(() -> space.update("여행", LocalDate.of(2024, 1, 3),
+        assertThatThrownBy(() -> space.updateByDates(LocalDate.of(2024, 1, 3),
             LocalDate.of(2024, 1, 2)))
             .isInstanceOf(SpaceException.class)
             .hasMessageContaining("시작일자는 종료일자보다 늦거나 같아야 합니다.");

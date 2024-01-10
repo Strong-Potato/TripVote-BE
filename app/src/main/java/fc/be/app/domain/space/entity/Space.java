@@ -57,21 +57,17 @@ public class Space {
             .build();
     }
 
-    public void update(String title, LocalDate startDate, LocalDate endDate) {
+    public void updateByTitle(String title) {
         if (title != null && !title.isEmpty()) {
             this.title = title;
         }
+    }
 
-        if (startDate != null) {
-            this.startDate = startDate;
-        }
-
-        if (endDate != null) {
-            this.endDate = endDate;
-        }
-
+    public void updateByDates(LocalDate startDate, LocalDate endDate) {
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             throw new SpaceException(INVALID_START_DATE);
         }
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 }
