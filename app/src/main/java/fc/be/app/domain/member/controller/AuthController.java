@@ -55,7 +55,7 @@ public class AuthController {
     public ApiResponse<Void> register(@Valid @RequestBody RegisterRequest request) {
         MemberRegisterRequest memberRegisterRequest =
                 new MemberRegisterRequest(request.email(), request.password(), request.nickname(), request.profile());
-        authCommand.authenticate(request.token(), request.email());
+        authCommand.authenticate(request.email(), request.token());
         memberCommand.register(memberRegisterRequest);
         authCommand.removeRegisterToken(request.token());
         return ApiResponse.ok();
