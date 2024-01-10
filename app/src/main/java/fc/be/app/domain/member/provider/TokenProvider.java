@@ -38,10 +38,10 @@ public class TokenProvider {
      * @throws AuthException when target email is blocked due to frequent generate request
      */
     public String generateVerificationCode(String email) throws AuthException {
-        countVerificationCodeGeneration(email);
         if (isBlocked(email)) {
             throw new AuthException(AuthErrorCode.VERIFICATION_CODE_GENERATE_BLOCKED);
         }
+        countVerificationCodeGeneration(email);
         String key = VERIFICATION_CODE_PREFIX + email;
         String value = generateSecureRandomCode(VERIFICATION_CODE_LENGTH);
         redisTemplate.opsForValue().set(key, value, VERIFICATION_CODE_DURATION);
