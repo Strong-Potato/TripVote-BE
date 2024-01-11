@@ -27,10 +27,9 @@ import fc.be.app.domain.member.vo.AuthProvider;
  * @see org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver
  * @see org.springframework.security.core.annotation.AuthenticationPrincipal
  */
-public record UserPrincipal(Long id, String email, AuthProvider authProvider) {
-    public UserPrincipal(Long id, String email, AuthProvider authProvider) {
-        this.id = id;
-        this.email = email;
-        this.authProvider = authProvider;
-    }
+public record UserPrincipal(
+        Long id,
+        String email,
+        AuthProvider authProvider
+) {
 }

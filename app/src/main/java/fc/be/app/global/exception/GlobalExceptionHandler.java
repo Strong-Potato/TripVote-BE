@@ -41,16 +41,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
         String errorMessage = "Authentication Failed";
         if (ex instanceof OAuth2AuthenticationException exception) {
-            log.warn("[OAUTH_AUTHENTICATION_EXCEPTION] OAUTH_AUTHENTICATION FAILED : {}", ex.getCause());
+            log.warn("[OAUTH_AUTHENTICATION_EXCEPTION] OAUTH_AUTHENTICATION FAILED : {}", exception.getMessage(), exception.getCause());
             errorMessage = exception.getMessage();
         } else if (ex instanceof AuthenticationException exception) {
-            log.warn("[AUTHENTICATION_EXCEPTION] AUTHENTICATION FAILED : {}", ex.getCause());
-            if (exception instanceof BadCredentialsException) {
-                errorMessage = "이메일 또는 비밀번호를 확인해주세요.";
-            } else if (exception instanceof InsufficientAuthenticationException) {
-                errorMessage = "로그인을 먼저 해주세요.";
-            } else if (exception instanceof UsernameNotFoundException) {
-                errorMessage = "회원가입되지 않은 이메일입니다.";
+            log.warn("[AUTHENTICATION_EXCEPTION] AUTHENTICATION FAILED : {}", exception.getMessage(), exception.getCause());
+            switch (exception) {
+                case BadCredentialsException
+                        badCredentialsException -> errorMessage = "이메일 또는 비밀번호를 확인해주세요.";
+                case InsufficientAuthenticationException
+                        insufficientAuthenticationException -> errorMessage = "로그인을 먼저 해주세요.";
+                case UsernameNotFoundException
+                        usernameNotFoundException -> errorMessage = "회원가입되지 않은 이메일입니다.";
+                default -> {
+                }
             }
         }
         ProblemDetail problemDetail = createProblemDetail(ex, httpStatus, errorMessage, null, null, request);
