@@ -37,6 +37,9 @@ public class Place {
     @Embedded
     private Location location;
 
+    @Comment("장소 카테고리")
+    private String category;
+
     @Comment("검색 결과 제공용 썸네일 이미지")
     private String thumbnail;
 
