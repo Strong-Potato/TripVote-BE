@@ -1,13 +1,12 @@
 package fc.be.app.domain.review.controller;
 
-import fc.be.app.domain.review.dto.ReviewCreateRequest;
-import fc.be.app.domain.review.dto.ReviewCreateResponse;
-import fc.be.app.domain.review.dto.ReviewEditRequest;
-import fc.be.app.domain.review.dto.ReviewGetResponse;
+import fc.be.app.domain.review.dto.*;
 import fc.be.app.domain.review.service.ReviewService;
 import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,18 +27,33 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{reviewId}")
-    public ApiResponse<Void> deleteReview(@PathVariable Long reviewId) {
-        reviewService.deleteReview(reviewId);
-        return ApiResponse.ok();
+    public ApiResponse<Integer> deleteReview(@PathVariable Long reviewId) {
+        return ApiResponse.ok(reviewService.deleteReview(reviewId));
     }
 
-    @GetMapping("/{placeId}")
-    public ApiResponse<ReviewGetResponse> getPlaceReviews(@PathVariable Integer placeId) {
-        return ApiResponse.ok(reviewService.getPlaceReviews(placeId));
+    @GetMapping("/rating")
+    public ApiResponse<ReviewRatingResponse> getRatingAndReviewCount(
+            @Valid @RequestBody ReviewGetRequest reviewGetRequest
+    ) {
+        return ApiResponse.ok(reviewService.bringJsonReviewRatingAndCount(reviewGetRequest));
+    }
+
+    @GetMapping
+    public ApiResponse<ReviewGetResponse> getPlaceReviews(
+            @Valid @RequestBody ReviewGetRequest reviewGetRequest,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ApiResponse.ok(reviewService.bringJsonReviewInfo(reviewGetRequest,
+                PageRequest.of(page, size, Sort.by("visitedAt").descending())));
     }
 
     @GetMapping("/my")
-    public ApiResponse<ReviewGetResponse> getMemberReviews() {
-        return ApiResponse.ok(reviewService.getMemberReviews());
+    public ApiResponse<ReviewGetResponse> getMemberReviews(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ApiResponse.ok(reviewService.getMemberReviews(PageRequest.of(page, size,
+                Sort.by("visitedAt").descending())));
     }
 }
