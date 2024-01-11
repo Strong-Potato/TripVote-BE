@@ -3,45 +3,18 @@ POST http://localhost:8080/reviews
 Content-Type: application/json
 
 {
-  "placeDTO": {
-    "id": 3023167,
-    "contentTypeId": 32,
-    "title": "브라운스위트 신촌센트럴",
-    "locationDTO": {
-      "address": "서울특별시 마포구 서강로 137 (노고산동)",
-      "addressDetail": "14층",
-      "phone": "",
-      "areaCode": 1,
-      "sigunguCode": 13,
-      "zipCode": 4058,
-      "latitude": 37.5547215174,
-      "longitude": 126.9356085978
-    },
-    "thumbnail": "http://tong.visitkorea.or.kr/cms/resource/04/3023104_image2_1.jpg",
-    "originalImage": "http://tong.visitkorea.or.kr/cms/resource/04/3023104_image3_1.jpg",
-    "gallery": [
-      "http://tong.visitkorea.or.kr/cms/resource/01/3023101_image2_1.jpg",
-      "http://tong.visitkorea.or.kr/cms/resource/09/3023109_image2_1.jpg"
-    ],
-    "createdTime": "2023-10-24T10:00:50",
-    "modifiedTime": "2023-10-24T10:13:23",
-    "infoCenter": "02-777-5621",
-    "checkIn": "15:00",
-    "checkOut": "11:00",
-    "reservationUrl": "",
-    "parking": "주차가능"
-  },
-  "placeId": {{accommodationId}},
-  "contentTypeId": {{accommodationTypeId}},
-  "title" : "브라운스위트 신촌센트럴",
-  "areaCode": {{accommodationAreaCode}},
-  "rating": {{rating}},
-  "content": {{content}},
+  "placeId": 3023167,
+  "thumbnail": "testestest",
+  "contentTypeId": 32,
+  "title": "브라운스위트 신촌센트럴",
+  "areaCode": 1,
+  "rating": 3,
+  "content": "굿굿",
   "images": [
-      "http://tong.visitkorea.or.kr/cms/resource/01/3023101_image2_1.jpg",
-      "http://tong.visitkorea.or.kr/cms/resource/09/3023109_image2_1.jpg"
+    "http://tong.visitkorea.or.kr/cms/resource/01/3023101_image2_1.jpg",
+    "http://tong.visitkorea.or.kr/cms/resource/09/3023109_image2_1.jpg"
   ],
-  "visitedAt": {{visitedAt}}
+  "visitedAt": "2024-01-07"
 }
 
 ### 리뷰 수정
@@ -49,18 +22,21 @@ PATCH http://localhost:8080/reviews
 Content-Type: application/json
 
 {
-  "reviewId": {{reviewId}},
-  "rating": {{editRating}},
-  "content": {{editContent}},
-  "images": {{editImages}},
-  "visitedAt": {{editVisitedAt}}
+  "reviewId": 1,
+  "rating": 3,
+  "content": "굿굿",
+  "images": [
+    "http://tong.visitkorea.or.kr/cms/resource/01/3023101_image2_1.jpg",
+    "http://tong.visitkorea.or.kr/cms/resource/09/3023109_image2_1.jpg"
+  ],
+  "visitedAt": "2024-01-07"
 }
 
 ### 리뷰 삭제
-DELETE http://localhost:8080/reviews/{{reviewId}}
+DELETE http://localhost:8080/reviews/1
 
 ### 해당 장소 리뷰 조회
-GET http://localhost:8080/reviews/{{placeId}}
+GET http://localhost:8080/reviews/3023167
 
-### 마이페이지 리뷰 조회
+### 내가 쓴 리뷰 조회
 GET http://localhost:8080/reviews/my
