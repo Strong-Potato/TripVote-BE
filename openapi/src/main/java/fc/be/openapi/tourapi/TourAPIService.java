@@ -25,12 +25,16 @@ public class TourAPIService {
             final int numOfRows,
             final int areaCode,
             final int sigunguCode,
-            final int contentTypeId
+            final int contentTypeId,
+            final char sortedBy,
+            final String categoryCode
     ) {
         var result = tourAPICommunicator.callAreaBasedSync(
                 pageNo, numOfRows,
                 areaCode, sigunguCode,
-                contentTypeId
+                contentTypeId,
+                sortedBy,
+                categoryCode
         );
 
         if (result == null) {
@@ -56,14 +60,16 @@ public class TourAPIService {
             final int sigunguCode,
             final int contentTypeId,
             final String keyword,
-            final char sortedBy
+            final char sortedBy,
+            final String categoryCode
     ) {
         var result = tourAPICommunicator.callSearchKeyword(
                 pageNo, numOfRows,
                 areaCode, sigunguCode,
                 keyword,
                 contentTypeId,
-                sortedBy
+                sortedBy,
+                categoryCode
         );
 
         if (result == null) {
