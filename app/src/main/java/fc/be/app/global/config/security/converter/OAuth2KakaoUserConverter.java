@@ -1,8 +1,8 @@
 package fc.be.app.global.config.security.converter;
 
 import fc.be.app.domain.member.vo.AuthProvider;
-import fc.be.app.global.config.security.model.KakaoUser;
-import fc.be.app.global.config.security.model.ProviderUser;
+import fc.be.app.global.config.security.model.user.KakaoUser;
+import fc.be.app.global.config.security.model.user.ProviderUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 public class OAuth2KakaoUserConverter implements Converter<ProviderUserConvertRequest, ProviderUser> {

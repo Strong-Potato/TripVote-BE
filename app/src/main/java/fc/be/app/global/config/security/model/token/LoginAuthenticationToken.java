@@ -1,4 +1,4 @@
-package fc.be.app.global.config.security.provider.token;
+package fc.be.app.global.config.security.model.token;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;

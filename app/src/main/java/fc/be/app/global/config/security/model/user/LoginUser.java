@@ -1,4 +1,4 @@
-package fc.be.app.global.config.security.model;
+package fc.be.app.global.config.security.model.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;

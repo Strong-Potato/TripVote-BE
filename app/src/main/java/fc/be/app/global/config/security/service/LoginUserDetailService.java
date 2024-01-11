@@ -3,7 +3,7 @@ package fc.be.app.global.config.security.service;
 import fc.be.app.domain.member.service.MemberQuery;
 import fc.be.app.domain.member.service.MemberQuery.MemberRequest;
 import fc.be.app.domain.member.service.MemberQuery.MemberResponse;
-import fc.be.app.global.config.security.model.LoginUser;
+import fc.be.app.global.config.security.model.user.LoginUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

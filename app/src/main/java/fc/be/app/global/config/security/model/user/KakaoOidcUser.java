@@ -1,4 +1,4 @@
-package fc.be.app.global.config.security.model;
+package fc.be.app.global.config.security.model.user;
 
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;

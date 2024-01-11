@@ -1,9 +1,9 @@
 package fc.be.app.global.config.security.provider;
 
 import fc.be.app.domain.member.vo.AuthProvider;
-import fc.be.app.global.config.security.model.LoginUser;
-import fc.be.app.global.config.security.model.UserPrincipal;
-import fc.be.app.global.config.security.provider.token.LoginAuthenticationToken;
+import fc.be.app.global.config.security.model.user.LoginUser;
+import fc.be.app.global.config.security.model.user.UserPrincipal;
+import fc.be.app.global.config.security.model.token.LoginAuthenticationToken;
 import fc.be.app.global.config.security.service.LoginUserDetailService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;

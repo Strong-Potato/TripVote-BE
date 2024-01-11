@@ -9,7 +9,7 @@ import fc.be.app.global.config.security.handler.LoginAuthenticationFailureHandle
 import fc.be.app.global.config.security.handler.LoginAuthenticationSuccessHandler;
 import fc.be.app.global.config.security.handler.OAuth2AuthenticationFailureHandler;
 import fc.be.app.global.config.security.handler.OAuth2AuthenticationSuccessHandler;
-import fc.be.app.global.config.security.model.UserPrincipal;
+import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.config.security.provider.LoginAuthenticationProvider;
 import fc.be.app.global.config.security.service.CustomOAuth2UserService;
 import fc.be.app.global.config.security.service.CustomOidcUserService;

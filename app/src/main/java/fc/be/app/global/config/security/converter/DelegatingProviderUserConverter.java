@@ -1,10 +1,10 @@
 package fc.be.app.global.config.security.converter;
 
 import fc.be.app.global.config.security.exception.UnsupportedProviderException;
-import fc.be.app.global.config.security.model.KakaoOidcUser;
-import fc.be.app.global.config.security.model.KakaoUser;
-import fc.be.app.global.config.security.model.OAuth2ProviderUser;
-import fc.be.app.global.config.security.model.ProviderUser;
+import fc.be.app.global.config.security.model.user.KakaoOidcUser;
+import fc.be.app.global.config.security.model.user.KakaoUser;
+import fc.be.app.global.config.security.model.user.OAuth2ProviderUser;
+import fc.be.app.global.config.security.model.user.ProviderUser;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
