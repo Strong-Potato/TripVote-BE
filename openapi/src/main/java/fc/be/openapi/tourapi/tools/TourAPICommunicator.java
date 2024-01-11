@@ -147,7 +147,8 @@ public class TourAPICommunicator {
             final int sigunguCode,
             final String keyword,
             final int contentTypeId,
-            char sortedBy
+            final char sortedBy,
+            final String categoryCode
     ) {
         StringBuilder url = buildEssentialUrl(properties.getSearchKeyword(), contentTypeId, 0);
         url.append("&keyword=").append(keyword == null ? "_" : URLEncoder.encode(keyword, StandardCharsets.UTF_8));
@@ -165,8 +166,18 @@ public class TourAPICommunicator {
             url.append("&sigunguCode=").append(sigunguCode);
         }
 
-        if(sortedBy == 'O' || sortedBy == 'Q' || sortedBy == 'R'){
+        if (sortedBy == 'O' || sortedBy == 'Q' || sortedBy == 'R') {
             url.append("&arrange=").append(sortedBy);
+        }
+
+        if (categoryCode != null) {
+            url.append("&cat");
+            switch (categoryCode.length()) {
+                case 9 -> url.append("3=");
+                case 5 -> url.append("2=");
+                default -> url.append("1=");
+            }
+            url.append(categoryCode);
         }
 
         return fetchDataFromAPI(
@@ -224,20 +235,39 @@ public class TourAPICommunicator {
             final int numOfRows,
             final int areaCode,
             final int sigunguCode,
-            final int contentTypeId
+            final int contentTypeId,
+            final char sortedBy,
+            final String categoryCode
     ) {
         StringBuilder url = buildEssentialUrl(properties.getAreaBasedSyncList(), contentTypeId, 0);
-        url.append("&pageNo=").append(pageNo);
-        url.append("&numOfRows=").append(numOfRows);
-        url.append("&showflag=").append("1");
-        url.append("&arrange=").append("Q");
+
+        if (pageNo != 0 && numOfRows != 0) {
+            url.append("&pageNo=").append(pageNo);
+            url.append("&numOfRows=").append(numOfRows);
+        }
 
         if (areaCode != 0) {
             url.append("&areaCode=").append(areaCode);
         }
-        if (sigunguCode != 0) {
+
+        if (areaCode != 0 && sigunguCode != 0) {
             url.append("&sigunguCode=").append(sigunguCode);
         }
+
+        if (sortedBy == 'O' || sortedBy == 'Q' || sortedBy == 'R') {
+            url.append("&arrange=").append(sortedBy);
+        }
+
+        if (categoryCode != null) {
+            url.append("&cat");
+            switch (categoryCode.length()) {
+                case 9 -> url.append("3=");
+                case 5 -> url.append("2=");
+                default -> url.append("1=");
+            }
+            url.append(categoryCode);
+        }
+
 
         return fetchDataFromAPI(
                 url.toString(),
