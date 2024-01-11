@@ -1,7 +1,12 @@
 package fc.be.app.domain.space.entity;
 
 import fc.be.app.domain.member.entity.Member;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +18,7 @@ import org.hibernate.annotations.Comment;
 @Getter
 @Comment("여행 스페이스의 초대멤버")
 public class JoinedMember {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("초대멤버 id")
@@ -44,5 +50,9 @@ public class JoinedMember {
             .member(member)
             .leftSpace(false)
             .build();
+    }
+
+    public void updateLeftSpace(Boolean leftSpace) {
+        this.leftSpace = leftSpace;
     }
 }
