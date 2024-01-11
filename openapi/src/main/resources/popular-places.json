@@ -3,7 +3,7 @@
     "id": 3062089,
     "contentTypeId": 12,
     "title": "망원유수지체육공원",
-    "locationDTO": {
+    "location": {
       "address": "서울특별시 마포구 월드컵로25길 190 (망원동)",
       "addressDetail": "",
       "phone": "",
@@ -13,6 +13,7 @@
       "latitude": 37.556817805,
       "longitude": 126.8969787272
     },
+    "category": "A02020700",
     "thumbnail": "http://tong.visitkorea.or.kr/cms/resource/29/3062029_image2_1.jpg",
     "originalImage": "http://tong.visitkorea.or.kr/cms/resource/29/3062029_image3_1.jpg",
     "gallery": [
@@ -38,7 +39,7 @@
     "id": 3056315,
     "contentTypeId": 14,
     "title": "갤러리미르",
-    "locationDTO": {
+    "location": {
       "address": "서울특별시 종로구 율곡로1길 40 (사간동)",
       "addressDetail": "",
       "phone": "",
@@ -48,6 +49,7 @@
       "latitude": 37.5776613265,
       "longitude": 126.9807316132
     },
+    "category": "A02060500",
     "thumbnail": "http://tong.visitkorea.or.kr/cms/resource/00/3056300_image2_1.jpg",
     "originalImage": "http://tong.visitkorea.or.kr/cms/resource/00/3056300_image3_1.jpg",
     "gallery": [
@@ -71,10 +73,45 @@
     "parking": "없음"
   },
   {
+    "id": 3057921,
+    "contentTypeId": 15,
+    "title": "송현동 솔빛축제",
+    "location": {
+      "address": "서울특별시 종로구 송현동",
+      "addressDetail": "48-9 열린송현 녹지광장",
+      "phone": "02-6258-0310",
+      "areaCode": 1,
+      "sigunguCode": 23,
+      "zipCode": 3062,
+      "latitude": 37.5765031451,
+      "longitude": 126.9817010026
+    },
+    "category": "A02070200",
+    "thumbnail": "http://tong.visitkorea.or.kr/cms/resource/04/3057904_image2_1.png",
+    "originalImage": "http://tong.visitkorea.or.kr/cms/resource/04/3057904_image3_1.png",
+    "gallery": [
+      "http://tong.visitkorea.or.kr/cms/resource/03/3057903_image2_1.png",
+      "http://tong.visitkorea.or.kr/cms/resource/06/3057906_image2_1.png",
+      "http://tong.visitkorea.or.kr/cms/resource/07/3057907_image2_1.jpg",
+      "http://tong.visitkorea.or.kr/cms/resource/08/3057908_image2_1.png",
+      "http://tong.visitkorea.or.kr/cms/resource/09/3057909_image2_1.png"
+    ],
+    "createdTime": "2023-12-05T09:58:27",
+    "modifiedTime": "2023-12-05T15:04:36",
+    "sponsor": "서울특별시",
+    "sponsorTel": "02-6258-0310",
+    "startDate": "20231215",
+    "endDate": "20240121",
+    "playtime": "11:00 ~ 22:00 (조명연출 18:00 ~ 22:00) (행사운영 기간 휴무일없음)",
+    "eventPlace": "열린송현 녹지광장",
+    "homepage": "",
+    "usetime": "무료"
+  },
+  {
     "id": 3060933,
     "contentTypeId": 28,
     "title": "서서울호수공원물놀이장",
-    "locationDTO": {
+    "location": {
       "address": "서울특별시 양천구 남부순환로64길 26 (신월동)",
       "addressDetail": "신월야구장",
       "phone": "",
@@ -84,6 +121,7 @@
       "latitude": 37.5265729518,
       "longitude": 126.8327243255
     },
+    "category": "A03030700",
     "thumbnail": "http://tong.visitkorea.or.kr/cms/resource/61/3054261_image2_1.jpg",
     "originalImage": "http://tong.visitkorea.or.kr/cms/resource/61/3054261_image3_1.jpg",
     "gallery": [
@@ -111,7 +149,7 @@
     "id": 3023167,
     "contentTypeId": 32,
     "title": "브라운스위트 신촌센트럴",
-    "locationDTO": {
+    "location": {
       "address": "서울특별시 마포구 서강로 137 (노고산동)",
       "addressDetail": "14층",
       "phone": "",
@@ -121,6 +159,7 @@
       "latitude": 37.5547215174,
       "longitude": 126.9356085978
     },
+    "category": "B02010900",
     "thumbnail": "http://tong.visitkorea.or.kr/cms/resource/04/3023104_image2_1.jpg",
     "originalImage": "http://tong.visitkorea.or.kr/cms/resource/04/3023104_image3_1.jpg",
     "gallery": [
@@ -139,7 +178,7 @@
     "id": 3060939,
     "contentTypeId": 38,
     "title": "사운즈한남",
-    "locationDTO": {
+    "location": {
       "address": "서울특별시 용산구 대사관로 35 (한남동)",
       "addressDetail": "",
       "phone": "",
@@ -149,6 +188,7 @@
       "latitude": 37.5337695867,
       "longitude": 127.0020086956
     },
+    "category": "A04010600",
     "thumbnail": "http://tong.visitkorea.or.kr/cms/resource/47/3054347_image2_1.JPG",
     "originalImage": "http://tong.visitkorea.or.kr/cms/resource/47/3054347_image3_1.JPG",
     "gallery": [
@@ -174,7 +214,7 @@
     "id": 3060930,
     "contentTypeId": 39,
     "title": "코코몽키즈랜드 송파점",
-    "locationDTO": {
+    "location": {
       "address": "서울특별시 송파구 충민로 66 (문정동)",
       "addressDetail": "가든파이브 NC백화점 송파점 영관 6층",
       "phone": "",
@@ -184,6 +224,7 @@
       "latitude": 37.4776672007,
       "longitude": 127.1249768726
     },
+    "category": "A05020900",
     "thumbnail": "http://tong.visitkorea.or.kr/cms/resource/99/3053899_image2_1.jpg",
     "originalImage": "http://tong.visitkorea.or.kr/cms/resource/99/3053899_image3_1.jpg",
     "gallery": [
