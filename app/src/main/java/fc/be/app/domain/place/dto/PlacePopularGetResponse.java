@@ -18,8 +18,9 @@ public record PlacePopularGetResponse(
                     .contentTypeId(place.getContentTypeId())
                     .title(place.getTitle())
                     .thumbnail(place.getThumbnail())
-                    .areaCode(place.getLocationDTO().getAreaCode())
-                    .sigunguCode(place.getLocationDTO().getSigunguCode())
+                    .areaCode(place.getLocation().getAreaCode())
+                    .sigunguCode(place.getLocation().getSigunguCode())
+                    .category(place.getCategory())
                     .build()
             );
         }
@@ -30,7 +31,8 @@ public record PlacePopularGetResponse(
     private record PlacePopularGetResponseItem(
             Integer id, Integer contentTypeId,
             String title, String thumbnail,
-            Integer areaCode, Integer sigunguCode
+            Integer areaCode, Integer sigunguCode,
+            String category
     ) {
     }
 }

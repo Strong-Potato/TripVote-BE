@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-import static fc.be.openapi.config.TourAPIProperties.FORMATTTER;
+import static fc.be.openapi.config.TourAPIProperties.FORMATTER;
 
 
 @Component
@@ -19,7 +19,7 @@ public class DetailCommonMapper implements TourAPIMapper<PlaceDTO, DetailCommon1
                 .id(Integer.parseInt(item.contentid()))
                 .contentTypeId(Integer.parseInt(item.contenttypeid()))
                 .title(item.title())
-                .locationDTO(LocationDTO.builder()
+                .location(LocationDTO.builder()
                         .address(item.addr1())
                         .addressDetail(item.addr2())
                         .phone(item.tel())
@@ -29,10 +29,11 @@ public class DetailCommonMapper implements TourAPIMapper<PlaceDTO, DetailCommon1
                         .latitude(Double.parseDouble(item.mapy()))
                         .longitude(Double.parseDouble(item.mapx()))
                         .build())
+                .category(item.cat3())
                 .thumbnail(item.firstimage())
                 .originalImage(item.firstimage2())
-                .createdTime(LocalDateTime.parse(item.createdtime(), FORMATTTER))
-                .modifiedTime(LocalDateTime.parse(item.modifiedtime(), FORMATTTER))
+                .createdTime(LocalDateTime.parse(item.createdtime(), FORMATTER))
+                .modifiedTime(LocalDateTime.parse(item.modifiedtime(), FORMATTER))
                 .build();
     }
 }

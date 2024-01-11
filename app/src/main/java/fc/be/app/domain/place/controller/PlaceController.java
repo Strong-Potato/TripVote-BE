@@ -1,6 +1,7 @@
 package fc.be.app.domain.place.controller;
 
 import fc.be.app.domain.place.dto.PlaceInfoGetResponse;
+import fc.be.app.domain.place.dto.PlaceNearbyResponse;
 import fc.be.app.domain.place.dto.PlacePopularGetResponse;
 import fc.be.app.domain.place.dto.PlaceSearchResponse;
 import fc.be.app.domain.place.service.PlaceService;
@@ -35,7 +36,8 @@ public class PlaceController {
             @RequestParam(defaultValue = "0") int sigunguCode,
             @RequestParam(defaultValue = "0") int contentTypeId,
             @RequestParam(defaultValue = "_") String keyword,
-            @RequestParam(defaultValue = "R") char arrange
+            @RequestParam(defaultValue = "R") char arrange,
+            @RequestParam(required = false) String categoryCode
     ) {
         return ApiResponse.ok(
                 placeService.bringSearchKeywordResults(
@@ -43,23 +45,30 @@ public class PlaceController {
                         areaCode, sigunguCode,
                         contentTypeId,
                         keyword,
-                        arrange
+                        arrange,
+                        categoryCode
                 )
         );
     }
 
-    @GetMapping("/nearby")
-    public ApiResponse<PlaceSearchResponse> sendNearbyPlaces(
+    @GetMapping("/nearby/{pageNo}")
+    public ApiResponse<PlaceNearbyResponse> sendNearbyPlaces(
+            @PathVariable int pageNo,
             @RequestParam(defaultValue = "10") int numOfRows,
-            @RequestParam int areaCode,
-            @RequestParam int sigunguCode,
-            @RequestParam int contentTypeId
+            @RequestParam(defaultValue = "0") int areaCode,
+            @RequestParam(defaultValue = "0") int sigunguCode,
+            @RequestParam int contentTypeId,
+            @RequestParam(defaultValue = "R") char arrange,
+            @RequestParam(required = false) String categoryCode
     ) {
         return ApiResponse.ok(
                 placeService.bringNearbyPlaces(
+                        pageNo,
                         numOfRows,
                         areaCode, sigunguCode,
-                        contentTypeId
+                        contentTypeId,
+                        arrange,
+                        categoryCode
                 )
         );
     }

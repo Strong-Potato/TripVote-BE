@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 @ConfigurationProperties(prefix = "tourapi")
 public class TourAPIProperties {
 
-    public static final DateTimeFormatter FORMATTTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
     private String baseUrl;
     private String areaBasedSyncList;

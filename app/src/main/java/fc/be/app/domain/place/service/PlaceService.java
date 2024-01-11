@@ -79,7 +79,8 @@ public class PlaceService {
             int areaCode, int sigunguCode,
             int contentTypeId,
             String keyword,
-            char sortedBy
+            char sortedBy,
+            String categoryCode
     ) {
 
         List<PlaceDTO> places = tourAPIService.bringSearchKeywordDomains(
@@ -87,7 +88,8 @@ public class PlaceService {
                 areaCode, sigunguCode,
                 contentTypeId,
                 keyword,
-                sortedBy
+                sortedBy,
+                categoryCode
         );
 
         if (places == null) {
@@ -98,15 +100,18 @@ public class PlaceService {
     }
 
     public PlaceNearbyResponse bringNearbyPlaces(
-            int numOfRows, int areaCode,
-            int sigunguCode, int contentTypeId
+            int pageNo, int numOfRows,
+            int areaCode, int sigunguCode,
+            int contentTypeId,
+            char sortedBy,
+            String categoryCode
     ) {
-        int defaultPageNo = 1;
-
         List<PlaceDTO> places = tourAPIService.bringAreaBasedSyncDomains(
-                defaultPageNo, numOfRows,
+                pageNo, numOfRows,
                 areaCode, sigunguCode,
-                contentTypeId
+                contentTypeId,
+                sortedBy,
+                categoryCode
         );
 
         if (places == null) {
