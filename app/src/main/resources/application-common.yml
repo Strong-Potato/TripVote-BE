@@ -1,0 +1,35 @@
+--- ## OAuth2 설정
+spring:
+  security:
+    oauth2:
+      client:
+        registration: ## 클라이언트 설정
+          kakao:
+            client-id: ${KAKAOCLIENTID}
+            client-secret: ${KAKAOSECRET}
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            client-name: ${KAKAOCLIENTNAME}
+            redirect-uri: ${KAKAOREDIRECTURI}
+            scope: profile_nickname,profile_image,account_email
+            #scope: openid,profile_nickname,profile_image,account_email
+        provider: ## 공급자 설정
+          kakao:
+            issuer-uri: https://kauth.kakao.com
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            #user-info-uri: https://kapi.kakao.com/v1/oidc/userinfo # oidc 설정시
+            jwk-set-uri: https://kauth.kakao.com/.well-known/jwks.json
+            user-name-attribute: id
+            #user-name-attribute: sub # oidc 설정시
+
+--- ## AWS SES 설정
+spring:
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2
+      credentials:
+        access-key: ${AWSSESACCESSKEY}
+        secret-key: ${AWSSESSECRETKEY}

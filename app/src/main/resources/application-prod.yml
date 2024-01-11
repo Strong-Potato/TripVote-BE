@@ -12,3 +12,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+  data:
+    redis:
+      host: ${REDISHOST}
+      port: ${REDISPORT}
+
+cors:
+  allowed-origins: https://tripvote.site
