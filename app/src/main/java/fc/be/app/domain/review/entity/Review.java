@@ -2,10 +2,10 @@ package fc.be.app.domain.review.entity;
 
 
 import fc.be.app.domain.member.entity.Member;
+import fc.be.app.domain.place.Place;
 import fc.be.app.domain.review.dto.ReviewEditRequest;
 import fc.be.app.global.entity.BaseTimeEntity;
 import fc.be.app.global.util.ListImagesConverter;
-import fc.be.domain.place.Place;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
