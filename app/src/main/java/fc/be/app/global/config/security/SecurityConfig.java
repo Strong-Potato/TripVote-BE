@@ -88,7 +88,7 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(authRequest -> authRequest
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .anyRequest().authenticated());
+                        .anyRequest().permitAll());
 
         // 예외 처리 필터
         httpSecurity
