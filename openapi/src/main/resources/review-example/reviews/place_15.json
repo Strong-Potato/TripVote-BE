@@ -1,0 +1,44 @@
+{
+  "reviews": [
+    {
+      "nickname": "R. C. N",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjWtTnNBEDG5wPdInYVMuoK7vU_ico5Ul5EKaEtgWnAUVNpY=s128-c0x00000000-cc-rp-mo-ba5",
+      "rating": 4,
+      "visitedAt": "2020-01-16",
+      "content": "올해는 눈이 귀해서 강원도겨울축제들이  전부 연기되었는데  다행히 태백눈꽃축제는\n예정대로 개최되어  인공눈,얼음으로  구경\n하고왔어요~~ 태백산 등반후 축제장은 온통\n인파에 묻혀 사진 찍기도힘듦~ 우린 금욜미리\n당골광장구경~  ㅎㅎ한가하게 사진찍고~\n체험하고~~좋았읍니다~ 태백산 등반과\n함께한  태백눈꽃축제  넘좋았어요~~",
+      "isGoogle": true
+    },
+    {
+      "nickname": "꼬막이",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjURKEYjsIBFht57bCV5xOb6INtyZ9TBOWQBxP8HSnAgRnw=s128-c0x00000000-cc-rp-mo-ba5",
+      "rating": 3,
+      "visitedAt": "2019-01-21",
+      "content": "춥다. ㅎ. 강풍 불어 썰매가 폐장. 쩝 주차장이 넓어서 좋음. 무료 셔틀로 행사장까지 태워 줌",
+      "isGoogle": true
+    },
+    {
+      "nickname": "박재선",
+      "profileImage": "https://lh3.googleusercontent.com/a/ACg8ocJAdXkBQGKFUOOPGiiuAEI-PI6JxQQ-5xZ0C37kmDOHQjk=s128-c0x00000000-cc-rp-mo-ba4",
+      "rating": 3,
+      "visitedAt": "2019-01-20",
+      "content": "아이들과 눈썰매장에서 즐거운시간 보냈네요\n대형 눈 조각상들도 보고 좋은 시간 갖었어요\n눈이 안 온지 꽤나되서 좀 설경을 볼수없어 약간 아쉽지만\n축제기간 눈오면 한번더 가면 좋을듯 시퍼요",
+      "isGoogle": true
+    },
+    {
+      "nickname": "김학봉",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjWmempGQQI-ONtQIANtEJuNUedbDYtZUkNaHx2aoU1R6Mp8=s128-c0x00000000-cc-rp-mo-ba5",
+      "rating": 5,
+      "visitedAt": "2019-01-19",
+      "content": "대학생들이 인공눈으로 만든  조각상들이 아주 멋지네요.먹거리와 구경거리도 좋아요.일찍 가야 축제장까지 차가 들어 갈 수가 있어서 편해요.주차장은 여러군데가 있어요.늦게 가면 초입에서 셔틀버스을 타고 가야합니다.걸어서는 20분 정도 걸린다고 하네요.",
+      "isGoogle": true
+    },
+    {
+      "nickname": "taehee won",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjXY0IEqQpe7nhn9wJik_HeFvgsaX7PqAFLRwD0CXfJBmKE=s128-c0x00000000-cc-rp-mo",
+      "rating": 4,
+      "visitedAt": "2018-02-05",
+      "content": "태백시에서 주관하는 눈축제.. 젊은 대학생들이 만든 작품이 시대에 때라 눈을 가지고 여러모양의 조각을 만든다.. 태약의 후예.. 싸이 강낭스타일. 라바 등등",
+      "isGoogle": true
+    }
+  ]
+}

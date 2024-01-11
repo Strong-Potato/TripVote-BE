@@ -8,3 +8,9 @@ tourapi:
   mobile-os: "ETC"
   mobile-app: "TripVote"
   render-type: "json"
+
+google:
+  places:
+    api:
+      key: AIzaSyAXK_DZg5TzPIGCghmZQCKyW5pPeIWoCxY
+      base-url: "https://places.googleapis.com"
