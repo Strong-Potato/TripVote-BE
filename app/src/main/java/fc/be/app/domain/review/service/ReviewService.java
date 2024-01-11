@@ -1,7 +1,7 @@
 package fc.be.app.domain.review.service;
 
 import fc.be.app.domain.member.entity.Member;
-import fc.be.app.domain.place.Place;
+import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.domain.review.dto.*;
 import fc.be.app.domain.review.entity.Review;
@@ -20,13 +20,17 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final PlaceService placeService;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public ReviewCreateResponse createReview(ReviewCreateRequest reviewCreateRequest) {
-        //todo [Review] Security 적용 -1
         placeService.saveOrUpdatePlace(reviewCreateRequest.placeId(),
                 reviewCreateRequest.contentTypeId());
-        return ReviewCreateResponse.from(reviewCreateRequest.to(Member.builder().build()));
+
+        //todo [Review] Security 적용 -1
+        Member member = memberRepository.save(Member.builder().build());
+        return ReviewCreateResponse.from(
+                reviewRepository.save(reviewCreateRequest.to(member)));
     }
 
     @Transactional
