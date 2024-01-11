@@ -28,15 +28,20 @@ GET http://localhost:8080/places/search/{{pageNo}}
 GET http://localhost:8080/places/search/{{pageNo}}?contentTypeId={{spotTypeId}}
 
 ### keyword 포함
-GET http://localhost:8080/places/search/{{pageNo}}?arrange=R&contentTypeId={{accommodationTypeId}}
+GET http://localhost:8080/places/search/{{pageNo}}?keyword={{keyword}}
 
+### category만 포함(카페)
+GET http://localhost:8080/places/search/{{pageNo}}?categoryCode={{cafeCategoryCode}}
 
 ## 주변 장소 목록(areaSyncBased)
 ### spot
-GET http://localhost:8080/places/nearby?areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&contentTypeId={{spotTypeId}}
+GET http://localhost:8080/places/nearby/{{pageNo}}?areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&contentTypeId={{spotTypeId}}
 
 ### accommodation
-GET http://localhost:8080/places/nearby?areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&contentTypeId={{accommodationTypeId}}
+GET http://localhost:8080/places/nearby/{{pageNo}}?areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&contentTypeId={{accommodationTypeId}}
+
+### restaurant + 카페
+GET http://localhost:8080/places/nearby/{{pageNo}}?areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&contentTypeId={{restaurantTypeId}}&categoryCode={{cafeCategoryCode}}&numOfRows=2
 
 
 ## 30일간 인기 장소 목록
