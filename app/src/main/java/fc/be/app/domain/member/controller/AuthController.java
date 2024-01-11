@@ -31,7 +31,7 @@ public class AuthController {
     private final MailService mailService;
 
     @PostMapping("/register/send-email")
-    public ApiResponse<Void> sendCodeToEmail(@Valid @RequestBody SendEmailRequest request) {
+    public ApiResponse sendCodeToEmail(@Valid @RequestBody SendEmailRequest request) {
         String targetEmail = request.email();
         MemberRequest memberRequest = new MemberRequest(targetEmail);
         boolean isExists = memberQuery.exists(memberRequest);
@@ -44,7 +44,7 @@ public class AuthController {
     }
 
     @PostMapping("/register/check-token")
-    public ApiResponse<Void> verifyEmail(@Valid @RequestBody CheckTokenRequest request) {
+    public ApiResponse verifyEmail(@Valid @RequestBody CheckTokenRequest request) {
         String targetEmail = request.email();
         String verificationCode = request.code();
         String registerToken = authCommand.generateAndStoreToken(targetEmail, verificationCode);
@@ -52,7 +52,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ApiResponse<Void> register(@Valid @RequestBody RegisterRequest request) {
+    public ApiResponse register(@Valid @RequestBody RegisterRequest request) {
         MemberRegisterRequest memberRegisterRequest =
                 new MemberRegisterRequest(request.email(), request.password(), request.nickname(), request.profile());
         authCommand.authenticate(request.email(), request.token());
