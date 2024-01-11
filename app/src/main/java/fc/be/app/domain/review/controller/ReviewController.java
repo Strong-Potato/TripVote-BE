@@ -34,7 +34,7 @@ public class ReviewController {
     }
 
     @GetMapping("/{placeId}")
-    public ApiResponse<ReviewGetResponse> getPlaceReviews(@PathVariable Long placeId) {
+    public ApiResponse<ReviewGetResponse> getPlaceReviews(@PathVariable Integer placeId) {
         return ApiResponse.ok(reviewService.getPlaceReviews(placeId));
     }
 

@@ -1,7 +1,12 @@
 package fc.be.app.domain.review.service;
 
+import fc.be.app.domain.member.entity.Member;
+import fc.be.app.domain.place.Place;
+import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.domain.review.dto.*;
 import fc.be.app.domain.review.entity.Review;
+import fc.be.app.domain.review.exception.ReviewErrorCode;
+import fc.be.app.domain.review.exception.ReviewException;
 import fc.be.app.domain.review.repository.ReviewRepository;
 import fc.be.app.global.http.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,18 +19,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
+    private final PlaceService placeService;
 
     @Transactional
     public ReviewCreateResponse createReview(ReviewCreateRequest reviewCreateRequest) {
         //todo [Review] Security 적용 -1
-        return ReviewCreateResponse.from(reviewRepository.save(
-                reviewCreateRequest.to(reviewCreateRequest, null)));
+        placeService.saveOrUpdatePlace(reviewCreateRequest.placeId(),
+                reviewCreateRequest.contentTypeId());
+        return ReviewCreateResponse.from(reviewCreateRequest.to(Member.builder().build()));
     }
 
     @Transactional
     public ApiResponse<ReviewEditResponse> editReview(ReviewEditRequest reviewEditRequest) {
         Review review = reviewRepository.findById(reviewEditRequest.reviewId())
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new ReviewException(ReviewErrorCode.REVIEW_NOT_FOUND));
 
         review.editReview(reviewEditRequest);
         return ApiResponse.ok(ReviewEditResponse.from(reviewRepository.save(review)));
@@ -37,7 +44,7 @@ public class ReviewService {
         reviewRepository.deleteById(reviewId);
     }
 
-    public ApiResponse<ReviewGetResponse> getPlaceReviews(Long placeId) {
+    public ApiResponse<ReviewGetResponse> getPlaceReviews(Integer placeId) {
         return ApiResponse.ok(ReviewGetResponse.from(
                 reviewRepository.findByPlaceId(placeId)
         ));
