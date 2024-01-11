@@ -1,11 +1,14 @@
 package fc.be.openapi.tourapi.dto.bone;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class LocationDTO {
     private String address;
     private String addressDetail;
@@ -15,16 +18,4 @@ public class LocationDTO {
     private Integer zipCode;
     private Double latitude;
     private Double longitude;
-
-    @Builder
-    public LocationDTO(String address, String addressDetail, String phone, Integer areaCode, Integer sigunguCode, Integer zipCode, Double latitude, Double longitude) {
-        this.address = address;
-        this.addressDetail = addressDetail;
-        this.phone = phone;
-        this.areaCode = areaCode;
-        this.sigunguCode = sigunguCode;
-        this.zipCode = zipCode;
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
 }
