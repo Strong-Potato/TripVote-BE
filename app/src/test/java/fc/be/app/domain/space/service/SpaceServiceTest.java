@@ -5,14 +5,17 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import fc.be.app.domain.member.entity.Member;
+import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.space.dto.request.UpdateSpaceRequest.DateUpdateRequest;
 import fc.be.app.domain.space.dto.request.UpdateSpaceRequest.TitleUpdateRequest;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
 import fc.be.app.domain.space.entity.JoinedMember;
+import fc.be.app.domain.space.entity.Journey;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.space.repository.JoinedMemberRepository;
+import fc.be.app.domain.space.repository.JourneyRepository;
 import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.SpaceType;
 import java.time.LocalDate;
@@ -40,9 +43,13 @@ class SpaceServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private JourneyRepository journeyRepository;
+
     @AfterEach
     void tearDown() {
         joinedMemberRepository.deleteAllInBatch();
+        journeyRepository.deleteAllInBatch();
         spaceRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
     }
@@ -139,6 +146,32 @@ class SpaceServiceTest {
         assertThat(spaceResponse.getEndDate()).isEqualTo(updateRequest.getEndDate());
     }
 
+    @DisplayName("여행 스페이스의 시작일자와 종료일자에 대한 값을 업데이트를 한다.")
+    @Test
+    void updateSpaceWithDatesAndUpdateJourney() {
+        // given
+        Space space = createSpace(LocalDate.of(2024, 1, 7), LocalDate.of(2024, 1, 10));
+        Space savedSpace = spaceRepository.save(space);
+
+        List<Journey> journeys = Journey.createJourneys(LocalDate.of(2024, 1, 7),
+            LocalDate.of(2024, 1, 10), savedSpace);
+
+        journeyRepository.saveAll(journeys);
+
+        DateUpdateRequest updateRequest = DateUpdateRequest.builder()
+            .startDate(LocalDate.of(2024, 1, 6))
+            .endDate(LocalDate.of(2024, 1, 8))
+            .build();
+
+        // when
+        SpaceResponse spaceResponse = spaceService.updateSpaceByDates(savedSpace.getId(),
+            updateRequest);
+
+        // then
+        assertThat(spaceResponse.getStartDate()).isEqualTo(updateRequest.getStartDate());
+        assertThat(spaceResponse.getEndDate()).isEqualTo(updateRequest.getEndDate());
+    }
+
     @DisplayName("이미 지난간 시점의 여행 스페이스 리스트를 가져온다.")
     @Test
     void getSpaceListByPast() {
@@ -209,6 +242,85 @@ class SpaceServiceTest {
                 tuple(space1.getTitle(), space1.getStartDate(), space1.getEndDate()),
                 tuple(space2.getTitle(), space2.getStartDate(), space2.getEndDate())
             );
+    }
+
+    @DisplayName("여행스페이스 방에서 나간다.(정상케이스)")
+    @Test
+    void exitSpace() {
+        // given
+        Space space = createSpace(LocalDate.of(2024, 1, 7), LocalDate.of(2024, 1, 10));
+        spaceRepository.save(space);
+
+        Member member = Member.builder()
+            .nickname("tester")
+            .build();
+        Member savedMember = memberRepository.save(member);
+
+        JoinedMember joinedMember = createJoinedMember(space, member);
+        joinedMemberRepository.save(joinedMember);
+
+        // when then
+        spaceService.exitSpace(space.getId(), savedMember.getId());
+    }
+
+    @DisplayName("여행스페이스 방에서 나간다.(해당 여행스페이스가 존재하지 않을경우)")
+    @Test
+    void exitSpaceWithNoSpace() {
+        // given
+        Space space = createSpace(LocalDate.of(2024, 1, 7), LocalDate.of(2024, 1, 10));
+        spaceRepository.save(space);
+
+        Member member = Member.builder()
+            .nickname("tester")
+            .build();
+        Member savedMember = memberRepository.save(member);
+
+        JoinedMember joinedMember = createJoinedMember(space, member);
+        joinedMemberRepository.save(joinedMember);
+
+        // when then
+        assertThatThrownBy(() -> spaceService.exitSpace(space.getId() + 1, savedMember.getId()))
+            .isInstanceOf(SpaceException.class)
+            .hasMessageContaining("여행스페이스 정보가 존재하지 않습니다.");
+    }
+
+    @DisplayName("여행스페이스 방에서 나간다.(해당 멤버가 존재하지 않을경우)")
+    @Test
+    void exitSpaceWithNoMember() {
+        // given
+        Space space = createSpace(LocalDate.of(2024, 1, 7), LocalDate.of(2024, 1, 10));
+        spaceRepository.save(space);
+
+        Member member = Member.builder()
+            .nickname("tester")
+            .build();
+        Member savedMember = memberRepository.save(member);
+
+        JoinedMember joinedMember = createJoinedMember(space, member);
+        joinedMemberRepository.save(joinedMember);
+
+        // when then
+        assertThatThrownBy(() -> spaceService.exitSpace(space.getId(), savedMember.getId() + 1))
+            .isInstanceOf(MemberException.class)
+            .hasMessageContaining("해당 사용자가 존재하지 않습니다.");
+    }
+
+    @DisplayName("여행스페이스 방에서 나간다.(해당 여행스페이스에 초대되어 있지 않는 경우)")
+    @Test
+    void exitSpaceWithNoJoinedMember() {
+        // given
+        Space space = createSpace(LocalDate.of(2024, 1, 7), LocalDate.of(2024, 1, 10));
+        spaceRepository.save(space);
+
+        Member member = Member.builder()
+            .nickname("tester")
+            .build();
+        Member savedMember = memberRepository.save(member);
+
+        // when then
+        assertThatThrownBy(() -> spaceService.exitSpace(space.getId(), savedMember.getId()))
+            .isInstanceOf(SpaceException.class)
+            .hasMessageContaining("해당 여행스페이스의 초대되어 있지 않습니다.");
     }
 
     private JoinedMember createJoinedMember(Space space1, Member member) {
