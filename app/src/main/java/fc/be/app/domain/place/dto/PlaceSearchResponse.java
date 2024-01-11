@@ -10,7 +10,7 @@ import java.util.List;
 public record PlaceSearchResponse(
         List<Item> places
 ) {
-    public static PlaceSearchResponse from(List<PlaceDTO> places) {
+    public static PlaceSearchResponse from(List<? extends PlaceDTO> places) {
         List<Item> items = new ArrayList<>();
 
         for (var place : places) {
@@ -19,7 +19,8 @@ public record PlaceSearchResponse(
                     .contentTypeId(place.getContentTypeId())
                     .title(place.getTitle())
                     .thumbnail(place.getThumbnail())
-                    .location(place.getLocationDTO())
+                    .location(place.getLocation())
+                    .category(place.getCategory())
                     .build()
             );
         }
@@ -32,7 +33,8 @@ public record PlaceSearchResponse(
             Integer contentTypeId,
             String title,
             String thumbnail,
-            LocationDTO location
+            LocationDTO location,
+            String category
     ) {
     }
 }
