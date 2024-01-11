@@ -2,7 +2,7 @@ package fc.be.app.global.config.security.service;
 
 import fc.be.app.domain.member.service.MemberCommand;
 import fc.be.app.global.config.security.converter.Converter;
-import fc.be.app.global.config.security.model.ProviderUser;
+import fc.be.app.global.config.security.model.user.ProviderUser;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

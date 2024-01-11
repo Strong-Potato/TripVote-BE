@@ -5,7 +5,7 @@ import fc.be.app.domain.member.service.MemberCommand.ProviderMemberRegisterReque
 import fc.be.app.domain.member.vo.AuthProvider;
 import fc.be.app.global.config.security.converter.Converter;
 import fc.be.app.global.config.security.converter.ProviderUserConvertRequest;
-import fc.be.app.global.config.security.model.ProviderUser;
+import fc.be.app.global.config.security.model.user.ProviderUser;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

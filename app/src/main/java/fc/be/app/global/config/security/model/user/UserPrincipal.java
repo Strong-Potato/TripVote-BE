@@ -1,4 +1,4 @@
-package fc.be.app.global.config.security.model;
+package fc.be.app.global.config.security.model.user;
 
 import fc.be.app.domain.member.vo.AuthProvider;
 

@@ -2,7 +2,7 @@ package fc.be.app.global.config.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fc.be.app.domain.member.dto.LoginRequest;
-import fc.be.app.global.config.security.provider.token.LoginAuthenticationToken;
+import fc.be.app.global.config.security.model.token.LoginAuthenticationToken;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
