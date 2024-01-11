@@ -1,4 +1,4 @@
-package fc.be.domain.review.dto;
+package fc.be.app.domain.review.dto;
 
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.place.Place;
