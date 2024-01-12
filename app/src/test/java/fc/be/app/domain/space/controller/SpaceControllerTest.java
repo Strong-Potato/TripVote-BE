@@ -7,6 +7,7 @@ import fc.be.app.domain.space.dto.response.SpaceResponse;
 import fc.be.app.domain.space.service.SpaceService;
 import fc.be.app.global.config.security.SecurityAppConfig;
 import fc.be.app.global.config.security.SecurityConfig;
+import fc.be.app.global.config.security.filter.JwtAuthenticationFilter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = SpaceController.class,
         excludeFilters = {
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {SecurityConfig.class, SecurityAppConfig.class})
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {SecurityConfig.class, SecurityAppConfig.class, JwtAuthenticationFilter.class})
         },
         excludeAutoConfiguration = {
                 SecurityAutoConfiguration.class,
