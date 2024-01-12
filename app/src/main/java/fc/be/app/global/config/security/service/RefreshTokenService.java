@@ -37,7 +37,7 @@ public class RefreshTokenService {
             // no value
             return false;
         }
-        Long id = userPrincipal.id(); // TODO: access-token이 같으면 user-id도 당연히 같다고 보아야 하지 않을까?
+        Long id = userPrincipal.id();
         String clientIp = details.getClientIp();
         String userAgent = details.getUserAgent();
 
