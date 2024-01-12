@@ -1,31 +1,25 @@
 package fc.be.app.domain.space.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
-
-import fc.be.app.config.TestQueryDslConfig;
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.space.entity.JoinedMember;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.vo.SpaceType;
-import java.time.LocalDate;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
+
 @ActiveProfiles("test")
-@Import(TestQueryDslConfig.class)
 @DataJpaTest
 class SpaceRepositoryTest {
-
-    @Autowired
-    private TestEntityManager entityManager;
 
     @Autowired
     private SpaceRepository spaceRepository;
