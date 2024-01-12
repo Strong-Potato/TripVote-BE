@@ -1,5 +1,7 @@
-package fc.be.app.domain.space.entity;
+package fc.be.app.domain.vote.entity;
 
+import fc.be.app.domain.member.entity.Member;
+import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.vo.VoteStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -21,7 +23,7 @@ public class Vote {
     @Comment("투표 id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "space_id")
     @Comment("여행스페이스 식별자")
     private Space space;
@@ -33,7 +35,20 @@ public class Vote {
     @Comment("투표상태")
     private VoteStatus status;
 
+    @ManyToOne
+    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @Comment("투표를 만든 사람")
+    private Member owner;
+
     @OneToMany(mappedBy = "vote")
     @Comment("후보지")
     private List<Candidate> candidates;
+
+    @OneToMany(mappedBy = "vote")
+    private List<VotedMember> votedMembers;
+
+    public void addCandidate(Candidate candidate) {
+        candidate.setVote(this);
+        this.candidates.add(candidate);
+    }
 }

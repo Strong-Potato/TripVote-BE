@@ -1,8 +1,9 @@
-package fc.be.app.domain.space.entity;
+package fc.be.app.domain.vote.entity;
 
 import fc.be.app.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -26,4 +27,17 @@ public class VotedMember {
     @JoinColumn(name = "member_id")
     @Comment("투표한 멤버 id")
     private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "vote_id")
+    @Comment("투표 id")
+    private Vote vote;
+
+    @Builder
+    private VotedMember(Long id, Candidate candidate, Member member, Vote vote) {
+        this.id = id;
+        this.candidate = candidate;
+        this.member = member;
+        this.vote = vote;
+    }
 }

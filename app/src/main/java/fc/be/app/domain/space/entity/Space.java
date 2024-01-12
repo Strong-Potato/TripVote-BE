@@ -1,20 +1,18 @@
 package fc.be.app.domain.space.entity;
 
-import static fc.be.app.domain.space.exception.SpaceErrorCode.INVALID_START_DATE;
-
 import fc.be.app.domain.space.exception.SpaceException;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import java.time.LocalDate;
-import java.util.List;
+import fc.be.app.domain.vote.entity.Vote;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import static fc.be.app.domain.space.exception.SpaceErrorCode.INVALID_START_DATE;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
