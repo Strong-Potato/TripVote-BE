@@ -27,7 +27,6 @@ public class Candidate {
     private Member member;
 
     @OneToMany(mappedBy = "candidate")
-    @JoinColumn(name = "voted_id")
     @Comment("후보에 투표한 회원 id(FK)")
     private List<VotedMember> votedMember;
 

@@ -1,20 +1,24 @@
 package fc.be.app.domain.space.repository;
 
-import static fc.be.app.domain.space.entity.QJoinedMember.joinedMember;
-import static fc.be.app.domain.space.entity.QSpace.space;
-
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.vo.SpaceType;
+import jakarta.persistence.EntityManager;
+
 import java.time.LocalDate;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+import static fc.be.app.domain.space.entity.QJoinedMember.joinedMember;
+import static fc.be.app.domain.space.entity.QSpace.space;
+
 public class SpaceRepositoryCustomImpl implements SpaceRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+
+    public SpaceRepositoryCustomImpl(EntityManager entityManager) {
+        this.queryFactory = new JPAQueryFactory(entityManager);
+    }
 
     @Override
     public List<Space> findByEndDateAndMember(LocalDate endDate, Long memberId,
