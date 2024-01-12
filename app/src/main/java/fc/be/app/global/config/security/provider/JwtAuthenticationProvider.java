@@ -1,6 +1,7 @@
 package fc.be.app.global.config.security.provider;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -12,6 +13,7 @@ import fc.be.app.global.config.security.properties.TokenProperties;
 import fc.be.app.global.config.security.service.RefreshTokenService;
 import fc.be.app.global.util.JwtService;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -61,6 +63,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             }
         } catch (JWTVerificationException ex) {
             throw new InvalidJwtException(ex.getMessage(), ex);
+        } catch (JWTCreationException ex) {
+            throw new InternalAuthenticationServiceException(ex.getMessage(), ex);
         }
         return authResult;
     }

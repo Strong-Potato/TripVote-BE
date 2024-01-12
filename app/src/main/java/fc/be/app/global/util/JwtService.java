@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -36,7 +37,7 @@ public class JwtService {
         this.tokenProperties = tokenProperties;
     }
 
-    public String generateAccessToken(UserPrincipal userPrincipal) {
+    public String generateAccessToken(UserPrincipal userPrincipal) throws JWTCreationException {
         String subject = userPrincipal.email();
         Map<String, Map<String, ?>> claim = new HashMap<>();
         Map<String, Object> authenticationMap = objectMapper.convertValue(userPrincipal,
@@ -50,7 +51,7 @@ public class JwtService {
         return generateToken(subject, claim, arrayClaim, Long.parseLong(tokenProperties.getAccessTokenExpireTime()));
     }
 
-    public String generateAccessToken(UserPrincipal userPrincipal, Collection<? extends GrantedAuthority> authorities) {
+    public String generateAccessToken(UserPrincipal userPrincipal, Collection<? extends GrantedAuthority> authorities) throws JWTCreationException {
         String subject = userPrincipal.email();
         Map<String, Map<String, ?>> claim = new HashMap<>();
         Map<String, Object> authenticationMap = objectMapper.convertValue(userPrincipal,
@@ -63,7 +64,7 @@ public class JwtService {
         return generateToken(subject, claim, arrayClaim, Long.parseLong(tokenProperties.getAccessTokenExpireTime()));
     }
 
-    private String generateToken(String subject, Map<String, Map<String, ?>> claim, Map<String, String[]> arrayClaim, long expireSecond) {
+    private String generateToken(String subject, Map<String, Map<String, ?>> claim, Map<String, String[]> arrayClaim, long expireSecond) throws JWTCreationException {
         LocalDateTime now = LocalDateTime.now();
         JWTCreator.Builder builder = JWT.create();
         builder.withSubject(subject);

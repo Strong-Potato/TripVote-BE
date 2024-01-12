@@ -1,5 +1,6 @@
 package fc.be.app.global.config.security.handler;
 
+import com.auth0.jwt.exceptions.JWTCreationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fc.be.app.global.config.security.model.token.LoginAuthenticationToken;
 import fc.be.app.global.config.security.model.user.UserPrincipal;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -41,7 +43,12 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
         UserPrincipal principal = (UserPrincipal) loginAuthentication.getPrincipal();
 
         // response
-        String accessToken = jwtService.generateAccessToken(principal);
+        String accessToken;
+        try {
+            accessToken = jwtService.generateAccessToken(principal);
+        } catch (JWTCreationException ex) {
+            throw new InternalAuthenticationServiceException(ex.getMessage(), ex);
+        }
         CookieUtil.addCookie(response, tokenProperties.getAccessTokenName(), accessToken, Integer.parseInt(tokenProperties.getAccessTokenCookieExpireTime()));
 
         String refreshToken = refreshTokenService.refresh(accessToken, principal, (AuthenticationDetails) loginAuthentication.getDetails());
