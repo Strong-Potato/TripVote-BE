@@ -7,7 +7,6 @@ import fc.be.app.domain.space.dto.response.SpaceResponse;
 import fc.be.app.domain.space.service.SpaceService;
 import fc.be.app.global.config.security.SecurityAppConfig;
 import fc.be.app.global.config.security.SecurityConfig;
-import fc.be.app.global.config.security.filter.JwtAuthenticationFilter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
