@@ -13,11 +13,9 @@ import static java.lang.Boolean.FALSE;
 
 public record ReviewCreateRequest(
         @Positive Integer placeId,
-        @NotNull String thumbnail,
         @NotNull Integer contentTypeId,
         @NotNull String title,
-        @NotNull Integer areaCode,
-        @Min(1) Integer rating,
+        @Min(1) @Max(5) Integer rating,
         @NotBlank String content,
         List<String> images,
         @PastOrPresent LocalDate visitedAt
