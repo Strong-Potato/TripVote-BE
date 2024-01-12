@@ -77,7 +77,7 @@ public class JwtService {
         builder
                 .withIssuer(issuer)
                 .withIssuedAt(now.atZone(ZoneId.systemDefault()).toInstant())
-                .withExpiresAt(now.atZone(ZoneId.systemDefault()).plus(expireSecond, ChronoUnit.SECONDS).toInstant());
+                .withExpiresAt(now.atZone(ZoneId.systemDefault()).plusSeconds(expireSecond).toInstant());
         return builder.sign(algorithm);
     }
 

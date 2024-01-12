@@ -36,7 +36,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authentication;
         TokenPair tokenPair = (TokenPair) jwtAuthentication.getCredentials();
         AuthenticationDetails details = (AuthenticationDetails) authentication.getDetails();
-        JwtAuthenticationToken authResult = null;
+        JwtAuthenticationToken authResult;
         try {
             DecodedJWT decodedJwt = jwtService.verify(tokenPair.accessToken());
             UserPrincipal userPrincipal =

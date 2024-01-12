@@ -47,11 +47,7 @@ public class RefreshTokenService {
             // expired
             return false;
         }
-        if (!storedRefreshToken.equals(requestedRefreshToken)) {
-            // invalid
-            return false;
-        }
-        return true;
+        return storedRefreshToken.equals(requestedRefreshToken);
     }
 
     /**
