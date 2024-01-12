@@ -7,7 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum SpaceErrorCode {
     SPACE_NOT_FOUND(404, "SPACE_NOT_FOUND", "여행스페이스 정보가 존재하지 않습니다."),
-    INVALID_START_DATE(400, "INVALID_START_DATE", "시작일자는 종료일자보다 늦거나 같아야 합니다.");
+    INVALID_START_DATE(400, "INVALID_START_DATE", "시작일자는 종료일자보다 늦거나 같아야 합니다."),
+    SPACE_NOT_INVITE(404, "SPACE_NOT_INVITE", "해당 여행스페이스의 초대되어 있지 않습니다.");
 
     private final Integer responseCode;
     private final String title;

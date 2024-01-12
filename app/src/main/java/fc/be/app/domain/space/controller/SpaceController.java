@@ -1,17 +1,16 @@
 package fc.be.app.domain.space.controller;
 
 import fc.be.app.domain.space.dto.request.UpdateSpaceRequest;
+import fc.be.app.domain.space.dto.response.JourneyResponse;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
 import fc.be.app.domain.space.service.SpaceService;
 import fc.be.app.domain.space.vo.SpaceType;
 import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +30,7 @@ public class SpaceController {
 
     @PostMapping
     public ApiResponse<SpaceResponse> createSpace() {
-        //todo 로그인 구현 시 @authenticationprincipal 어노테이션 등으로 변경할 예정
+        // todo 로그인 구현 시 @AuthenticationPrincipal 어노테이션 등으로 변경할 예정
         Long memberId = 1L;
         return ApiResponse.created(spaceService.createSpace(memberId));
     }
@@ -63,4 +62,19 @@ public class SpaceController {
             memberId, type);
         return ApiResponse.ok(spaceResponses);
     }
+
+    @PutMapping("/{spaceId}/exit")
+    public ApiResponse exitSpace(@PathVariable Long spaceId) {
+        // todo 로그인 구현 시 @AuthenticationPrincipal 어노테이션 등으로 변경할 예정
+        Long memberId = 1L;
+        spaceService.exitSpace(spaceId, memberId);
+        return ApiResponse.ok();
+    }
+
+    @GetMapping("/{spaceId}/journey")
+    public ApiResponse<List<JourneyResponse>> getJourneyForSpace(@PathVariable Long spaceId) {
+        List<JourneyResponse> journeyResponses = spaceService.getJourneyForSpace(spaceId);
+        return ApiResponse.ok(journeyResponses);
+    }
+
 }

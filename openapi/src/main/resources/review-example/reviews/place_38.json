@@ -1,0 +1,44 @@
+{
+  "reviews": [
+    {
+      "nickname": "Yong",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjUnHHE4AvMH13NmroGKp7brmHKXmn2gp96iWUJS_6Slzzk=s128-c0x00000000-cc-rp-mo-ba4",
+      "rating": 5,
+      "visitedAt": "2023-12-30",
+      "content": "한국에서 가장 유명하고 사람들이 많이 방문하는 백화점 중 한곳. 지하에는 큰 규모의 식품전문섹터가 있고 위쪽으로는 많은 매장들과 함께 예쁘게 꾸며놓은 공간이있다. 매년 크리스마스가되면 크리스마스 장식을 해서 사람이 엄청 몰리고 화제가 된다.\n꼭 크리스마스 시즌이 아니어도 구경하러 방문해도 좋다.",
+      "isGoogle": true
+    },
+    {
+      "nickname": "Sunah Noh",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjUjvSW-hzRPx6hj-NHT9d6beDb0vyZFhfBHcO6-slLlng=s128-c0x00000000-cc-rp-mo-ba6",
+      "rating": 5,
+      "visitedAt": "2023-12-23",
+      "content": "넘 죠아요\n돈 있으면 천국 돈 없어도 구경 할 것 많음!\n음식은 쏘쏘 잘 골라야한다\n옷과 신발은 크리스마스시즌이라 재고가 많이\n없네요",
+      "isGoogle": true
+    },
+    {
+      "nickname": "서군",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjWjWtVslEuZEmesHKZCTkWUfsYe820BMawcBN3chri_XoqC=s128-c0x00000000-cc-rp-mo-ba7",
+      "rating": 5,
+      "visitedAt": "2023-11-15",
+      "content": "예약은 조기종료되어 방문 워크인으로 해당 전시회장 앞에서 QR로 접속하여 순번이 정해집니다\n\n11시부터 가능하다고 나와있지만 방문 전 네이버 블로그에서 QR코드 찾으셔서 URL만 따로 사파리나 인터넷창으로 미리 띄워놓으시길 바랍니다\n\n현장에서 접속하시면 이미 많은 사람들의 대기 순번이 있으며 11시보다 조금 빨리 예약을 받고 있어요. 제가 방문했던 당일 기준 10시 45분부터 예약창이 열렸습니다\n\n10시50분쯤 예약 걸어놨는데 1900번대였고 입장까지 3시간 정도 소요되었으니 참고하시길 바래요!\n\n전체적으로 사진 찍을 스팟이 많고, 평일 오전에도 사람이 굉장히 많으니 미리 블로그나 웹서핑 후 사진찍을 곳 정해가시면 시간 절약할 수 있으실겁니다",
+      "isGoogle": true
+    },
+    {
+      "nickname": "J여의도라이프",
+      "profileImage": "https://lh3.googleusercontent.com/a/ACg8ocLBhDR8mknwMRlqbYM0nLq5U2BwvH6jcreAFFUpq0eB=s128-c0x00000000-cc-rp-mo-ba4",
+      "rating": 5,
+      "visitedAt": "2023-11-02",
+      "content": "서울 관광중인 외국인들이 꽤 많습니다. 외관 만큼이나 인테리어도 훌륭하고, 시즌별 이벤트도 있어 사진 찍기도 좋습니다. 지금은 디즈니 테마로 꾸며 있고 음악도 발랄합니다. 주말이면 종종 공연을 하기도 합니다. 곳곳에 앉을 곳이 있고, 식당 및 카페도 많습니다.\n+++++++++\n20231101 크리스마스 사진을 추가했습니다",
+      "isGoogle": true
+    },
+    {
+      "nickname": "쿠키/Cookie",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjVqS6sYMnZmxBzzuJ-kXqY98Hli1Pw5fs-zSEU6Ou-GUeE=s128-c0x00000000-cc-rp-mo",
+      "rating": 5,
+      "visitedAt": "2023-10-22",
+      "content": "파이브가이즈 입점했다해서 갔다왔어요\n햄버거는 절반정도까지가 맛있고 나머지 먹을땐 느끼해서 힘든감이 있어요ㅠ\n웨이팅은 평일기준 확실히 점심시간에는 많은데 2시쯤 되니까 많이 줄었어요\n디즈니 스토어도 갔다오고 5층 정원은 크리스마스로 공사중이라서 아쉬웠던...\n더현대는 항상 새로운 음식점과 볼거리가 바뀌어서 좋은거 같아요 👍",
+      "isGoogle": true
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "reviews": [
+    {
+      "nickname": "MARI LEE",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjUxFPeMUAxQ-z_fSj0nDQICLIKJfOhQer8M6XGsOVVfrg=s128-c0x00000000-cc-rp-mo-ba5",
+      "rating": 3,
+      "visitedAt": "2024-01-08",
+      "content": "드디이 전주성에 방문했네요.\n리그운영중이 아닌 비수기에 문이 닫혀있어서 아쉬운 마음으로  밖에서만 보고 갑니다.\n경기를 한번 보러 왔었으면 좋았을텐데..\n우선\n겉으로 보여지는 모습은 외관 페인트라던가 정비가 필요해 보였습니다.\n그리고.명색이 월드컵 경기장인데 주변 입지가 너무 시골스러운 모습이어서 조금 놀랐어요.",
+      "isGoogle": true
+    },
+    {
+      "nickname": "Jueon",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjUxAFjqKWOPUyoEf13yIyUP_EvQg7Wt-1mfK6F3YIoJ3IY=s128-c0x00000000-cc-rp-mo-ba6",
+      "rating": 5,
+      "visitedAt": "2023-06-07",
+      "content": "전주월드컵경기장은 되게 신기했던 게 원정석 게이트가 따로 떨어져 있었다.\n\n수원, 울산, 서울만 하더라도 위에 사진처럼 저렇게 올라가서 쭉 한 바퀴 돌면 원정석 게이트가 나오는데 전주월드컵경기장은 저기로 가면 바로 E석 게이트가 나와서 굉장히 당황스러웠다.\n\n전주 원정 가는 축구팬들은 꼭 주의하길...\n\n본인 아무것도 모르고 수원 머플러랑 유니폼 다 두르고 저기로 갔다가 다시 돌아왔는데 지금 생각해 보면 전북팬들이 무슨 생각 했을까 싶다.\n전주월드컵경기장 원정석 2열 시야.\n\n빅버드 n석 2열보다 전주성 원정석 2열이 경기장이랑 훨씬 가깝고 시야 괜찮다.\n무엇보다 좌석에 컵홀더가 있다는 게 진짜 놀라웠다.\n\n응원석에는 스탠딩바도 있고 좌석 색깔도 전북현대 메인 색깔인 진한 초록으로 깔아놔서 너무 예뻤다.\n\n제발 빅버드도 좌석 리모델링...",
+      "isGoogle": true
+    },
+    {
+      "nickname": "ji young choi",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjX_1GRbHdrOLr1W9HEh2UfKFVfeRwzWGxEfzlyCLihYwKzv=s128-c0x00000000-cc-rp-mo",
+      "rating": 5,
+      "visitedAt": "2023-06-06",
+      "content": "현대  울산  경기 보러 갔어요.\n날씨가 정말 좋았고  제가 응원하는 전주현대가 이겨서 더욱 신났어요.\n이 날 27000 여명이  왔었네요",
+      "isGoogle": true
+    },
+    {
+      "nickname": "YH B",
+      "profileImage": "https://lh3.googleusercontent.com/a/ACg8ocIqEOVQC9YLF3RSpJuAxKY1G2ZaSxvxQRs9QZFF43JM=s128-c0x00000000-cc-rp-mo-ba6",
+      "rating": 5,
+      "visitedAt": "2022-10-23",
+      "content": "국제규격의 축구장 및\n골프장 그리고 각종 인라인장 및 대형행사가\n매년개최되는 경기장으로 전북인의 사랑을 받는곳입니다.",
+      "isGoogle": true
+    },
+    {
+      "nickname": "맛돌이",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjVCbtiQQTPKtwdgQCjJOt-UWVW5yW_hO9EEyh_jltAH7pic=s128-c0x00000000-cc-rp-mo-ba4",
+      "rating": 5,
+      "visitedAt": "2022-06-28",
+      "content": "집근처라 아이들과 자주가는데\n진짜 주차하기도 좋고\n아이들과 운동하기도 좋아요\n간식은 필수입니다\n편의점이 안보여요.ㅎ\n대신 근처에 맛있는 간장게장집이 있으니\n꼭 가보세요\n축구보고 밥먹는 코스로 유명하답니다",
+      "isGoogle": true
+    }
+  ]
+}

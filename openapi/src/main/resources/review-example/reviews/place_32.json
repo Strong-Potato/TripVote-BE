@@ -1,0 +1,44 @@
+{
+  "reviews": [
+    {
+      "nickname": "이정희",
+      "profileImage": "https://lh3.googleusercontent.com/a/ACg8ocLEh8ydcKucioQxwUypDv0a0Rt79bAggnnBVGGid1F0=s128-c0x00000000-cc-rp-mo",
+      "rating": 5,
+      "visitedAt": "2023-12-30",
+      "content": "역시 신라스테이는 객실도 깔끔하고  모든것이 깨끗해서 제일 맘에 들었습니다\n\n새로 신설 된지 얼마 되지 않은것으로 보였고  분위기도 최고였습니다\n또 가고 싶습니다",
+      "isGoogle": true
+    },
+    {
+      "nickname": "HanJae Lee",
+      "profileImage": "https://lh3.googleusercontent.com/a/ACg8ocLA2eh7bpsrrh21KzLg2MN_vWTPjp1Ey6MU2PMox8Fi=s128-c0x00000000-cc-rp-mo",
+      "rating": 5,
+      "visitedAt": "2023-12-22",
+      "content": "\"그랜드 더블룸 2박\"\n\n객실, 화장실 다 깨끗하고, 로비의 직원분들 친절하십니다.\n조식도 가짓수는 엄~청 많진 않지만 다양하고 맛있습니다.\n\n위치는 도심 외곽에 있어서 조용하지만, 주요 관광지랑은 거리가 좀 있습니다.\n\n대체적으로 매우 만족합니다.",
+      "isGoogle": true
+    },
+    {
+      "nickname": "안현정",
+      "profileImage": "https://lh3.googleusercontent.com/a/ACg8ocJ_uH5c4NLmTqKyB4SGgSPmh_50uWEoNklv9o8K6V6_=s128-c0x00000000-cc-rp-mo-ba3",
+      "rating": 4,
+      "visitedAt": "2023-09-24",
+      "content": "시설이나 인테리어 현대적이고 깔끔합니다.\n리버뷰는 허헙 벌판과 강뷰라 딱히 추천할만큼은 아니예요.\n침구상태도좀고 프리미어 트윈 시티뷰였는데 싱글침대두개요 쇼파배드가 있어서 성인2  아이1  정도까지 무리없어보입니다.\n시티뷰는 근처 아파트와 너무 가까워서 저녁에는 커튼을 내내 치고 있어야합니다.\n근처에 스타필드와 국회도서관 영화관등 편의시설이 훌륭하고 식당도 많아서 위치는 괜찮았습니다.\n조식은 맛은 나쁘지않으나 음식 가지수나 종류가 다양하지못해 아쉽습니다. 딱 가격만큼합니다.\n저렴한 가격을 생각한다면 추천합니다.\n\n참 수영장은 9월까지 오픈이니 10월이후 방문시에는 운영하지않는다는것을 참고하세요",
+      "isGoogle": true
+    },
+    {
+      "nickname": "Mission City",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjWoerA7ODNtZgiJHMrnR3qixPozzu23J8kgXk-4a5n3WzQ=s128-c0x00000000-cc-rp-mo-ba5",
+      "rating": 5,
+      "visitedAt": "2023-08-31",
+      "content": "평일 점심 뷔페는 명지 신도시 통틀어 최고의 가성비입니다. 음식의 퀄리티는 5성급 호텔 최상의 주방장 급의 맛입니다. 일주일에 한 번 먹어도 축복이라 생각될 가격임. 제발 가격 올리지 마세요..  점심에 직원 전체 회식 계획중입니다. 맛을 아시는 분이라면 음식에 무슨 짓을 했는지 알 수 있어요.\n\n중식 이 가격이면 미친거임..",
+      "isGoogle": true
+    },
+    {
+      "nickname": "켁크KEK",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjUmFqiVgSkT658ou9NmNURi2FhMe7kpTkOPx0p-nduojVA=s128-c0x00000000-cc-rp-mo-ba5",
+      "rating": 5,
+      "visitedAt": "2023-08-10",
+      "content": "말그대로 서부산쪽오시면 숙박하기좋아요.\n깡통시장  영도 송도  이쪽여행할때 좋네요.\n복잡하지않고 계획신도시라  거리도 깔끔해요.\n단 수영장 유료네요.\n예약할때 이런얘기가 있었으면 여기 안왔을듯요.\nㅡㅡ\n2시간이용하는데  어른 3만원 초등이하 18000원\nㅎㅎㅎ\n요즘 호텔은 다그런가요?\n하지만 호텔내 침구와 어메너티 방 구조가 잘빠져서 역시 신라 라는말이 절로 나왔어요.\n변기가 예술인점이  비행기 변기처럼 압력이 세게 내려갑니다.ㅎㅎ 냄새유입도 없고  깔끔하게 관리될것같아서 탐나더라구요.\n전반적으로 굉장히 편하게 숙박했습니다",
+      "isGoogle": true
+    }
+  ]
+}
