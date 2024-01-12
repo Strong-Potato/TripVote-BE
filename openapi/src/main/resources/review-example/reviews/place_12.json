@@ -1,0 +1,44 @@
+{
+  "reviews": [
+    {
+      "nickname": "양남권",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjXKLHouosuPNJOc4SEWQJL_qjWKJzKQMihuUljqCdDGjCc=s128-c0x00000000-cc-rp-mo-ba7",
+      "rating": 4,
+      "visitedAt": "2022-09-23",
+      "content": "아이들 데리고 둘러 볼만한 곳입니다 농원을 이쁘게 잘 가꾸어 놓고 감귤도 팔고 놀이터도 갖추어져 있어서 불편함이 없어 보입니다\n사진도 많이찍고 얘들이 넘 좋아합니다 동물들도 있고",
+      "isGoogle": true
+    },
+    {
+      "nickname": "G.U Luv",
+      "profileImage": "https://lh3.googleusercontent.com/a/ACg8ocLvgh82b_8JEBONpxmoU38YeOuYGf71QJb5ae3uyfPe=s128-c0x00000000-cc-rp-mo",
+      "rating": 5,
+      "visitedAt": "2021-11-11",
+      "content": "한곳에서 다양한 체험 가능한곳~!\n다음번에도 다시 찾아올 의향 200% 입니다~!!\n감귤도 따고 모노레일도 타며 흑돼지랑 오리 먹이도 주고\n생태체험하며 다양한 동물들도 보고 곤충관에서 애벌레도 만져봤네요~~\n아이가 넘 좋아해서 담번 제주 방문때도 올 예정이랍니다~^^",
+      "isGoogle": true
+    },
+    {
+      "nickname": "윤미향",
+      "profileImage": "https://lh3.googleusercontent.com/a/ACg8ocIMqFhUZhh6IR4P6FEbZybPMKpDG81NowV-bV5IUjs=s128-c0x00000000-cc-rp-mo-ba4",
+      "rating": 4,
+      "visitedAt": "2021-10-28",
+      "content": "체험이 재밌네요. 모노레일도 좋았어요.\n곳곳에 포토존이 있어 아이들과 재밌게 사진 찰영을 할수있어요. 모노레일을 타고 농장 한바퀴를 돌며 흑돼지, 오리 먹이 주기 체험이 있어요.",
+      "isGoogle": true
+    },
+    {
+      "nickname": "Sion Park",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjUFC_kLoBUPZrEBP9s-jCQiSDE1B7XEmonGGu3oIcE6q0c=s128-c0x00000000-cc-rp-mo-ba5",
+      "rating": 5,
+      "visitedAt": "2021-08-26",
+      "content": "동물체험이 많아 아이들이 좋아했어요.\n학교나 유치원에서 체험학습으로 많이 오는 장소인지 화장실이 커서 깜짝놀랐네요.\n체험활동지를 주셔서 1바퀴 돌며 관찰하고 체험할 수 있어 유익했어요. 체험활동지를 다 하고나면 주스도 선물로 주세요\n토끼도 직접 토끼우리에 들어가서 밥을 줄 수 있고요. 오리먹이주는데 가면 오리 한마리가 담장을 넘어와 돌아다니며 먹이통을 노리고 있으니 먹이통을 바닥에 내려놓으면 먹이통에 있는 먹이를 다 뺐깁니다^^\n귀여웠어요",
+      "isGoogle": true
+    },
+    {
+      "nickname": "킹바우",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjUAR6HB6fLiRUccI_7B1Ef9QtlAYk_xSotSLahks8OhMi0=s128-c0x00000000-cc-rp-mo-ba5",
+      "rating": 5,
+      "visitedAt": "2020-02-29",
+      "content": "안에 모노레일 감귤따기 기념품 소품점 있구요\n2월 26일에 방문했는데 끝물느낌이었지만\n감귤 맛있었어요!\n구은귤도 따로 해주시고 귤나무 많았어요\n바구니 넘치게 담았지만 뭐라안하시는..ㅋㅋㅋ\n안에서 맛난 귤따서 먹고 2kg 바구니사서 많이 따서 담아가요!",
+      "isGoogle": true
+    }
+  ]
+}

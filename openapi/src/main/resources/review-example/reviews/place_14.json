@@ -1,0 +1,44 @@
+{
+  "reviews": [
+    {
+      "nickname": "HK",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjXKzhRkd7iVuIHdsoCcTg_-F2ZvWt3VnrwfWv_UDSbYHPc=s128-c0x00000000-cc-rp-mo-ba4",
+      "rating": 5,
+      "visitedAt": "2023-12-10",
+      "content": "호암미술관은 들어가면서부터 시작해서 전시 다 보고 떠날 때까지 예술을 감상할 수 있는 곳이라 느낀다. 정원을 걸어서, 미술관 건물을 발견하고, 전시를 보고, 나와서 다른 쪽 정원을 보고.\n\n사람 적은 평일날 와서 여유있게 구경하고 정원에서 햇볕을 쐬길 추천한다.\n\n전시의 양이 많지는 않으나 퀄리티는 매우 좋은 편.",
+      "isGoogle": true
+    },
+    {
+      "nickname": "김루비",
+      "profileImage": "https://lh3.googleusercontent.com/a/ACg8ocJ-_uioSrLXOlnvIrIiZbaILVl1xL7aGtvNs8Fd5ybv=s128-c0x00000000-cc-rp-mo-ba5",
+      "rating": 5,
+      "visitedAt": "2023-11-10",
+      "content": "갑자기 방문한 호암 미술관~으로 힐링 하고왔습니다.  가을의 아쉬움을 만끽하고 왔습니다. 입장료는 10.000 이고 예약제로 운영되는데  오후 늦게 방문하여 예약없이 바로 입장했어요~",
+      "isGoogle": true
+    },
+    {
+      "nickname": "S-RAGON (DANA)",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjXIDC-hFh2LN-s2vV1XdYBciquHuix1kXwVAmxCeA0rHw=s128-c0x00000000-cc-rp-mo",
+      "rating": 5,
+      "visitedAt": "2023-10-27",
+      "content": "호암미술관 홈페이지에서 예약하고 가셔야 미술관 건물+정원까지 관람 가능합니다. 1인당 만원이고, 이런날씨엔 충분히 내고 갈 만합니다. 조경도 잘되어있고 입장료때문인지, 사람도 엄청많은 수준이 아니라 추천합니다. 주차요원들도 있어서 원활해요. 미술관 입구에서 직원이 QR코드로 인원수체크 및 사전입장권 체크합니다. 캠핑의자 정도 가져가셔서 지정된 장소에서 간단한 피크닉 가능합니다.",
+      "isGoogle": true
+    },
+    {
+      "nickname": "Soonjung Kwon (AGR)",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjUTQcKLMYAsB_7RTb-ilTISNofzbXdKe00PF72GMA9QknI=s128-c0x00000000-cc-rp-mo-ba7",
+      "rating": 5,
+      "visitedAt": "2023-10-23",
+      "content": "✅ 자연을 보는 즐거움, 거기서 사진으로 추억도 기록하기 너무 좋은 곳이에요.\n\n👍🏻 멋진 자연에 고풍스러운 석상들을 보는 즐거움이 있었어요.\n\n👍🏻👍🏻2층에 참여전시가 있었는데 그거는 투따봉이네요. 어른 아이들 다 같이 흑연스틱으로 흰종이에 밑판에 그려진 양각 쇠판의 형상을 긁어 그림그리는 것 같은 재미를 느낄 수 있어어요. 특히 아이들이 엄청 좋아할 활동이였어요.\n\n🤏🏻 전시물은 많지 않았어요.\n\n👎🏻 기념품은 인터넷으로 주문해야 하고 배송료 3500원은 별도네요. (리움미술관에서는 오프라인.구매 가능하다고 해요.)",
+      "isGoogle": true
+    },
+    {
+      "nickname": "YO LEE",
+      "profileImage": "https://lh3.googleusercontent.com/a-/ALV-UjW5RJAzgpLAkt_XtZTU9ZU-sZ859uqIbTDQqQk2FXkPifhJ=s128-c0x00000000-cc-rp-mo-ba7",
+      "rating": 5,
+      "visitedAt": "2023-09-02",
+      "content": "용인 에버랜드 호암미술관 주변에 조성된 한국식 정원입니다. 오랜기간 잘 가꿔진 정원은 미술관을 굳이 보지않더라도 자연속에 힐링하기에 최적의 장소인거 같습니다. 사시사철 아름다운 모습에 곳곳에 한국의 정원과 돌담, 그리고 석조문화재들까지 다른곳에서 찾아보기 힘든 매력을 지니고 있는 장소인거 같습니다. 관내에는 공작새를 방목 사육하고 있다고 하는데 운이 좋게 매표소에서 보내되네요.",
+      "isGoogle": true
+    }
+  ]
+}
