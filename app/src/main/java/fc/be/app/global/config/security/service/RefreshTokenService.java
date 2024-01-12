@@ -53,9 +53,9 @@ public class RefreshTokenService {
     /**
      * generate refresh-token for requested access token
      *
-     * @param accessToken
-     * @param userPrincipal
-     * @param details
+     * @param accessToken   refresh token을 발급받고자 하는 대상 access token
+     * @param userPrincipal refresh token을 발급받고자 하는 유저
+     * @param details       refresh token을 발급받고자 하는 유저의 클라이언트 정보(ip, user-agent)
      * @return generated refresh token value for the requested access token
      */
     public String refresh(String accessToken, UserPrincipal userPrincipal, AuthenticationDetails details) {
