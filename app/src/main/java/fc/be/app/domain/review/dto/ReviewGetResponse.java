@@ -23,7 +23,7 @@ public record ReviewGetResponse(
             items.add(
                     new Item(
                             review.getMember().getNickname(),
-                            review.getMember().getEmail(),// todo [Review] Member Filed 추가되면 작업 필요
+                            review.getMember().getProfile(),
                             review.getRating(),
                             review.getVisitedAt(),
                             review.getContent(),
@@ -45,7 +45,7 @@ public record ReviewGetResponse(
             items.add(
                     new Item(
                             review.nickname(),
-                            review.profileImage(),// todo [Review] Member Filed 추가되면 작업 필요
+                            review.profileImage(),
                             review.rating(),
                             TestchangeLocalDate(review.visitedAt()),
                             review.content(),
@@ -67,7 +67,7 @@ public record ReviewGetResponse(
                             .rating(review.rating())
                             .member(Member.builder()
                                     .nickname(review.authorAttribution().displayName())
-                                    .email(review.authorAttribution().photoUri())//todo [Review] 프로필사진 업데이트 요망
+                                    .profile(review.authorAttribution().photoUri())
                                     .build())
                             .visitedAt(changeLocalDate(review.publishTime()))
                             .isGoogle(Boolean.TRUE)
@@ -88,7 +88,7 @@ public record ReviewGetResponse(
                             .rating(review.rating())
                             .member(Member.builder()
                                     .nickname(review.nickname())
-                                    .email(review.profileImage())//todo [Review] 프로필사진 업데이트 요망
+                                    .profile(review.profileImage())
                                     .build())
                             .visitedAt(TestchangeLocalDate(review.visitedAt()))
                             .isGoogle(Boolean.TRUE)
