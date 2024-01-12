@@ -20,3 +20,17 @@ spring:
 
 cors:
   allowed-origins: https://tripvote.site
+
+jwt:
+  secret-key: ${JWTSECRETKEY}
+  access-token-name: ${ACCESSTOKENNAME}
+  access-token-authentication-property: ${ACCESSTOKENAUTHPROPERTY}
+  access-token-authorities-property: ${ACCESSTOKENAUTHGRPROPERTY}
+  access-token-expire-time: ${ACCESSTOKENVALIDSECOND}
+  access-token-cookie-expire-time: ${ACCESSTOKENCOOKIEEXPIRETIME}
+  refresh-token-name: ${REFRESHTOKENNAME}
+  refresh-token-expire-time: ${REFRESHTOKENVALIDSECOND}
+  refresh-token-cookie-expire-time: ${REFRESHTOKENCOOKIEEXPIRETIME}
+  issuer: ${JWTISSUER}
+
+domain: ${DOMAIN}
