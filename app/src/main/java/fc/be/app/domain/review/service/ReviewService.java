@@ -1,6 +1,8 @@
 package fc.be.app.domain.review.service;
 
 import fc.be.app.domain.member.entity.Member;
+import fc.be.app.domain.member.exception.MemberErrorCode;
+import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.domain.review.dto.*;
@@ -33,9 +35,12 @@ public class ReviewService {
     @Transactional
     public ReviewCreateResponse createReview(ReviewCreateRequest reviewCreateRequest) {
         //todo [Review] Security 적용 -1
-        var member = memberRepository.save(memberRepository.save(Member.builder().build()));
+
         Integer placeId = reviewCreateRequest.placeId();
         Integer contentTypeId = reviewCreateRequest.contentTypeId();
+
+        Member member = memberRepository.findById(1L).orElseThrow(()->
+                new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         placeService.saveOrUpdatePlace(placeId, contentTypeId);
 
