@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fc.be.openapi.google.dto.review.GoogleTempRatingResponse;
 import fc.be.openapi.google.dto.review.GoogleTempReviewResponse;
+import fc.be.openapi.tourapi.exception.TourAPIError;
+import fc.be.openapi.tourapi.exception.TourAPIErrorCode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -22,7 +24,7 @@ public class ReviewJsonReader {
                 googleReviewResponse = objectMapper.readValue(inputStream, GoogleTempReviewResponse.class);
             }
         } catch (IOException e) {
-            log.error("Error reading JSON file: ", e);
+            new TourAPIError(TourAPIErrorCode.NO_CONTENTTPYEID);
         }
         return googleReviewResponse;
     }
@@ -35,7 +37,7 @@ public class ReviewJsonReader {
                 googleTempRatingResponse = objectMapper.readValue(inputStream, GoogleTempRatingResponse.class);
             }
         } catch (IOException e) {
-            log.error("Error reading JSON file: ", e);
+            new TourAPIError(TourAPIErrorCode.NO_CONTENTTPYEID);
         }
         return googleTempRatingResponse;
     }

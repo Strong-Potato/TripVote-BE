@@ -4,8 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ReviewErrorCode {
-    REVIEW_NOT_FOUND(301, "review not found", "해당 리뷰가 존재하지 않습니다."),
-    CONTENT_TYPE_NOT_MATCH(302, "content type not match", "해당하는 콘텐츠 타입이 없습니다.")
+    REVIEW_NOT_FOUND(400, "review not found", "해당 리뷰가 존재하지 않습니다."),
     ;
     private final Integer responseCode;
     private final String title;

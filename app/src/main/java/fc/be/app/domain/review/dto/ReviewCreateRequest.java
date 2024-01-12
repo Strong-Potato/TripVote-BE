@@ -1,22 +1,21 @@
 package fc.be.app.domain.review.dto;
 
+
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.place.Place;
-
 import fc.be.app.domain.review.entity.Review;
-
-import fc.be.openapi.tourapi.constant.ContentTypeId;
 import jakarta.validation.constraints.*;
+
 import java.time.LocalDate;
 import java.util.List;
 
+import static java.lang.Boolean.FALSE;
+
 public record ReviewCreateRequest(
-        @NotNull Integer placeId,
-        @NotNull String thumbnail,
+        @Positive Integer placeId,
         @NotNull Integer contentTypeId,
         @NotNull String title,
-        @NotNull Integer areaCode,
-        @Min(1) Integer rating,
+        @Min(1) @Max(5) Integer rating,
         @NotBlank String content,
         List<String> images,
         @PastOrPresent LocalDate visitedAt
@@ -31,6 +30,7 @@ public record ReviewCreateRequest(
                 .rating(rating)
                 .content(content)
                 .images(images)
+                .isGoogle(FALSE) //앱 내 리뷰이므로 기본 값 FALSE
                 .build();
     }
 }

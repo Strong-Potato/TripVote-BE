@@ -20,16 +20,23 @@ import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.SpaceType;
 import java.time.LocalDate;
 import java.util.List;
+
+import fc.be.openapi.google.GooglePlacesService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 @SpringBootTest
 class SpaceServiceTest {
+
+    @MockBean
+    private GooglePlacesService placesService;
 
     @Autowired
     private SpaceService spaceService;
