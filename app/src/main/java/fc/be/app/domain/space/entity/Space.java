@@ -1,22 +1,19 @@
 package fc.be.app.domain.space.entity;
 
-import static fc.be.app.domain.space.exception.SpaceErrorCode.INVALID_START_DATE;
-
 import fc.be.app.domain.space.exception.SpaceException;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.IntStream;
+import fc.be.app.domain.vote.entity.Vote;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import static fc.be.app.domain.space.exception.SpaceErrorCode.INVALID_START_DATE;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -56,7 +53,7 @@ public class Space {
 
     public static Space create() {
         return Space.builder()
-            .build();
+                .build();
     }
 
     public void addJourney(Journey journey) {
@@ -114,9 +111,9 @@ public class Space {
     private void updateJourneysForIncreasedDays(LocalDate startDate, LocalDate endDate, int daysToAdd) {
         for (int i = 0; i < daysToAdd; i++) {
             Journey newJourney = Journey.builder()
-                .date(startDate.plusDays(i)) // 날짜를 올바르게 설정
-                .space(this)
-                .build();
+                    .date(startDate.plusDays(i)) // 날짜를 올바르게 설정
+                    .space(this)
+                    .build();
             journeys.add(newJourney);
         }
 
@@ -129,7 +126,7 @@ public class Space {
 
     private void updateJourneysCommon(LocalDate startDate, LocalDate endDate) {
         IntStream.range(0, daysBetween(startDate, endDate) + 1)
-            .forEach(index -> journeys.get(index).updateDate(startDate.plusDays(index)));
+                .forEach(index -> journeys.get(index).updateDate(startDate.plusDays(index)));
     }
 
     private static int daysBetween(LocalDate startDate, LocalDate endDate) {
