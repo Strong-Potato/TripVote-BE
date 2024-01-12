@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = SpaceController.class,
         excludeFilters = {
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {SecurityConfig.class, SecurityAppConfig.class, JwtAuthenticationFilter.class})
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {SecurityConfig.class, SecurityAppConfig.class})
         },
         excludeAutoConfiguration = {
                 SecurityAutoConfiguration.class,

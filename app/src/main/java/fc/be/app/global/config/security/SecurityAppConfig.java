@@ -1,7 +1,10 @@
 package fc.be.app.global.config.security;
 
+import fc.be.app.global.config.security.filter.JwtAuthenticationFilter;
 import fc.be.app.global.config.security.properties.CorsProperties;
+import fc.be.app.global.config.security.properties.TokenProperties;
 import fc.be.app.global.config.security.provider.AuthenticationDetails;
+import fc.be.app.global.config.security.provider.JwtAuthenticationProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityAppConfig {
     private final CorsProperties corsProperties;
+    private final TokenProperties tokenProperties;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -31,6 +35,11 @@ public class SecurityAppConfig {
     @Bean
     public AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource() {
         return context -> new AuthenticationDetails(context);
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtAuthenticationProvider provider) {
+        return new JwtAuthenticationFilter(provider, authenticationDetailsSource(), tokenProperties);
     }
 
     @Bean
