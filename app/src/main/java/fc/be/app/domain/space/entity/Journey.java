@@ -1,7 +1,9 @@
 package fc.be.app.domain.space.entity;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -14,6 +16,7 @@ import java.util.List;
 @Getter
 @Comment("일자별 일정")
 public class Journey {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("일자별 일정 id")
@@ -29,4 +32,28 @@ public class Journey {
 
     @OneToMany(mappedBy = "journey")
     private List<SelectedPlace> place;
+
+    @Builder
+    private Journey(Space space, LocalDate date) {
+        this.space = space;
+        this.date = date;
+    }
+
+    public static List<Journey> createJourneys(LocalDate startDate, LocalDate endDate,
+        Space space) {
+        List<Journey> journeyList = new ArrayList<>();
+
+        startDate.datesUntil(endDate.plusDays(1)).forEach(currentDate -> journeyList.add(
+            Journey.builder()
+                .date(currentDate)
+                .space(space)
+                .build()
+        ));
+
+        return journeyList;
+    }
+
+    public void updateDate(LocalDate date) {
+        this.date = date;
+    }
 }
