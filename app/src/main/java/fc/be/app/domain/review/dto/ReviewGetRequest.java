@@ -1,10 +1,12 @@
 package fc.be.app.domain.review.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public record ReviewGetRequest(
-        @NotNull Integer placeId,
+        @Positive Integer placeId,
         @NotNull Integer contentTypeId,
-        @NotNull String placeTitle
+        @NotBlank String placeTitle
 ) {
 }

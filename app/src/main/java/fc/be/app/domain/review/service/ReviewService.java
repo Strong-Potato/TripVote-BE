@@ -120,7 +120,7 @@ public class ReviewService {
             var response = ReviewJsonReader.readReviewsJsonFile    //임시로 Json파일에서 읽어옴
                     ("./review-example/reviews/place_" + reviewGetRequest.contentTypeId() + ".json");
 
-            List<Review> reviews = new ArrayList<>(ReviewGetResponse.TestconvertToReviews(response));
+            List<Review> reviews = new ArrayList<>(ReviewGetResponse.testConvertToReviews(response));
             reviews.addAll(reviewRepository.findByPlaceId(placeId, pageable).toList());
             return ReviewGetResponse.from(reviews);
         }

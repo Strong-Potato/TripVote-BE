@@ -36,28 +36,6 @@ public record ReviewGetResponse(
         );
     }
 
-    //todo 지워야함
-    public static ReviewGetResponse Testfrom(
-            GoogleTempReviewResponse googleTempReviewResponse
-    ) {
-        List<Item> items = new ArrayList<>();
-        for (var review : googleTempReviewResponse.reviews()) {
-            items.add(
-                    new Item(
-                            review.nickname(),
-                            review.profileImage(),
-                            review.rating(),
-                            TestchangeLocalDate(review.visitedAt()),
-                            review.content(),
-                            review.isGoogle()
-                    )
-            );
-        }
-        return new ReviewGetResponse(
-                items
-        );
-    }
-
     public static List<Review> convertToReviews(GoogleReviewResponse googleReviewResponse) {
         List<Review> reviews = new ArrayList<>();
         for (var review : googleReviewResponse.reviews()) {
@@ -79,7 +57,7 @@ public record ReviewGetResponse(
     }
 
     //todo 지워야함
-    public static List<Review> TestconvertToReviews(GoogleTempReviewResponse googleReviewResponse) {
+    public static List<Review> testConvertToReviews(GoogleTempReviewResponse googleReviewResponse) {
         List<Review> reviews = new ArrayList<>();
         for (var review : googleReviewResponse.reviews()) {
             reviews.add(
@@ -90,7 +68,7 @@ public record ReviewGetResponse(
                                     .nickname(review.nickname())
                                     .profile(review.profileImage())
                                     .build())
-                            .visitedAt(TestchangeLocalDate(review.visitedAt()))
+                            .visitedAt(testChangeLocalDate(review.visitedAt()))
                             .isGoogle(Boolean.TRUE)
                             .build()
             );
@@ -105,13 +83,12 @@ public record ReviewGetResponse(
         return localDateTime.toLocalDate();
     }
 
-    //todo 지워야함
-    private static LocalDate TestchangeLocalDate(String strLocalDateTime) {
+    private static LocalDate testChangeLocalDate(String strLocalDateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(strLocalDateTime, formatter);
     }
 
-    public record Item(
+    private record Item(
             String nickname,
             String profileImage,
             Integer rating,

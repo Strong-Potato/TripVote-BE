@@ -31,7 +31,7 @@ public record ReviewGetMemberResponse(List<Item> reviews) {
         );
     }
 
-    public record Item(
+    private record Item(
             Long reviewId,
             String thumbnail,
             String placeTitle,
