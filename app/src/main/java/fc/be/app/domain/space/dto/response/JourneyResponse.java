@@ -9,30 +9,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
-public class JourneyResponse {
-
-    private Long id;
-    private Space space;
-    private LocalDate date;
-    private List<SelectedPlace> place;
-
-    @Builder
-    private JourneyResponse(Long id, Space space, LocalDate date, List<SelectedPlace> place) {
-        this.id = id;
-        this.space = space;
-        this.date = date;
-        this.place = place;
-    }
-
+@Builder
+public record JourneyResponse(
+    Long id,
+    LocalDate date,
+    List<SelectedPlace> place
+) {
     public static JourneyResponse from(Journey journey) {
         return JourneyResponse.builder()
             .id(journey.getId())
-            .space(journey.getSpace())
             .date(journey.getDate())
             .place(journey.getPlace())
             .build();
     }
-
 }
