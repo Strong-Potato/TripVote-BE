@@ -7,9 +7,10 @@ import static org.assertj.core.groups.Tuple.tuple;
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
-import fc.be.app.domain.space.dto.request.UpdateSpaceRequest.DateUpdateRequest;
-import fc.be.app.domain.space.dto.request.UpdateSpaceRequest.TitleUpdateRequest;
+import fc.be.app.domain.space.dto.request.DateUpdateRequest;
+import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
+import fc.be.app.domain.space.dto.response.SpacesResponse;
 import fc.be.app.domain.space.entity.JoinedMember;
 import fc.be.app.domain.space.entity.Journey;
 import fc.be.app.domain.space.entity.Space;
@@ -18,17 +19,15 @@ import fc.be.app.domain.space.repository.JoinedMemberRepository;
 import fc.be.app.domain.space.repository.JourneyRepository;
 import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.SpaceType;
+import fc.be.openapi.google.GooglePlacesService;
 import java.time.LocalDate;
 import java.util.List;
-
-import fc.be.openapi.google.GooglePlacesService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
@@ -75,7 +74,7 @@ class SpaceServiceTest {
         SpaceResponse savedSpace = spaceService.createSpace(savedMember.getId());
 
         // then
-        assertThat(savedSpace.getId()).isNotNull();
+        assertThat(savedSpace.id()).isNotNull();
         assertThat(savedSpace)
             .extracting("title", "startDate", "endDate")
             .containsNull();
@@ -129,7 +128,7 @@ class SpaceServiceTest {
             updateRequest);
 
         // then
-        assertThat(spaceResponse.getTitle()).isEqualTo(updateRequest.getTitle());
+        assertThat(spaceResponse.title()).isEqualTo(updateRequest.title());
     }
 
     @DisplayName("여행 스페이스의 시작일자와 종료일자에 대한 값을 업데이트를 한다.")
@@ -149,8 +148,8 @@ class SpaceServiceTest {
             updateRequest);
 
         // then
-        assertThat(spaceResponse.getStartDate()).isEqualTo(updateRequest.getStartDate());
-        assertThat(spaceResponse.getEndDate()).isEqualTo(updateRequest.getEndDate());
+        assertThat(spaceResponse.startDate()).isEqualTo(updateRequest.startDate());
+        assertThat(spaceResponse.endDate()).isEqualTo(updateRequest.endDate());
     }
 
     @DisplayName("여행 스페이스의 시작일자와 종료일자에 대한 값을 업데이트를 한다.")
@@ -175,8 +174,8 @@ class SpaceServiceTest {
             updateRequest);
 
         // then
-        assertThat(spaceResponse.getStartDate()).isEqualTo(updateRequest.getStartDate());
-        assertThat(spaceResponse.getEndDate()).isEqualTo(updateRequest.getEndDate());
+        assertThat(spaceResponse.startDate()).isEqualTo(updateRequest.startDate());
+        assertThat(spaceResponse.endDate()).isEqualTo(updateRequest.endDate());
     }
 
     @DisplayName("이미 지난간 시점의 여행 스페이스 리스트를 가져온다.")
@@ -202,12 +201,12 @@ class SpaceServiceTest {
         joinedMemberRepository.saveAll(List.of(joinedMember1, joinedMember2, joinedMember3));
 
         // when
-        List<SpaceResponse> spaceResponses = spaceService.findByEndDateAndMember(
+        SpacesResponse spacesResponse = spaceService.findByEndDateAndMember(
             LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.PAST);
 
         // then
-        assertThat(spaceResponses).hasSize(2);
-        assertThat(spaceResponses)
+        assertThat(spacesResponse.spaceResponses()).hasSize(2);
+        assertThat(spacesResponse.spaceResponses())
             .extracting("title", "startDate", "endDate")
             .containsExactlyInAnyOrder(
                 tuple(space2.getTitle(), space2.getStartDate(), space2.getEndDate()),
@@ -238,12 +237,12 @@ class SpaceServiceTest {
         joinedMemberRepository.saveAll(List.of(joinedMember1, joinedMember2, joinedMember3));
 
         // when
-        List<SpaceResponse> spaceResponses = spaceService.findByEndDateAndMember(
+        SpacesResponse spacesResponses = spaceService.findByEndDateAndMember(
             LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.UPCOMING);
 
         // then
-        assertThat(spaceResponses).hasSize(2);
-        assertThat(spaceResponses)
+        assertThat(spacesResponses.spaceResponses()).hasSize(2);
+        assertThat(spacesResponses.spaceResponses())
             .extracting("title", "startDate", "endDate")
             .containsExactlyInAnyOrder(
                 tuple(space1.getTitle(), space1.getStartDate(), space1.getEndDate()),
