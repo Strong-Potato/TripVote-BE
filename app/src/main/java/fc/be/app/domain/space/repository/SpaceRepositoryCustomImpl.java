@@ -22,17 +22,17 @@ public class SpaceRepositoryCustomImpl implements SpaceRepositoryCustom {
 
     @Override
     public List<Space> findByEndDateAndMember(LocalDate endDate, Long memberId,
-        SpaceType type) {
+                                              SpaceType type) {
         return queryFactory
-            .selectFrom(space)
-            .leftJoin(space.joinedMembers, joinedMember)
-            .on(joinedMember.space.id.eq(space.id))
-            .where(
-                eqLeftSpaceAndMember(false, memberId),
-                goeUpComingEndDate(endDate, type),
-                ltPastEndDate(endDate, type)
-            )
-            .fetch();
+                .selectFrom(space)
+                .leftJoin(space.joinedMembers, joinedMember)
+                .on(joinedMember.space.id.eq(space.id))
+                .where(
+                        eqLeftSpaceAndMember(false, memberId),
+                        goeUpComingEndDate(endDate, type),
+                        ltPastEndDate(endDate, type)
+                )
+                .fetch();
     }
 
     private BooleanExpression eqLeftSpaceAndMember(Boolean leftSpace, Long memberId) {

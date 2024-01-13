@@ -3,7 +3,6 @@ package fc.be.app.domain.space.entity;
 import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.vote.entity.Vote;
 import jakarta.persistence.*;
-import java.util.ArrayList;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -54,7 +54,7 @@ public class Space {
 
     public static Space create() {
         return Space.builder()
-            .build();
+                .build();
     }
 
     public void updateByTitle(String title) {
@@ -70,7 +70,7 @@ public class Space {
     }
 
     public List<Long> findByDeletedJourneyIds(LocalDate startDate, LocalDate endDate,
-        int daysToRemove) {
+                                              int daysToRemove) {
         List<Long> journeyIds = new ArrayList<>();
 
         for (int i = 0; i < daysToRemove; i++) {
@@ -81,22 +81,22 @@ public class Space {
     }
 
     public List<Journey> findByAddedJourneys(LocalDate startDate, LocalDate endDate,
-        int daysToAdd) {
+                                             int daysToAdd) {
         List<Journey> journeyList = new ArrayList<>();
 
         for (int i = 0; i < daysToAdd; i++) {
             journeyList.add(Journey.builder()
-                .date(startDate.plusDays(i))
-                .space(this)
-                .build());
+                    .date(startDate.plusDays(i))
+                    .space(this)
+                    .build());
         }
 
         return journeyList;
     }
 
     public void updateJourneys(int day) {
-        IntStream.range(0, day + 1)
-            .forEach(index -> journeys.get(index).updateDate(startDate.plusDays(index)));
+        IntStream.rangeClosed(0, day)
+                .forEach(index -> journeys.get(index).updateDate(startDate.plusDays(index)));
     }
 
     private void validationDates(LocalDate startDate, LocalDate endDate) {

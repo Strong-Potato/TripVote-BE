@@ -12,17 +12,11 @@ import fc.be.app.domain.space.service.SpaceService;
 import fc.be.app.domain.space.vo.SpaceType;
 import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
-import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,15 +39,19 @@ public class SpaceController {
     }
 
     @PutMapping("/{spaceId}/title")
-    public ApiResponse<SpaceResponse> updateSpaceByTitle(@PathVariable Long spaceId,
-        @Valid @RequestBody TitleUpdateRequest updateRequest) {
+    public ApiResponse<SpaceResponse> updateSpaceByTitle(
+            @PathVariable Long spaceId,
+            @Valid @RequestBody TitleUpdateRequest updateRequest
+    ) {
         SpaceResponse spaceResponse = spaceService.updateSpaceByTitle(spaceId, updateRequest);
         return ApiResponse.ok(spaceResponse);
     }
 
     @PutMapping("/{spaceId}/dates")
-    public ApiResponse<SpaceResponse> updateSpaceByDates(@PathVariable Long spaceId,
-        @Valid @RequestBody DateUpdateRequest updateRequest) {
+    public ApiResponse<SpaceResponse> updateSpaceByDates(
+            @PathVariable Long spaceId,
+            @Valid @RequestBody DateUpdateRequest updateRequest
+    ) {
         SpaceResponse spaceResponse = spaceService.updateSpaceByDates(spaceId, updateRequest);
         return ApiResponse.ok(spaceResponse);
     }
@@ -63,7 +61,7 @@ public class SpaceController {
         // todo 로그인 구현 시 @AuthenticationPrincipal 어노테이션 등으로 변경할 예정
         Long memberId = 1L;
         return ApiResponse.ok(spaceService.findByEndDateAndMember(LocalDate.now(),
-            memberId, type));
+                memberId, type));
     }
 
     @PutMapping("/{spaceId}/exit")

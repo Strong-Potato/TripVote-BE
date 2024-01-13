@@ -1,11 +1,5 @@
 package fc.be.app.domain.space.service;
 
-import static fc.be.app.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
-import static fc.be.app.domain.place.exception.PlaceErrorCode.PLACE_NOT_LOADED;
-import static fc.be.app.domain.space.exception.SpaceErrorCode.JOURNEY_NOT_FOUND;
-import static fc.be.app.domain.space.exception.SpaceErrorCode.SPACE_NOT_FOUND;
-import static fc.be.app.domain.space.exception.SpaceErrorCode.SPACE_NOT_INVITE;
-
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
@@ -30,15 +24,19 @@ import fc.be.app.domain.space.repository.JourneyRepository;
 import fc.be.app.domain.space.repository.SelectedPlaceRepository;
 import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.SpaceType;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
+
+import static fc.be.app.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
+import static fc.be.app.domain.place.exception.PlaceErrorCode.PLACE_NOT_LOADED;
+import static fc.be.app.domain.space.exception.SpaceErrorCode.*;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -56,7 +54,7 @@ public class SpaceService {
     @Transactional
     public SpaceResponse createSpace(Long memberId) {
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
         Space savedSpace = spaceRepository.save(Space.create());
 
@@ -68,14 +66,14 @@ public class SpaceService {
 
     public SpaceResponse getSpaceById(Long spaceId) {
         Space space = spaceRepository.findById(spaceId)
-            .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
         return SpaceResponse.of(space);
     }
 
     @Transactional
     public SpaceResponse updateSpaceByTitle(Long spaceId, TitleUpdateRequest updateRequest) {
         Space space = spaceRepository.findById(spaceId)
-            .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
         space.updateByTitle(updateRequest.title());
         return SpaceResponse.of(space);
     }
@@ -83,12 +81,12 @@ public class SpaceService {
     @Transactional
     public SpaceResponse updateSpaceByDates(Long spaceId, DateUpdateRequest updateRequest) {
         Space space = spaceRepository.findById(spaceId)
-            .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
 
         if (space.getJourneys().isEmpty()) {
             List<Journey> journeys = Journey.createJourneys(space.getStartDate(),
-                space.getEndDate(),
-                space);
+                    space.getEndDate(),
+                    space);
             journeyRepository.saveAll(journeys);
         } else {
             int originalDays = countDaysBetween(space.getStartDate(), space.getEndDate());
@@ -96,15 +94,15 @@ public class SpaceService {
 
             if (originalDays > newDays) {
                 List<Long> journeys = space.findByDeletedJourneyIds(
-                    updateRequest.startDate(),
-                    updateRequest.endDate(), originalDays - newDays);
+                        updateRequest.startDate(),
+                        updateRequest.endDate(), originalDays - newDays);
 
                 journeyRepository.deleteAllByIdInBatch(journeys);
                 selectedPlaceRepository.deleteByJourneyIds(journeys);
             } else if (originalDays < newDays) {
                 List<Journey> journeys = space.findByAddedJourneys(
-                    updateRequest.startDate(),
-                    updateRequest.endDate(), newDays - originalDays);
+                        updateRequest.startDate(),
+                        updateRequest.endDate(), newDays - originalDays);
 
                 journeyRepository.saveAll(journeys);
             }
@@ -118,31 +116,31 @@ public class SpaceService {
     }
 
     public SpacesResponse findByEndDateAndMember(LocalDate currentDate, Long memberId,
-        SpaceType type) {
+                                                 SpaceType type) {
         return SpacesResponse.from(
-            spaceRepository.findByEndDateAndMember(currentDate, memberId, type));
+                spaceRepository.findByEndDateAndMember(currentDate, memberId, type));
     }
 
     @Transactional
     public void exitSpace(Long spaceId, Long memberId) {
         Space space = spaceRepository.findById(spaceId)
-            .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
 
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
         JoinedMember joinedMember = joinedMemberRepository.findBySpaceAndMember(space,
-            member).orElseThrow(() -> new SpaceException(SPACE_NOT_INVITE));
+                member).orElseThrow(() -> new SpaceException(SPACE_NOT_INVITE));
 
         joinedMember.updateLeftSpace(true);
     }
 
     public JourneysResponse getJourneyForSpace(Long spaceId) {
         Space space = spaceRepository.findById(spaceId)
-            .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
 
         List<Journey> journeys = journeyRepository.findAllBySpaceOrderByDateAsc(
-            space);
+                space);
 
         return JourneysResponse.from(journeys);
     }
@@ -150,7 +148,7 @@ public class SpaceService {
     @Transactional
     public JourneyResponse selectedPlacesForSpace(SelectedPlaceRequest request) {
         Journey journey = journeyRepository.findById(request.journeyId())
-            .orElseThrow(() -> new SpaceException(JOURNEY_NOT_FOUND));
+                .orElseThrow(() -> new SpaceException(JOURNEY_NOT_FOUND));
 
         List<SelectedPlace> selectedPlaces = insertSelectedPlace(request, journey);
         journey.addSelectedPlace(selectedPlaces);
@@ -164,13 +162,13 @@ public class SpaceService {
 
         for (SelectedPlaceRequest selectedPlaceRequest : request.selectedPlaceRequests()) {
             Journey journey = journeyRepository.findById(selectedPlaceRequest.journeyId())
-                .orElseThrow(() -> new SpaceException(JOURNEY_NOT_FOUND));
+                    .orElseThrow(() -> new SpaceException(JOURNEY_NOT_FOUND));
 
             selectedPlaceRepository.deleteByJourney(journey);
             journey.clearSelectedPlace();
 
             List<SelectedPlace> selectedPlaces = insertSelectedPlace(selectedPlaceRequest, journey);
-            journey.setSelectedPlace(selectedPlaces);
+            journey.addSelectedPlace(selectedPlaces);
             journeys.add(journey);
         }
 
@@ -179,16 +177,16 @@ public class SpaceService {
 
     private List<SelectedPlace> insertSelectedPlace(SelectedPlaceRequest selectedPlaceRequest, Journey journey) {
         int lastOrder = journey.getPlace().stream()
-            .mapToInt(SelectedPlace::getOrders)
-            .max()
-            .orElse(0);
+                .mapToInt(SelectedPlace::getOrders)
+                .max()
+                .orElse(0);
 
         List<SelectedPlace> selectedPlaces = new ArrayList<>();
 
         for (Integer id : selectedPlaceRequest.selectedPlaces()) {
             lastOrder++;
             Place place = placeRepository.findById(id)
-                .orElseThrow(() -> new PlaceException(PLACE_NOT_LOADED));
+                    .orElseThrow(() -> new PlaceException(PLACE_NOT_LOADED));
             selectedPlaces.add(SelectedPlace.create(place, lastOrder, journey));
         }
 

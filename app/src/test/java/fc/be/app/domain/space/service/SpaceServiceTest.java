@@ -205,8 +205,8 @@ class SpaceServiceTest {
             LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.PAST);
 
         // then
-        assertThat(spacesResponse.spaceResponses()).hasSize(2);
-        assertThat(spacesResponse.spaceResponses())
+        assertThat(spacesResponse.spaces()).hasSize(2);
+        assertThat(spacesResponse.spaces())
             .extracting("title", "startDate", "endDate")
             .containsExactlyInAnyOrder(
                 tuple(space2.getTitle(), space2.getStartDate(), space2.getEndDate()),
@@ -241,8 +241,8 @@ class SpaceServiceTest {
             LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.UPCOMING);
 
         // then
-        assertThat(spacesResponses.spaceResponses()).hasSize(2);
-        assertThat(spacesResponses.spaceResponses())
+        assertThat(spacesResponses.spaces()).hasSize(2);
+        assertThat(spacesResponses.spaces())
             .extracting("title", "startDate", "endDate")
             .containsExactlyInAnyOrder(
                 tuple(space1.getTitle(), space1.getStartDate(), space1.getEndDate()),

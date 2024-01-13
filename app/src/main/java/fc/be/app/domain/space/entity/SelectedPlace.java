@@ -41,9 +41,9 @@ public class SelectedPlace {
 
     public static SelectedPlace create(Place place, Integer orders, Journey journey) {
         return SelectedPlace.builder()
-            .place(place)
-            .journey(journey)
-            .orders(orders)
-            .build();
+                .place(place)
+                .journey(journey)
+                .orders(orders)
+                .build();
     }
 }
