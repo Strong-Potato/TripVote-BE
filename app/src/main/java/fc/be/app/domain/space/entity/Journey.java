@@ -63,10 +63,6 @@ public class Journey {
         place.clear();
     }
 
-    public void setSelectedPlace(List<SelectedPlace> selectedPlaces) {
-        this.place = new ArrayList<>(selectedPlaces);
-    }
-
     public void addSelectedPlace(List<SelectedPlace> selectedPlaces) {
         this.place.addAll(selectedPlaces);
     }

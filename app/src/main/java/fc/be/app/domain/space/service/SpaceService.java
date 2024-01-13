@@ -168,7 +168,7 @@ public class SpaceService {
             journey.clearSelectedPlace();
 
             List<SelectedPlace> selectedPlaces = insertSelectedPlace(selectedPlaceRequest, journey);
-            journey.setSelectedPlace(selectedPlaces);
+            journey.addSelectedPlace(selectedPlaces);
             journeys.add(journey);
         }
 
