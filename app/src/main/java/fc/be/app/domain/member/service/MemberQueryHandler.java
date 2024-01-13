@@ -16,6 +16,19 @@ public class MemberQueryHandler implements MemberQuery {
     private final MemberRepository memberRepository;
 
     @Override
+    public Optional<MemberResponse> findById(Long id) {
+        Optional<Member> findMember = memberRepository.findById(id);
+        return findMember
+                .map(member -> new MemberResponse(
+                        member.getId(),
+                        member.getPassword(),
+                        member.getEmail(),
+                        member.getNickname(),
+                        member.getProfile(),
+                        member.getProvider()));
+    }
+
+    @Override
     public Optional<MemberResponse> find(MemberRequest request) {
         Optional<Member> findMember = memberRepository.findByProviderAndEmail(AuthProvider.NONE, request.email());
         return findMember
