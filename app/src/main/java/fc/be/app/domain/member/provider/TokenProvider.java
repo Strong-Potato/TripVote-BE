@@ -24,7 +24,7 @@ public class TokenProvider {
     private static final Duration VERIFICATION_CODE_DURATION = Duration.ofSeconds(300);
     private static final String VERIFICATION_CODE_GENERATION_COUNT_PREFIX = "code_generation_count_";
     private static final Duration VERIFICATION_CODE_GENERATION_COUNT_DURATION = Duration.ofSeconds(300);
-    private static final int VERIFICATION_CODE_GENERATION_BLOCKED_COUNT = 3;
+    private static final int VERIFICATION_CODE_GENERATION_BLOCKED_COUNT = 5;
     private static final String BLOCKED_EMAIL_PREFIX = "blocked_email_";
     private static final Duration BLOCKED_EMAIL_DURATION = Duration.ofSeconds(300);
     private static final String REGISTER_TOKEN_PREFIX = "register_token_";
