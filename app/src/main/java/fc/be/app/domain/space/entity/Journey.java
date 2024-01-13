@@ -56,4 +56,17 @@ public class Journey {
     public void updateDate(LocalDate date) {
         this.date = date;
     }
+
+    public void clearSelectedPlace() {
+        place.clear();
+    }
+
+    public void setSelectedPlace(List<SelectedPlace> selectedPlaces) {
+        this.place = new ArrayList<>(selectedPlaces);
+    }
+
+    public void addSelectedPlace(List<SelectedPlace> selectedPlaces) {
+        this.place.addAll(selectedPlaces);
+    }
+
 }

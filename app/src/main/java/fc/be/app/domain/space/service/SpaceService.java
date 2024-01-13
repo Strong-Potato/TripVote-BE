@@ -1,27 +1,40 @@
 package fc.be.app.domain.space.service;
 
 import static fc.be.app.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
+import static fc.be.app.domain.place.exception.PlaceErrorCode.PLACE_NOT_LOADED;
+import static fc.be.app.domain.space.exception.SpaceErrorCode.JOURNEY_NOT_FOUND;
 import static fc.be.app.domain.space.exception.SpaceErrorCode.SPACE_NOT_FOUND;
 import static fc.be.app.domain.space.exception.SpaceErrorCode.SPACE_NOT_INVITE;
 
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
-import fc.be.app.domain.space.dto.request.UpdateSpaceRequest.DateUpdateRequest;
-import fc.be.app.domain.space.dto.request.UpdateSpaceRequest.TitleUpdateRequest;
+import fc.be.app.domain.place.Place;
+import fc.be.app.domain.place.exception.PlaceException;
+import fc.be.app.domain.place.repository.PlaceRepository;
+import fc.be.app.domain.space.dto.request.DateUpdateRequest;
+import fc.be.app.domain.space.dto.request.SelectedPlaceRequest;
+import fc.be.app.domain.space.dto.request.SelectedPlacesRequest;
+import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
 import fc.be.app.domain.space.dto.response.JourneyResponse;
+import fc.be.app.domain.space.dto.response.JourneysResponse;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
+import fc.be.app.domain.space.dto.response.SpacesResponse;
 import fc.be.app.domain.space.entity.JoinedMember;
 import fc.be.app.domain.space.entity.Journey;
+import fc.be.app.domain.space.entity.SelectedPlace;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.space.repository.JoinedMemberRepository;
 import fc.be.app.domain.space.repository.JourneyRepository;
+import fc.be.app.domain.space.repository.SelectedPlaceRepository;
 import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.SpaceType;
 import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,6 +50,8 @@ public class SpaceService {
     private final JoinedMemberRepository joinedMemberRepository;
     private final MemberRepository memberRepository;
     private final JourneyRepository journeyRepository;
+    private final PlaceRepository placeRepository;
+    private final SelectedPlaceRepository selectedPlaceRepository;
 
     @Transactional
     public SpaceResponse createSpace(Long memberId) {
@@ -61,7 +76,7 @@ public class SpaceService {
     public SpaceResponse updateSpaceByTitle(Long spaceId, TitleUpdateRequest updateRequest) {
         Space space = spaceRepository.findById(spaceId)
             .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
-        space.updateByTitle(updateRequest.getTitle());
+        space.updateByTitle(updateRequest.title());
         return SpaceResponse.of(space);
     }
 
@@ -70,25 +85,42 @@ public class SpaceService {
         Space space = spaceRepository.findById(spaceId)
             .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
 
-        if (space.getJourneys().size() == 0) {
-            space.updateByDates(updateRequest.getStartDate(), updateRequest.getEndDate());
-            List<Journey> journeys = Journey.createJourneys(space.getStartDate(), space.getEndDate(),
+        if (space.getJourneys().isEmpty()) {
+            List<Journey> journeys = Journey.createJourneys(space.getStartDate(),
+                space.getEndDate(),
                 space);
             journeyRepository.saveAll(journeys);
         } else {
-            space.updateByDatesAndUpdateJourney(updateRequest.getStartDate(), updateRequest.getEndDate());
-            System.out.println("123");
+            int originalDays = countDaysBetween(space.getStartDate(), space.getEndDate());
+            int newDays = countDaysBetween(updateRequest.startDate(), updateRequest.endDate());
+
+            if (originalDays > newDays) {
+                List<Long> journeys = space.findByDeletedJourneyIds(
+                    updateRequest.startDate(),
+                    updateRequest.endDate(), originalDays - newDays);
+
+                journeyRepository.deleteAllByIdInBatch(journeys);
+                selectedPlaceRepository.deleteByJourneyIds(journeys);
+            } else if (originalDays < newDays) {
+                List<Journey> journeys = space.findByAddedJourneys(
+                    updateRequest.startDate(),
+                    updateRequest.endDate(), newDays - originalDays);
+
+                journeyRepository.saveAll(journeys);
+            }
+
+            space.updateJourneys(newDays);
         }
+
+        space.updateByDates(updateRequest.startDate(), updateRequest.endDate());
 
         return SpaceResponse.of(space);
     }
 
-    public List<SpaceResponse> findByEndDateAndMember(LocalDate currentDate, Long memberId,
+    public SpacesResponse findByEndDateAndMember(LocalDate currentDate, Long memberId,
         SpaceType type) {
-        return spaceRepository.findByEndDateAndMember(currentDate, memberId, type)
-            .stream()
-            .map(SpaceResponse::of)
-            .collect(Collectors.toList());
+        return SpacesResponse.from(
+            spaceRepository.findByEndDateAndMember(currentDate, memberId, type));
     }
 
     @Transactional
@@ -105,15 +137,65 @@ public class SpaceService {
         joinedMember.updateLeftSpace(true);
     }
 
-    public List<JourneyResponse> getJourneyForSpace(Long spaceId) {
+    public JourneysResponse getJourneyForSpace(Long spaceId) {
         Space space = spaceRepository.findById(spaceId)
             .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
 
         List<Journey> journeys = journeyRepository.findAllBySpaceOrderByDateAsc(
             space);
 
-        return journeys.stream()
-            .map(JourneyResponse::from)
-            .collect(Collectors.toList());
+        return JourneysResponse.from(journeys);
+    }
+
+    @Transactional
+    public JourneyResponse selectedPlacesForSpace(SelectedPlaceRequest request) {
+        Journey journey = journeyRepository.findById(request.journeyId())
+            .orElseThrow(() -> new SpaceException(JOURNEY_NOT_FOUND));
+
+        List<SelectedPlace> selectedPlaces = insertSelectedPlace(request, journey);
+        journey.addSelectedPlace(selectedPlaces);
+
+        return JourneyResponse.from(journey);
+    }
+
+    @Transactional
+    public JourneysResponse updatePlacesForSpace(SelectedPlacesRequest request) {
+        List<Journey> journeys = new ArrayList<>();
+
+        for (SelectedPlaceRequest selectedPlaceRequest : request.selectedPlaceRequests()) {
+            Journey journey = journeyRepository.findById(selectedPlaceRequest.journeyId())
+                .orElseThrow(() -> new SpaceException(JOURNEY_NOT_FOUND));
+
+            selectedPlaceRepository.deleteByJourney(journey);
+            journey.clearSelectedPlace();
+
+            List<SelectedPlace> selectedPlaces = insertSelectedPlace(selectedPlaceRequest, journey);
+            journey.setSelectedPlace(selectedPlaces);
+            journeys.add(journey);
+        }
+
+        return JourneysResponse.from(journeys);
+    }
+
+    private List<SelectedPlace> insertSelectedPlace(SelectedPlaceRequest selectedPlaceRequest, Journey journey) {
+        int lastOrder = journey.getPlace().stream()
+            .mapToInt(SelectedPlace::getOrders)
+            .max()
+            .orElse(0);
+
+        List<SelectedPlace> selectedPlaces = new ArrayList<>();
+
+        for (Integer id : selectedPlaceRequest.selectedPlaces()) {
+            lastOrder++;
+            Place place = placeRepository.findById(id)
+                .orElseThrow(() -> new PlaceException(PLACE_NOT_LOADED));
+            selectedPlaces.add(SelectedPlace.create(place, lastOrder, journey));
+        }
+
+        return selectedPlaceRepository.saveAll(selectedPlaces);
+    }
+
+    private static int countDaysBetween(LocalDate startDate, LocalDate endDate) {
+        return Period.between(startDate, endDate).getDays();
     }
 }
