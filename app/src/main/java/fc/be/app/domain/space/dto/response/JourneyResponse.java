@@ -34,7 +34,7 @@ public record JourneyResponse(
                     SelectedPlaceResponse.builder()
                             .id(place.getId())
                             .Order(place.getOrders())
-                            .places(item)
+                            .place(item)
                             .build()
             );
         }
@@ -52,7 +52,7 @@ public record JourneyResponse(
     private record SelectedPlaceResponse(
             Long id,
             Integer Order,
-            Item places
+            Item place
     ) {
     }
 

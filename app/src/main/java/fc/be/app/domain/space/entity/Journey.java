@@ -1,9 +1,6 @@
 package fc.be.app.domain.space.entity;
 
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
