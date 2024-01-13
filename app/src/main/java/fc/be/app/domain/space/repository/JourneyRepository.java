@@ -8,4 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface JourneyRepository extends JpaRepository<Journey, Long> {
 
     List<Journey> findAllBySpaceOrderByDateAsc(Space space);
+
+    @Override
+    void deleteAllByIdInBatch(Iterable<Long> longs);
 }
