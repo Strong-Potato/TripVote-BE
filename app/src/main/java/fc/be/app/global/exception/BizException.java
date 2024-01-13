@@ -1,7 +1,7 @@
 package fc.be.app.global.exception;
 
+import jakarta.annotation.Nullable;
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.Nullable;
 import org.springframework.web.ErrorResponseException;
 
 import java.util.Map;
