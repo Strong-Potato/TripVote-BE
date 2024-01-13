@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Base64;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -23,6 +24,7 @@ public class TokenProvider {
     private static final Duration VERIFICATION_CODE_DURATION = Duration.ofSeconds(300);
     private static final String VERIFICATION_CODE_GENERATION_COUNT_PREFIX = "code_generation_count_";
     private static final Duration VERIFICATION_CODE_GENERATION_COUNT_DURATION = Duration.ofSeconds(300);
+    private static final int VERIFICATION_CODE_GENERATION_BLOCKED_COUNT = 5;
     private static final String BLOCKED_EMAIL_PREFIX = "blocked_email_";
     private static final Duration BLOCKED_EMAIL_DURATION = Duration.ofSeconds(300);
     private static final String REGISTER_TOKEN_PREFIX = "register_token_";
@@ -37,7 +39,9 @@ public class TokenProvider {
      */
     public String generateVerificationCode(String email) throws AuthException {
         if (isBlocked(email)) {
-            throw new AuthException(AuthErrorCode.VERIFICATION_CODE_GENERATE_BLOCKED);
+            String key = BLOCKED_EMAIL_PREFIX + email;
+            Long expire = redisTemplate.getExpire(key);
+            throw new AuthException(AuthErrorCode.VERIFICATION_CODE_GENERATE_BLOCKED, "data", Map.of("expire", expire));
         }
         countVerificationCodeGeneration(email);
         String key = VERIFICATION_CODE_PREFIX + email;
@@ -50,7 +54,7 @@ public class TokenProvider {
         String key = VERIFICATION_CODE_GENERATION_COUNT_PREFIX + email;
         Long count = redisTemplate.opsForValue().increment(key);
         redisTemplate.expire(key, VERIFICATION_CODE_GENERATION_COUNT_DURATION);
-        if (count != null && count >= 5) {
+        if (count != null && count >= VERIFICATION_CODE_GENERATION_BLOCKED_COUNT) {
             addToBlockedEmail(email);
         }
     }
@@ -63,7 +67,7 @@ public class TokenProvider {
 
     public boolean isBlocked(String email) {
         String key = BLOCKED_EMAIL_PREFIX + email;
-        return redisTemplate.hasKey(key) != null ? redisTemplate.hasKey(key) : false;
+        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
 
     private String generateSecureRandomCode(int length) {
