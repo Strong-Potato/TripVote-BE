@@ -3,6 +3,7 @@ package fc.be.app.domain.space.entity;
 import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.vote.entity.Vote;
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,7 +42,7 @@ public class Space {
     @OneToMany(mappedBy = "space")
     private List<Vote> voteSpaces;
 
-    @OneToMany(mappedBy = "space", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "space")
     private List<JoinedMember> joinedMembers;
 
     @Builder
@@ -53,15 +54,7 @@ public class Space {
 
     public static Space create() {
         return Space.builder()
-                .build();
-    }
-
-    public void addJourney(Journey journey) {
-        journeys.add(journey);
-    }
-
-    public void removeJourney(Journey journey) {
-        journeys.remove(journey);
+            .build();
     }
 
     public void updateByTitle(String title) {
@@ -72,64 +65,43 @@ public class Space {
 
     public void updateByDates(LocalDate startDate, LocalDate endDate) {
         validationDates(startDate, endDate);
-
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public void updateByDatesAndUpdateJourney(LocalDate startDate, LocalDate endDate) {
-        validationDates(startDate, endDate);
+    public List<Long> findByDeletedJourneyIds(LocalDate startDate, LocalDate endDate,
+        int daysToRemove) {
+        List<Long> journeyIds = new ArrayList<>();
 
-        int originalDays = daysBetween(this.startDate, this.endDate);
-        int newDays = daysBetween(startDate, endDate);
-
-        if (originalDays > newDays) {
-            updateJourneysForDecreasedDays(startDate, endDate, originalDays - newDays);
-        } else if (originalDays < newDays) {
-            updateJourneysForIncreasedDays(startDate, endDate, newDays - originalDays);
-        } else {
-            updateJourneysForSameDays(startDate, endDate);
+        for (int i = 0; i < daysToRemove; i++) {
+            journeyIds.add(journeys.get(journeys.size() - 1).getId());
         }
 
-        this.startDate = startDate;
-        this.endDate = endDate;
+        return journeyIds;
+    }
+
+    public List<Journey> findByAddedJourneys(LocalDate startDate, LocalDate endDate,
+        int daysToAdd) {
+        List<Journey> journeyList = new ArrayList<>();
+
+        for (int i = 0; i < daysToAdd; i++) {
+            journeyList.add(Journey.builder()
+                .date(startDate.plusDays(i))
+                .space(this)
+                .build());
+        }
+
+        return journeyList;
+    }
+
+    public void updateJourneys(int day) {
+        IntStream.range(0, day + 1)
+            .forEach(index -> journeys.get(index).updateDate(startDate.plusDays(index)));
     }
 
     private void validationDates(LocalDate startDate, LocalDate endDate) {
-        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+        if (startDate == null || endDate == null || startDate.isAfter(endDate)) {
             throw new SpaceException(INVALID_START_DATE);
         }
-    }
-
-    private void updateJourneysForDecreasedDays(LocalDate startDate, LocalDate endDate, int daysToRemove) {
-        for (int i = 0; i < daysToRemove; i++) {
-            journeys.remove(journeys.size() - 1);
-        }
-        updateJourneysCommon(startDate, endDate);
-    }
-
-    private void updateJourneysForIncreasedDays(LocalDate startDate, LocalDate endDate, int daysToAdd) {
-        for (int i = 0; i < daysToAdd; i++) {
-            Journey newJourney = Journey.builder()
-                    .date(startDate.plusDays(i)) // 날짜를 올바르게 설정
-                    .space(this)
-                    .build();
-            journeys.add(newJourney);
-        }
-
-        updateJourneysCommon(startDate, endDate);
-    }
-
-    private void updateJourneysForSameDays(LocalDate startDate, LocalDate endDate) {
-        updateJourneysCommon(startDate, endDate);
-    }
-
-    private void updateJourneysCommon(LocalDate startDate, LocalDate endDate) {
-        IntStream.range(0, daysBetween(startDate, endDate) + 1)
-                .forEach(index -> journeys.get(index).updateDate(startDate.plusDays(index)));
-    }
-
-    private static int daysBetween(LocalDate startDate, LocalDate endDate) {
-        return (int) Math.abs(startDate.toEpochDay() - endDate.toEpochDay());
     }
 }
