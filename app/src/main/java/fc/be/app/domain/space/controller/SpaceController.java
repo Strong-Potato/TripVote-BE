@@ -7,16 +7,12 @@ import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
 import fc.be.app.domain.space.dto.response.JourneyResponse;
 import fc.be.app.domain.space.dto.response.JourneysResponse;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
-import fc.be.app.domain.space.dto.response.SpacesResponse;
 import fc.be.app.domain.space.service.SpaceService;
-import fc.be.app.domain.space.vo.SpaceType;
 import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -54,14 +50,6 @@ public class SpaceController {
     ) {
         SpaceResponse spaceResponse = spaceService.updateSpaceByDates(spaceId, updateRequest);
         return ApiResponse.ok(spaceResponse);
-    }
-
-    @GetMapping
-    public ApiResponse<SpacesResponse> getSpaceListWithType(@RequestParam SpaceType type) {
-        // todo 로그인 구현 시 @AuthenticationPrincipal 어노테이션 등으로 변경할 예정
-        Long memberId = 1L;
-        return ApiResponse.ok(spaceService.findByEndDateAndMember(LocalDate.now(),
-                memberId, type));
     }
 
     @PutMapping("/{spaceId}/exit")

@@ -1,5 +1,6 @@
 package fc.be.app.domain.space.service;
 
+import fc.be.app.domain.member.dto.response.MySpaceResponse;
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
@@ -13,7 +14,6 @@ import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
 import fc.be.app.domain.space.dto.response.JourneyResponse;
 import fc.be.app.domain.space.dto.response.JourneysResponse;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
-import fc.be.app.domain.space.dto.response.SpacesResponse;
 import fc.be.app.domain.space.entity.JoinedMember;
 import fc.be.app.domain.space.entity.Journey;
 import fc.be.app.domain.space.entity.SelectedPlace;
@@ -26,6 +26,8 @@ import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.SpaceType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static fc.be.app.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
 import static fc.be.app.domain.place.exception.PlaceErrorCode.PLACE_NOT_LOADED;
@@ -115,10 +118,18 @@ public class SpaceService {
         return SpaceResponse.of(space);
     }
 
-    public SpacesResponse findByEndDateAndMember(LocalDate currentDate, Long memberId,
-                                                 SpaceType type) {
-        return SpacesResponse.from(
-                spaceRepository.findByEndDateAndMember(currentDate, memberId, type));
+    public MySpaceResponse findByEndDateAndMember(LocalDate currentDate, Long memberId, SpaceType type, Pageable pageRequest) {
+        Page<Space> myPages = spaceRepository.findByEndDateAndMember(currentDate, memberId, type, pageRequest);
+
+        int totalPages = myPages.getTotalPages();
+        long totalElements = myPages.getTotalElements();
+        int number = myPages.getNumber();
+        int size = myPages.getSize();
+        boolean first = myPages.isFirst();
+        boolean last = myPages.isLast();
+        List<SpaceResponse> content = myPages.get().map(space -> SpaceResponse.of(space)).collect(Collectors.toList());
+
+        return new MySpaceResponse(content, number, size, totalPages, totalElements, first, last);
     }
 
     @Transactional

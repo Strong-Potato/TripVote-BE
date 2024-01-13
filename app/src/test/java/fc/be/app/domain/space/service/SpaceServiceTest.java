@@ -4,13 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.groups.Tuple.tuple;
 
+import fc.be.app.domain.member.dto.response.MySpaceResponse;
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.space.dto.request.DateUpdateRequest;
 import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
-import fc.be.app.domain.space.dto.response.SpacesResponse;
 import fc.be.app.domain.space.entity.JoinedMember;
 import fc.be.app.domain.space.entity.Journey;
 import fc.be.app.domain.space.entity.Space;
@@ -20,14 +20,17 @@ import fc.be.app.domain.space.repository.JourneyRepository;
 import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.SpaceType;
 import fc.be.openapi.google.GooglePlacesService;
+
 import java.time.LocalDate;
 import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
@@ -65,8 +68,8 @@ class SpaceServiceTest {
     void createSpace() {
         // given
         Member member = Member.builder()
-            .nickname("tester")
-            .build();
+                .nickname("tester")
+                .build();
 
         Member savedMember = memberRepository.save(member);
 
@@ -76,8 +79,8 @@ class SpaceServiceTest {
         // then
         assertThat(savedSpace.id()).isNotNull();
         assertThat(savedSpace)
-            .extracting("title", "startDate", "endDate")
-            .containsNull();
+                .extracting("title", "startDate", "endDate")
+                .containsNull();
     }
 
     @DisplayName("여행스페이스 id(식별자)로 여행스페이스 값을 가져온다.")
@@ -92,9 +95,9 @@ class SpaceServiceTest {
 
         // then
         assertThat(target)
-            .extracting("id", "title", "startDate", "endDate")
-            .contains(savedSpace.getId(), savedSpace.getTitle(), savedSpace.getStartDate(),
-                savedSpace.getEndDate());
+                .extracting("id", "title", "startDate", "endDate")
+                .contains(savedSpace.getId(), savedSpace.getTitle(), savedSpace.getStartDate(),
+                        savedSpace.getEndDate());
     }
 
     @DisplayName("올바르지 않거나 없는 식별자로 조회 시 예외를 발생시킨다.")
@@ -108,8 +111,8 @@ class SpaceServiceTest {
 
         // when then
         assertThatThrownBy(() -> spaceService.getSpaceById(spaceId))
-            .isInstanceOf(SpaceException.class)
-            .hasMessageContaining("여행스페이스 정보가 존재하지 않습니다.");
+                .isInstanceOf(SpaceException.class)
+                .hasMessageContaining("여행스페이스 정보가 존재하지 않습니다.");
     }
 
     @DisplayName("여행 스페이스의 타이틀(title)을 업데이트를 한다.")
@@ -120,12 +123,12 @@ class SpaceServiceTest {
         Space savedSpace = spaceRepository.save(space);
 
         TitleUpdateRequest updateRequest = TitleUpdateRequest.builder()
-            .title("서울 여행")
-            .build();
+                .title("서울 여행")
+                .build();
 
         // when
         SpaceResponse spaceResponse = spaceService.updateSpaceByTitle(savedSpace.getId(),
-            updateRequest);
+                updateRequest);
 
         // then
         assertThat(spaceResponse.title()).isEqualTo(updateRequest.title());
@@ -139,13 +142,13 @@ class SpaceServiceTest {
         Space savedSpace = spaceRepository.save(space);
 
         DateUpdateRequest updateRequest = DateUpdateRequest.builder()
-            .startDate(LocalDate.of(2024, 1, 6))
-            .endDate(LocalDate.of(2024, 1, 9))
-            .build();
+                .startDate(LocalDate.of(2024, 1, 6))
+                .endDate(LocalDate.of(2024, 1, 9))
+                .build();
 
         // when
         SpaceResponse spaceResponse = spaceService.updateSpaceByDates(savedSpace.getId(),
-            updateRequest);
+                updateRequest);
 
         // then
         assertThat(spaceResponse.startDate()).isEqualTo(updateRequest.startDate());
@@ -160,18 +163,18 @@ class SpaceServiceTest {
         Space savedSpace = spaceRepository.save(space);
 
         List<Journey> journeys = Journey.createJourneys(LocalDate.of(2024, 1, 7),
-            LocalDate.of(2024, 1, 10), savedSpace);
+                LocalDate.of(2024, 1, 10), savedSpace);
 
         journeyRepository.saveAll(journeys);
 
         DateUpdateRequest updateRequest = DateUpdateRequest.builder()
-            .startDate(LocalDate.of(2024, 1, 6))
-            .endDate(LocalDate.of(2024, 1, 8))
-            .build();
+                .startDate(LocalDate.of(2024, 1, 6))
+                .endDate(LocalDate.of(2024, 1, 8))
+                .build();
 
         // when
         SpaceResponse spaceResponse = spaceService.updateSpaceByDates(savedSpace.getId(),
-            updateRequest);
+                updateRequest);
 
         // then
         assertThat(spaceResponse.startDate()).isEqualTo(updateRequest.startDate());
@@ -189,8 +192,8 @@ class SpaceServiceTest {
         spaceRepository.saveAll(List.of(space1, space2, space3));
 
         Member member = Member.builder()
-            .nickname("tester")
-            .build();
+                .nickname("tester")
+                .build();
 
         Member savedMember = memberRepository.save(member);
 
@@ -201,17 +204,17 @@ class SpaceServiceTest {
         joinedMemberRepository.saveAll(List.of(joinedMember1, joinedMember2, joinedMember3));
 
         // when
-        SpacesResponse spacesResponse = spaceService.findByEndDateAndMember(
-            LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.PAST);
+        MySpaceResponse mySpaceResponse = spaceService.findByEndDateAndMember(
+                LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.PAST, PageRequest.of(0, 10));
 
         // then
-        assertThat(spacesResponse.spaces()).hasSize(2);
-        assertThat(spacesResponse.spaces())
-            .extracting("title", "startDate", "endDate")
-            .containsExactlyInAnyOrder(
-                tuple(space2.getTitle(), space2.getStartDate(), space2.getEndDate()),
-                tuple(space3.getTitle(), space3.getStartDate(), space3.getEndDate())
-            );
+        assertThat(mySpaceResponse.spaces()).hasSize(2);
+        assertThat(mySpaceResponse.spaces())
+                .extracting("title", "startDate", "endDate")
+                .containsExactlyInAnyOrder(
+                        tuple(space2.getTitle(), space2.getStartDate(), space2.getEndDate()),
+                        tuple(space3.getTitle(), space3.getStartDate(), space3.getEndDate())
+                );
     }
 
     @DisplayName("예정인 여행스페이스들을 조회한다.")
@@ -225,8 +228,8 @@ class SpaceServiceTest {
         spaceRepository.saveAll(List.of(space1, space2, space3));
 
         Member member = Member.builder()
-            .nickname("tester")
-            .build();
+                .nickname("tester")
+                .build();
 
         Member savedMember = memberRepository.save(member);
 
@@ -237,17 +240,17 @@ class SpaceServiceTest {
         joinedMemberRepository.saveAll(List.of(joinedMember1, joinedMember2, joinedMember3));
 
         // when
-        SpacesResponse spacesResponses = spaceService.findByEndDateAndMember(
-            LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.UPCOMING);
+        MySpaceResponse mySpaceResponse = spaceService.findByEndDateAndMember(
+                LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.UPCOMING, PageRequest.of(0, 10));
 
         // then
-        assertThat(spacesResponses.spaces()).hasSize(2);
-        assertThat(spacesResponses.spaces())
-            .extracting("title", "startDate", "endDate")
-            .containsExactlyInAnyOrder(
-                tuple(space1.getTitle(), space1.getStartDate(), space1.getEndDate()),
-                tuple(space2.getTitle(), space2.getStartDate(), space2.getEndDate())
-            );
+        assertThat(mySpaceResponse.spaces()).hasSize(2);
+        assertThat(mySpaceResponse.spaces())
+                .extracting("title", "startDate", "endDate")
+                .containsExactlyInAnyOrder(
+                        tuple(space1.getTitle(), space1.getStartDate(), space1.getEndDate()),
+                        tuple(space2.getTitle(), space2.getStartDate(), space2.getEndDate())
+                );
     }
 
     @DisplayName("여행스페이스 방에서 나간다.(정상케이스)")
@@ -258,8 +261,8 @@ class SpaceServiceTest {
         spaceRepository.save(space);
 
         Member member = Member.builder()
-            .nickname("tester")
-            .build();
+                .nickname("tester")
+                .build();
         Member savedMember = memberRepository.save(member);
 
         JoinedMember joinedMember = createJoinedMember(space, member);
@@ -277,8 +280,8 @@ class SpaceServiceTest {
         spaceRepository.save(space);
 
         Member member = Member.builder()
-            .nickname("tester")
-            .build();
+                .nickname("tester")
+                .build();
         Member savedMember = memberRepository.save(member);
 
         JoinedMember joinedMember = createJoinedMember(space, member);
@@ -286,8 +289,8 @@ class SpaceServiceTest {
 
         // when then
         assertThatThrownBy(() -> spaceService.exitSpace(space.getId() + 1, savedMember.getId()))
-            .isInstanceOf(SpaceException.class)
-            .hasMessageContaining("여행스페이스 정보가 존재하지 않습니다.");
+                .isInstanceOf(SpaceException.class)
+                .hasMessageContaining("여행스페이스 정보가 존재하지 않습니다.");
     }
 
     @DisplayName("여행스페이스 방에서 나간다.(해당 멤버가 존재하지 않을경우)")
@@ -298,8 +301,8 @@ class SpaceServiceTest {
         spaceRepository.save(space);
 
         Member member = Member.builder()
-            .nickname("tester")
-            .build();
+                .nickname("tester")
+                .build();
         Member savedMember = memberRepository.save(member);
 
         JoinedMember joinedMember = createJoinedMember(space, member);
@@ -307,8 +310,8 @@ class SpaceServiceTest {
 
         // when then
         assertThatThrownBy(() -> spaceService.exitSpace(space.getId(), savedMember.getId() + 1))
-            .isInstanceOf(MemberException.class)
-            .hasMessageContaining("해당 사용자가 존재하지 않습니다.");
+                .isInstanceOf(MemberException.class)
+                .hasMessageContaining("해당 사용자가 존재하지 않습니다.");
     }
 
     @DisplayName("여행스페이스 방에서 나간다.(해당 여행스페이스에 초대되어 있지 않는 경우)")
@@ -319,28 +322,28 @@ class SpaceServiceTest {
         spaceRepository.save(space);
 
         Member member = Member.builder()
-            .nickname("tester")
-            .build();
+                .nickname("tester")
+                .build();
         Member savedMember = memberRepository.save(member);
 
         // when then
         assertThatThrownBy(() -> spaceService.exitSpace(space.getId(), savedMember.getId()))
-            .isInstanceOf(SpaceException.class)
-            .hasMessageContaining("해당 여행스페이스의 초대되어 있지 않습니다.");
+                .isInstanceOf(SpaceException.class)
+                .hasMessageContaining("해당 여행스페이스의 초대되어 있지 않습니다.");
     }
 
     private JoinedMember createJoinedMember(Space space1, Member member) {
         return JoinedMember.builder()
-            .space(space1)
-            .member(member)
-            .build();
+                .space(space1)
+                .member(member)
+                .build();
     }
 
     private Space createSpace(LocalDate startDate, LocalDate endDate) {
         return Space.builder()
-            .title("부산 여행")
-            .startDate(startDate)
-            .endDate(endDate)
-            .build();
+                .title("부산 여행")
+                .startDate(startDate)
+                .endDate(endDate)
+                .build();
     }
 }

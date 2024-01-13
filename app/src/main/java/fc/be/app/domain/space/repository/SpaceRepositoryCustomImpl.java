@@ -1,10 +1,14 @@
 package fc.be.app.domain.space.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.vo.SpaceType;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,9 +25,8 @@ public class SpaceRepositoryCustomImpl implements SpaceRepositoryCustom {
     }
 
     @Override
-    public List<Space> findByEndDateAndMember(LocalDate endDate, Long memberId,
-                                              SpaceType type) {
-        return queryFactory
+    public Page<Space> findByEndDateAndMember(LocalDate endDate, Long memberId, SpaceType type, Pageable pageRequest) {
+        List<Space> content = queryFactory
                 .selectFrom(space)
                 .leftJoin(space.joinedMembers, joinedMember)
                 .on(joinedMember.space.id.eq(space.id))
@@ -32,7 +35,22 @@ public class SpaceRepositoryCustomImpl implements SpaceRepositoryCustom {
                         goeUpComingEndDate(endDate, type),
                         ltPastEndDate(endDate, type)
                 )
+                .offset(pageRequest.getOffset())
+                .limit(pageRequest.getPageSize())
                 .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(space.count())
+                .from(space)
+                .leftJoin(space.joinedMembers, joinedMember)
+                .on(joinedMember.space.id.eq(space.id))
+                .where(
+                        eqLeftSpaceAndMember(false, memberId),
+                        goeUpComingEndDate(endDate, type),
+                        ltPastEndDate(endDate, type)
+                );
+
+        return PageableExecutionUtils.getPage(content, pageRequest, countQuery::fetchOne);
     }
 
     private BooleanExpression eqLeftSpaceAndMember(Boolean leftSpace, Long memberId) {

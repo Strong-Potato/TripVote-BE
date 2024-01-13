@@ -9,6 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
@@ -41,8 +43,8 @@ class SpaceRepositoryTest {
         spaceRepository.saveAll(List.of(space1, space2, space3));
 
         Member member = Member.builder()
-            .nickname("tester")
-            .build();
+                .nickname("tester")
+                .build();
 
         Member savedMember = memberRepository.save(member);
 
@@ -53,16 +55,16 @@ class SpaceRepositoryTest {
         joinedMemberRepository.saveAll(List.of(joinedMember1, joinedMember2, joinedMember3));
 
         // when
-        List<Space> spaces = spaceRepository.findByEndDateAndMember(
-            LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.PAST);
+        Page<Space> spaces = spaceRepository.findByEndDateAndMember(
+                LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.PAST, PageRequest.of(0, 10));
 
         // then
-        assertThat(spaces).hasSize(2)
-            .extracting("startDate", "endDate")
-            .containsExactlyInAnyOrder(
-                tuple(space2.getStartDate(), space2.getEndDate()),
-                tuple(space3.getStartDate(), space3.getEndDate())
-            );
+        assertThat(spaces.getContent()).hasSize(2)
+                .extracting("startDate", "endDate")
+                .containsExactlyInAnyOrder(
+                        tuple(space2.getStartDate(), space2.getEndDate()),
+                        tuple(space3.getStartDate(), space3.getEndDate())
+                );
     }
 
     @DisplayName("기준일 기준하에 지난간 일정을 조회한다.")
@@ -76,8 +78,8 @@ class SpaceRepositoryTest {
         spaceRepository.saveAll(List.of(space1, space2, space3));
 
         Member member = Member.builder()
-            .nickname("tester")
-            .build();
+                .nickname("tester")
+                .build();
 
         Member savedMember = memberRepository.save(member);
 
@@ -88,30 +90,30 @@ class SpaceRepositoryTest {
         joinedMemberRepository.saveAll(List.of(joinedMember1, joinedMember2, joinedMember3));
 
         // when
-        List<Space> spaces = spaceRepository.findByEndDateAndMember(
-            LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.UPCOMING);
+        Page<Space> spaces = spaceRepository.findByEndDateAndMember(
+                LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.UPCOMING, PageRequest.of(0, 10));
 
         // then
-        assertThat(spaces).hasSize(2)
-            .extracting("startDate", "endDate")
-            .containsExactlyInAnyOrder(
-                tuple(space2.getStartDate(), space2.getEndDate()),
-                tuple(space1.getStartDate(), space1.getEndDate())
-            );
+        assertThat(spaces.getContent()).hasSize(2)
+                .extracting("startDate", "endDate")
+                .containsExactlyInAnyOrder(
+                        tuple(space2.getStartDate(), space2.getEndDate()),
+                        tuple(space1.getStartDate(), space1.getEndDate())
+                );
     }
 
     private Space createSpace(LocalDate startDate, LocalDate endDate) {
         return Space.builder()
-            .title("부산 여행")
-            .startDate(startDate)
-            .endDate(endDate)
-            .build();
+                .title("부산 여행")
+                .startDate(startDate)
+                .endDate(endDate)
+                .build();
     }
 
     private JoinedMember createJoinedMember(Space space1, Member member) {
         return JoinedMember.builder()
-            .space(space1)
-            .member(member)
-            .build();
+                .space(space1)
+                .member(member)
+                .build();
     }
 }
