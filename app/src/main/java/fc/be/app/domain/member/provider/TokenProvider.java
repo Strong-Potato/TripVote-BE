@@ -67,7 +67,7 @@ public class TokenProvider {
 
     public boolean isBlocked(String email) {
         String key = BLOCKED_EMAIL_PREFIX + email;
-        return redisTemplate.hasKey(key) != null ? redisTemplate.hasKey(key) : false;
+        return redisTemplate.hasKey(key) != null && Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
 
     private String generateSecureRandomCode(int length) {
