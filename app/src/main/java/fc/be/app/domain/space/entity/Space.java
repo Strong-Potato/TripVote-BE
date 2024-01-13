@@ -97,7 +97,7 @@ public class Space {
     }
 
     public void updateJourneys(int day) {
-        IntStream.range(0, day + 1)
+        IntStream.rangeClosed(0, day)
                 .forEach(index -> journeys.get(index).updateDate(startDate.plusDays(index)));
     }
 

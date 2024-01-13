@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public record JourneysResponse(
-        List<JourneyResponse> journeyResponses
+        List<JourneyResponse> journeys
 ) {
     public static JourneysResponse from(List<Journey> journeys) {
         List<JourneyResponse> journeyResponses = journeys.stream()
