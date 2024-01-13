@@ -5,8 +5,8 @@ import lombok.Builder;
 
 @Builder
 public record TitleUpdateRequest(
-    @NotBlank(message = "타이틀은 빈값을 넣을 수 없습니다.")
-    String title
+        @NotBlank(message = "타이틀은 빈값을 넣을 수 없습니다.")
+        String title
 ) {
 
 }

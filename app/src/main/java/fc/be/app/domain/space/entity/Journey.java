@@ -1,7 +1,9 @@
 package fc.be.app.domain.space.entity;
 
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,14 +42,14 @@ public class Journey {
     }
 
     public static List<Journey> createJourneys(LocalDate startDate, LocalDate endDate,
-        Space space) {
+                                               Space space) {
         List<Journey> journeyList = new ArrayList<>();
 
         startDate.datesUntil(endDate.plusDays(1)).forEach(currentDate -> journeyList.add(
-            Journey.builder()
-                .date(currentDate)
-                .space(space)
-                .build()
+                Journey.builder()
+                        .date(currentDate)
+                        .space(space)
+                        .build()
         ));
 
         return journeyList;

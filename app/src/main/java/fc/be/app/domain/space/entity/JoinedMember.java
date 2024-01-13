@@ -46,10 +46,10 @@ public class JoinedMember {
 
     public static JoinedMember create(Space space, Member member) {
         return JoinedMember.builder()
-            .space(space)
-            .member(member)
-            .leftSpace(false)
-            .build();
+                .space(space)
+                .member(member)
+                .leftSpace(false)
+                .build();
     }
 
     public void updateLeftSpace(Boolean leftSpace) {
