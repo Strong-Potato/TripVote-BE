@@ -1,11 +1,12 @@
 package fc.be.app.domain.member.controller;
 
 import fc.be.app.domain.member.dto.response.MyInfoResponse;
-import fc.be.app.domain.member.dto.response.MySpaceResponse;
+import fc.be.app.domain.member.dto.response.MySpacesResponse;
 import fc.be.app.domain.member.exception.MemberErrorCode;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.service.MemberQuery;
 import fc.be.app.domain.member.service.MemberQuery.MemberResponse;
+import fc.be.app.domain.space.dto.response.SpacesResponse;
 import fc.be.app.domain.space.service.SpaceService;
 import fc.be.app.domain.space.vo.SpaceType;
 import fc.be.app.global.config.security.model.user.UserPrincipal;
@@ -34,25 +35,25 @@ public class MemberController {
         return ApiResponse.ok(MyInfoResponse.from(memberResponse));
     }
 
-    @GetMapping("/my-space")
-    public ApiResponse<MySpaceResponse> mySpace(@AuthenticationPrincipal UserPrincipal userPrincipal, Pageable pageable) {
+    @GetMapping("/my-spaces")
+    public ApiResponse<MySpacesResponse> mySpaces(@AuthenticationPrincipal UserPrincipal userPrincipal, Pageable pageable) {
         Long id = userPrincipal.id();
         // TODO: SpaceType의 역할? All도 필요한가?
-        MySpaceResponse mySpaceResponse = spaceService.findByEndDateAndMember(LocalDate.now(), id, null, pageable);
-        return ApiResponse.ok(mySpaceResponse);
+        SpacesResponse spacesResponse = spaceService.findByEndDateAndMember(LocalDate.now(), id, null, pageable);
+        return ApiResponse.ok(MySpacesResponse.from(spacesResponse));
     }
 
-    @GetMapping("/my-space/outdated")
-    public ApiResponse<MySpaceResponse> mySpaceOutdated(@AuthenticationPrincipal UserPrincipal userPrincipal, Pageable pageable) {
+    @GetMapping("/my-spaces/outdated")
+    public ApiResponse<MySpacesResponse> mySpacesOutdated(@AuthenticationPrincipal UserPrincipal userPrincipal, Pageable pageable) {
         Long id = userPrincipal.id();
-        MySpaceResponse mySpaceResponse = spaceService.findByEndDateAndMember(LocalDate.now(), id, SpaceType.PAST, pageable);
-        return ApiResponse.ok(mySpaceResponse);
+        SpacesResponse spacesResponse = spaceService.findByEndDateAndMember(LocalDate.now(), id, SpaceType.PAST, pageable);
+        return ApiResponse.ok(MySpacesResponse.from(spacesResponse));
     }
 
-    @GetMapping("/my-space/upcoming")
-    public ApiResponse<MySpaceResponse> mySpaceUpcoming(@AuthenticationPrincipal UserPrincipal userPrincipal, Pageable pageable) {
+    @GetMapping("/my-spaces/upcoming")
+    public ApiResponse<MySpacesResponse> mySpacesUpcoming(@AuthenticationPrincipal UserPrincipal userPrincipal, Pageable pageable) {
         Long id = userPrincipal.id();
-        MySpaceResponse mySpaceResponse = spaceService.findByEndDateAndMember(LocalDate.now(), id, SpaceType.UPCOMING, pageable);
-        return ApiResponse.ok(mySpaceResponse);
+        SpacesResponse mySpacesResponse = spaceService.findByEndDateAndMember(LocalDate.now(), id, SpaceType.UPCOMING, pageable);
+        return ApiResponse.ok(MySpacesResponse.from(mySpacesResponse));
     }
 }
