@@ -6,6 +6,7 @@ import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.domain.review.dto.*;
+import fc.be.app.domain.review.dto.response.ReviewResponse;
 import fc.be.app.domain.review.dto.response.ReviewsResponse;
 import fc.be.app.domain.review.entity.Review;
 import fc.be.app.domain.review.exception.ReviewErrorCode;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,7 +63,16 @@ public class ReviewService {
 
     public ReviewsResponse getMemberReviews(Long memberId, Pageable pageable) {
         Page<Review> reviews = reviewRepository.findByMemberId(memberId, pageable);
-        return ReviewsResponse.from(reviews);
+
+        int totalPages = reviews.getTotalPages();
+        long totalElements = reviews.getTotalElements();
+        int number = reviews.getNumber();
+        int size = reviews.getSize();
+        boolean first = reviews.isFirst();
+        boolean last = reviews.isLast();
+        List<ReviewResponse> content = reviews.get().map(ReviewResponse::of).collect(Collectors.toList());
+
+        return new ReviewsResponse(content, number, size, totalPages, totalElements, first, last);
     }
 
     @Transactional
