@@ -1,6 +1,7 @@
 package fc.be.app.domain.member.controller;
 
 import fc.be.app.domain.member.dto.response.MyInfoResponse;
+import fc.be.app.domain.member.dto.response.MyPlacesResponse;
 import fc.be.app.domain.member.dto.response.MyReviewsResponse;
 import fc.be.app.domain.member.dto.response.MySpacesResponse;
 import fc.be.app.domain.member.exception.MemberErrorCode;
@@ -12,6 +13,8 @@ import fc.be.app.domain.review.service.ReviewService;
 import fc.be.app.domain.space.dto.response.SpacesResponse;
 import fc.be.app.domain.space.service.SpaceService;
 import fc.be.app.domain.space.vo.SpaceType;
+import fc.be.app.domain.wish.dto.WishGetResponse;
+import fc.be.app.domain.wish.service.WishService;
 import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.http.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,7 @@ public class MemberController {
     private final MemberQuery memberQuery;
     private final SpaceService spaceService;
     private final ReviewService reviewService;
+    private final WishService wishService;
 
     @GetMapping("/my-info")
     public ApiResponse<MyInfoResponse> myInfo(@AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -66,5 +70,12 @@ public class MemberController {
         Long id = userPrincipal.id();
         ReviewsResponse reviewsResponse = reviewService.getMemberReviews(id, pageable);
         return ApiResponse.ok(MyReviewsResponse.from(reviewsResponse));
+    }
+
+    @GetMapping("/my-places")
+    public ApiResponse<MyPlacesResponse> myPlaces(@AuthenticationPrincipal UserPrincipal userPrincipal, Pageable pageable) {
+        Long id = userPrincipal.id();
+        WishGetResponse wishesResponse = wishService.getWishes(id, pageable);
+        return ApiResponse.ok(MyPlacesResponse.from(wishesResponse));
     }
 }
