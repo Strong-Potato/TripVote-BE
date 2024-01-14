@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
+    @Query("SELECT r FROM Review r join fetch r.member join fetch r.place")
     Page<Review> findByMemberId(Long memberId, Pageable pageable);
 
     Page<Review> findByPlaceId(Integer placeId, Pageable pageable);

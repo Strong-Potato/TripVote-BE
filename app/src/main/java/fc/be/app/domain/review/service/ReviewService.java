@@ -6,6 +6,7 @@ import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.domain.review.dto.*;
+import fc.be.app.domain.review.dto.response.ReviewsResponse;
 import fc.be.app.domain.review.entity.Review;
 import fc.be.app.domain.review.exception.ReviewErrorCode;
 import fc.be.app.domain.review.exception.ReviewException;
@@ -15,6 +16,7 @@ import fc.be.openapi.google.ReviewJsonReader;
 import fc.be.openapi.google.dto.review.GoogleReviewResponse;
 import fc.be.openapi.google.dto.review.form.GoogleRatingResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +41,7 @@ public class ReviewService {
         Integer placeId = reviewCreateRequest.placeId();
         Integer contentTypeId = reviewCreateRequest.contentTypeId();
 
-        Member member = memberRepository.findById(1L).orElseThrow(()->
+        Member member = memberRepository.findById(1L).orElseThrow(() ->
                 new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         placeService.saveOrUpdatePlace(placeId, contentTypeId);
@@ -57,11 +59,9 @@ public class ReviewService {
         return ReviewEditResponse.from(reviewRepository.save(review));
     }
 
-    public ReviewGetMemberResponse getMemberReviews(Pageable pageable) {
-        Long memberId = 1L;
-        // todo [Review] Security 적용 -2
-        return ReviewGetMemberResponse.from(
-                reviewRepository.findByMemberId(memberId, pageable).toList());
+    public ReviewsResponse getMemberReviews(Long memberId, Pageable pageable) {
+        Page<Review> reviews = reviewRepository.findByMemberId(memberId, pageable);
+        return ReviewsResponse.from(reviews);
     }
 
     @Transactional
