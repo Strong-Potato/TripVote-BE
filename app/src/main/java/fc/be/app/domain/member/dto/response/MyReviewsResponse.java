@@ -17,20 +17,20 @@ public record MyReviewsResponse(
 ) {
     public record MyReview(
             Long id,
-            PlaceResponse place,
+            ReviewedPlace place,
             LocalDate visitedAt,
             Integer rating,
             String content
     ) {
-        public record PlaceResponse(
+        public record ReviewedPlace(
                 Long id,
                 String area,
                 String category,
                 String title,
                 String thumbnail
         ) {
-            public static PlaceResponse from(ReviewResponse.PlaceInfo placeInfo) {
-                return new PlaceResponse(
+            public static ReviewedPlace from(ReviewResponse.PlaceInfo placeInfo) {
+                return new ReviewedPlace(
                         placeInfo.id().longValue(),
                         placeInfo.area(),
                         placeInfo.category(),
@@ -43,7 +43,7 @@ public record MyReviewsResponse(
         public static MyReview from(ReviewResponse reviewResponse) {
             return new MyReview(
                     reviewResponse.id(),
-                    PlaceResponse.from(reviewResponse.place()),
+                    ReviewedPlace.from(reviewResponse.place()),
                     reviewResponse.visitedAt(),
                     reviewResponse.rating(),
                     reviewResponse.content()
