@@ -1,11 +1,14 @@
 package fc.be.app.domain.member.controller;
 
 import fc.be.app.domain.member.dto.response.MyInfoResponse;
+import fc.be.app.domain.member.dto.response.MyReviewsResponse;
 import fc.be.app.domain.member.dto.response.MySpacesResponse;
 import fc.be.app.domain.member.exception.MemberErrorCode;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.service.MemberQuery;
 import fc.be.app.domain.member.service.MemberQuery.MemberResponse;
+import fc.be.app.domain.review.dto.response.ReviewsResponse;
+import fc.be.app.domain.review.service.ReviewService;
 import fc.be.app.domain.space.dto.response.SpacesResponse;
 import fc.be.app.domain.space.service.SpaceService;
 import fc.be.app.domain.space.vo.SpaceType;
@@ -26,6 +29,7 @@ import java.time.LocalDate;
 public class MemberController {
     private final MemberQuery memberQuery;
     private final SpaceService spaceService;
+    private final ReviewService reviewService;
 
     @GetMapping("/my-info")
     public ApiResponse<MyInfoResponse> myInfo(@AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -55,5 +59,12 @@ public class MemberController {
         Long id = userPrincipal.id();
         SpacesResponse mySpacesResponse = spaceService.findByEndDateAndMember(LocalDate.now(), id, SpaceType.UPCOMING, pageable);
         return ApiResponse.ok(MySpacesResponse.from(mySpacesResponse));
+    }
+
+    @GetMapping("/my-reviews")
+    public ApiResponse<MySpacesResponse> myReviews(@AuthenticationPrincipal UserPrincipal userPrincipal, Pageable pageable) {
+        Long id = userPrincipal.id();
+        ReviewsResponse reviewsResponse = reviewService.getMemberReviews(id, pageable);
+        return ApiResponse.ok(MyReviewsResponse.from(reviewsResponse));
     }
 }
