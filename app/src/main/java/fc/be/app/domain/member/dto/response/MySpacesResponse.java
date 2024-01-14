@@ -16,7 +16,7 @@ public record MySpacesResponse(
         boolean first,
         boolean last
 ) {
-    private record MySpace(
+    public record MySpace(
             Long id,
             String title,
             LocalDate startDate,
