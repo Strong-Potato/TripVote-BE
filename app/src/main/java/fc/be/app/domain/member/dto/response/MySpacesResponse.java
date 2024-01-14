@@ -29,7 +29,7 @@ public record MySpacesResponse(
                     spaceResponse.title(),
                     spaceResponse.startDate(),
                     spaceResponse.endDate(),
-                    ChronoUnit.DAYS.between(spaceResponse.startDate(), LocalDate.now())
+                    ChronoUnit.DAYS.between(LocalDate.now(), spaceResponse.startDate())
             );
         }
     }
