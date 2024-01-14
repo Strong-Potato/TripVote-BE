@@ -1,6 +1,5 @@
 package fc.be.app.domain.space.service;
 
-import fc.be.app.domain.member.dto.response.MySpaceResponse;
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
@@ -14,6 +13,7 @@ import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
 import fc.be.app.domain.space.dto.response.JourneyResponse;
 import fc.be.app.domain.space.dto.response.JourneysResponse;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
+import fc.be.app.domain.space.dto.response.SpacesResponse;
 import fc.be.app.domain.space.entity.JoinedMember;
 import fc.be.app.domain.space.entity.Journey;
 import fc.be.app.domain.space.entity.SelectedPlace;
@@ -118,7 +118,7 @@ public class SpaceService {
         return SpaceResponse.of(space);
     }
 
-    public MySpaceResponse findByEndDateAndMember(LocalDate currentDate, Long memberId, SpaceType type, Pageable pageRequest) {
+    public SpacesResponse findByEndDateAndMember(LocalDate currentDate, Long memberId, SpaceType type, Pageable pageRequest) {
         Page<Space> myPages = spaceRepository.findByEndDateAndMember(currentDate, memberId, type, pageRequest);
 
         int totalPages = myPages.getTotalPages();
@@ -127,9 +127,9 @@ public class SpaceService {
         int size = myPages.getSize();
         boolean first = myPages.isFirst();
         boolean last = myPages.isLast();
-        List<SpaceResponse> content = myPages.get().map(space -> SpaceResponse.of(space)).collect(Collectors.toList());
+        List<SpaceResponse> content = myPages.get().map(SpaceResponse::of).collect(Collectors.toList());
 
-        return new MySpaceResponse(content, number, size, totalPages, totalElements, first, last);
+        return new SpacesResponse(content, number, size, totalPages, totalElements, first, last);
     }
 
     @Transactional

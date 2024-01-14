@@ -4,13 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.groups.Tuple.tuple;
 
-import fc.be.app.domain.member.dto.response.MySpaceResponse;
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.space.dto.request.DateUpdateRequest;
 import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
+import fc.be.app.domain.space.dto.response.SpacesResponse;
 import fc.be.app.domain.space.entity.JoinedMember;
 import fc.be.app.domain.space.entity.Journey;
 import fc.be.app.domain.space.entity.Space;
@@ -204,12 +204,12 @@ class SpaceServiceTest {
         joinedMemberRepository.saveAll(List.of(joinedMember1, joinedMember2, joinedMember3));
 
         // when
-        MySpaceResponse mySpaceResponse = spaceService.findByEndDateAndMember(
+        SpacesResponse spaceResponse = spaceService.findByEndDateAndMember(
                 LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.PAST, PageRequest.of(0, 10));
 
         // then
-        assertThat(mySpaceResponse.spaces()).hasSize(2);
-        assertThat(mySpaceResponse.spaces())
+        assertThat(spaceResponse.spaces()).hasSize(2);
+        assertThat(spaceResponse.spaces())
                 .extracting("title", "startDate", "endDate")
                 .containsExactlyInAnyOrder(
                         tuple(space2.getTitle(), space2.getStartDate(), space2.getEndDate()),
@@ -240,12 +240,12 @@ class SpaceServiceTest {
         joinedMemberRepository.saveAll(List.of(joinedMember1, joinedMember2, joinedMember3));
 
         // when
-        MySpaceResponse mySpaceResponse = spaceService.findByEndDateAndMember(
+        SpacesResponse spaceResponse = spaceService.findByEndDateAndMember(
                 LocalDate.of(2024, 1, 8), savedMember.getId(), SpaceType.UPCOMING, PageRequest.of(0, 10));
 
         // then
-        assertThat(mySpaceResponse.spaces()).hasSize(2);
-        assertThat(mySpaceResponse.spaces())
+        assertThat(spaceResponse.spaces()).hasSize(2);
+        assertThat(spaceResponse.spaces())
                 .extracting("title", "startDate", "endDate")
                 .containsExactlyInAnyOrder(
                         tuple(space1.getTitle(), space1.getStartDate(), space1.getEndDate()),
