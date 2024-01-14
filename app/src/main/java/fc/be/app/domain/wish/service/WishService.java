@@ -9,6 +9,7 @@ import fc.be.app.domain.wish.entity.Wish;
 import fc.be.app.domain.wish.repository.WishRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +38,16 @@ public class WishService {
     }
 
     public WishGetResponse getWishes(Long memberId, Pageable pageable) {
-        return WishGetResponse.from(wishRepository.findAllByMemberId(memberId, pageable).toList());
+        Page<Wish> myWishes = wishRepository.findAllByMemberId(memberId, pageable);
+
+        int totalPages = myWishes.getTotalPages();
+        long totalElements = myWishes.getTotalElements();
+        int number = myWishes.getNumber();
+        int size = myWishes.getSize();
+        boolean first = myWishes.isFirst();
+        boolean last = myWishes.isLast();
+
+        return WishGetResponse.from(myWishes.getContent(), number, size, totalPages, totalElements, first, last);
     }
 
     @Transactional

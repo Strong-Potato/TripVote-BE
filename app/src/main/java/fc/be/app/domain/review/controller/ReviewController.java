@@ -47,13 +47,4 @@ public class ReviewController {
         return ApiResponse.ok(reviewService.bringJsonReviewInfo(reviewGetRequest,
                 PageRequest.of(page, size, Sort.by("visitedAt").descending())));
     }
-
-    @GetMapping("/my")
-    public ApiResponse<ReviewGetResponse> getMemberReviews(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        return ApiResponse.ok(reviewService.getMemberReviews(PageRequest.of(page, size,
-                Sort.by("visitedAt").descending())));
-    }
 }

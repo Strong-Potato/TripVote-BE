@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Optional;
 
 public interface MemberQuery {
+    Optional<MemberResponse> findById(Long id);
+
     Optional<MemberResponse> find(@Valid MemberRequest request);
 
     Optional<MemberResponse> find(@Valid ProviderMemberRequest request);

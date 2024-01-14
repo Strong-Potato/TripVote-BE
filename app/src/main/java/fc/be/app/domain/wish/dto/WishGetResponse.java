@@ -8,35 +8,49 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record WishGetResponse(
-        List<Item> wishes
+        List<Item> wishes,
+        Integer pageNumber,
+        Integer pageSize,
+        Integer totalPages,
+        Long totalResult,
+        boolean first,
+        boolean last
 ) {
-    public static WishGetResponse from(List<Wish> wishes) {
+    public static WishGetResponse from(List<Wish> wishes, Integer pageNumber, Integer pageSize, Integer totalPages, Long totalResult, boolean first, boolean last) {
         return new WishGetResponse(wishes.stream()
                 .map(wish -> new Item(
-                        PlaceSearsh.builder()
+                        PlaceSearch.builder()
                                 .id(wish.getPlace().getId())
                                 .contentTypeId(wish.getPlace().getContentTypeId().getId())
                                 .title(wish.getPlace().getTitle())
                                 .thumbnail(wish.getPlace().getThumbnail())
+                                .category(wish.getPlace().getCategory())
                                 .location(wish.getPlace().getLocation())
                                 .build(),
-                        wish.getCreatedDate()
-                )).toList()
+                        wish.getCreatedDate()))
+                .toList(),
+                pageNumber,
+                pageSize,
+                totalPages,
+                totalResult,
+                first,
+                last
         );
     }
 
     public record Item(
-            PlaceSearsh place,
+            PlaceSearch place,
             LocalDateTime createdDate
     ) {
     }
 
     @Builder
-    private record PlaceSearsh(
+    public record PlaceSearch(
             Integer id,
             Integer contentTypeId,
             String title,
             String thumbnail,
+            String category,
             Location location
     ) {
     }
