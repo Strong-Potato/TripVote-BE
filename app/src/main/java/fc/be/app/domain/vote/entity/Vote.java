@@ -62,6 +62,10 @@ public class Vote {
         this.candidates.add(candidate);
     }
 
+    public boolean isMax(int maxThreshold) {
+        return this.candidates.size() == maxThreshold;
+    }
+
     public static Vote of(Space space, String title, Member owner) {
         return Vote.builder()
                 .space(space)

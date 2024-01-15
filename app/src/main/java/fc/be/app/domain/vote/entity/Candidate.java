@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,11 +21,6 @@ public class Candidate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("후보지 id")
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    @Comment("작성자(FK)")
-    private Member member;
 
     @OneToMany(mappedBy = "candidate")
     @Comment("후보에 투표한 회원 id(FK)")
@@ -44,13 +40,21 @@ public class Candidate {
     private String tagline;
 
     @Builder
-    private Candidate(Long id, Member member, List<VotedMember> votedMember, Place place, Vote vote, String tagline) {
+    private Candidate(Long id, List<VotedMember> votedMember, Place place, Vote vote, String tagline) {
         this.id = id;
-        this.member = member;
         this.votedMember = votedMember;
         this.place = place;
         this.vote = vote;
         this.tagline = tagline;
+    }
+
+    public static Candidate of(Place place, Vote vote, String tagline) {
+        return Candidate.builder()
+                .place(place)
+                .vote(vote)
+                .tagline(tagline)
+                .votedMember(new ArrayList<>())
+                .build();
     }
 
     public void vote(Vote vote, Member member) {
