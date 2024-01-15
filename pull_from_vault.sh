@@ -11,7 +11,7 @@ echo "
 "
 
 
-echo "update application profiles from boocam-be-vaults..."
+echo "update application profiles from TripVote-BE-vaults..."
 git submodule init
 git submodule foreach git pull origin main
 
