@@ -87,8 +87,8 @@ public class SpaceService {
                 .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
 
         if (space.getJourneys().isEmpty()) {
-            List<Journey> journeys = Journey.createJourneys(space.getStartDate(),
-                    space.getEndDate(),
+            List<Journey> journeys = Journey.createJourneys(updateRequest.startDate(),
+                    updateRequest.endDate(),
                     space);
             journeyRepository.saveAll(journeys);
         } else {
@@ -206,5 +206,15 @@ public class SpaceService {
 
     private static int countDaysBetween(LocalDate startDate, LocalDate endDate) {
         return Period.between(startDate, endDate).getDays();
+    }
+
+    private static void validateSpace(Space space, Member requestMember) {
+        if (space.isReadOnly(LocalDate.now())) {
+            throw new SpaceException(SPACE_IS_READ_ONLY);
+        }
+
+        if (!space.isBelong(requestMember)) {
+            throw new SpaceException(NOT_JOINED_MEMBER);
+        }
     }
 }
