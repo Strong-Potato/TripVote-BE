@@ -6,50 +6,64 @@ import fc.be.app.domain.member.exception.MemberException;
 
 public interface AuthCommand {
     /**
-     * @param email
-     * @return
-     * @throws AuthException
+     * generate and store code for later verification
+     *
+     * @param email email for verification
+     * @return VerificationCode
+     * @throws AuthException when target email is blocked due to frequent generate request
      */
     String generateAndStoreCode(String email) throws AuthException;
 
     /**
-     * @param email
-     * @param verificationCode
-     * @return
-     * @throws AuthException
+     * authenticate verification code
+     * then generate and store register token for member registration
+     *
+     * @param email            email for registration
+     * @param verificationCode verificationCode sent to target email
+     * @return RegisterToken
+     * @throws AuthException with CODE_EXPIRED when verificationCode is outdated
+     * @throws AuthException when INCORRECT_CODE when verificationCode is incorrect
      */
     String generateAndStoreToken(String email, String verificationCode) throws AuthException;
 
     /**
-     * @param email
-     * @param token
-     * @throws AuthException
+     * authenticate register token
+     *
+     * @param email         email to be registered
+     * @param registerToken token for member register
+     * @throws AuthException with TOKEN_EXPIRED when registerToken is outdated
+     * @throws AuthException when INCORRECT_TOKEN when registerToken is incorrect
      */
-    void authenticate(String email, String token) throws AuthException;
+    void authenticate(String email, String registerToken) throws AuthException;
 
     /**
-     * @param token
+     * remove token used for member register
+     *
+     * @param registerToken token used for member register
      */
-    void removeRegisterToken(String token);
+    void removeRegisterToken(String registerToken);
 
     /**
-     * @param id
-     * @param password
-     * @return
-     * @throws MemberException
-     * @throws AuthException
+     * @param id       target user id for modify password
+     * @param password target user password
+     * @return modify token
+     * @throws MemberException if target user doesn't exist
+     * @throws AuthException   if password is incorrect
      */
     String generateAndStoreModifyToken(Long id, String password) throws MemberException, AuthException;
 
     /**
-     * @param id
-     * @param modifyToken
-     * @throws AuthException
+     * @param id          target user id for modify password
+     * @param modifyToken token for modify password
+     * @throws AuthException with TOKEN_EXPIRED when modify-token is outdated
+     * @throws AuthException when INCORRECT_TOKEN when modify-token is incorrect
      */
     void authenticateModifyToken(Long id, String modifyToken) throws AuthException;
 
     /**
-     * @param id
+     * remove modify token
+     *
+     * @param id modified user id
      */
     void removeModifyToken(Long id);
 }
