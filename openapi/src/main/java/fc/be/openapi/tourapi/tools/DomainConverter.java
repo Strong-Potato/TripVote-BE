@@ -28,7 +28,7 @@ import static fc.be.openapi.tourapi.exception.TourAPIErrorCode.JSON_PARSING_ERRO
 
 @Component
 @RequiredArgsConstructor
-public class TourAPIDomainConverter {
+public class DomainConverter {
 
     private final DetailCommonMapper detailCommonMapper;
     private final AreaBasedSyncMapper areaBasedSyncMapper;
