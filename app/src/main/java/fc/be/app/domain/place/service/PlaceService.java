@@ -4,16 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import fc.be.app.domain.place.Place;
-import fc.be.app.domain.place.dto.PlaceInfoGetResponse;
-import fc.be.app.domain.place.dto.PlaceNearbyResponse;
-import fc.be.app.domain.place.dto.PlacePopularGetResponse;
-import fc.be.app.domain.place.dto.PlaceSearchResponse;
+import fc.be.app.domain.place.dto.*;
 import fc.be.app.domain.place.exception.PlaceException;
 import fc.be.app.domain.place.repository.PlaceRepository;
 import fc.be.openapi.tourapi.TourAPIService;
-import fc.be.openapi.tourapi.dto.bone.PlaceDTO;
-import fc.be.openapi.tourapi.tools.ObjectMerger;
-import fc.be.openapi.tourapi.tools.TourAPIDomainConverter;
+import fc.be.openapi.tourapi.dto.response.bone.PlaceDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,12 +28,11 @@ import static fc.be.app.domain.place.exception.PlaceErrorCode.PLACE_NOT_LOADED;
 @Transactional(readOnly = true)
 public class PlaceService {
     private final TourAPIService tourAPIService;
-    private final TourAPIDomainConverter tourAPIDomainConverter;
     private final PlaceRepository placeRepository;
 
     @Transactional
-    public Place saveOrUpdatePlace(final int placeId, final int contentTypeId) {
-        Place newPlace = bringPlaceInfo(placeId, contentTypeId).toPlace();
+    public Place saveOrUpdatePlace(final int placeId, final int placeTypeId) {
+        Place newPlace = bringPlaceInfo(new PlaceInfoGetRequest(placeId, placeTypeId)).toPlace();
         Place existingPlace = placeRepository.findById(placeId).orElse(null);
 
         if (existingPlace == null) {
@@ -54,43 +48,18 @@ public class PlaceService {
         return existingPlace;
     }
 
-    public PlaceInfoGetResponse bringPlaceInfo(final int placeId, final int contentTypeId) {
-        PlaceDTO place = getPlaceDTO(placeId, contentTypeId);
-        return new PlaceInfoGetResponse(place);
-    }
-
-    public PlaceDTO getPlaceDTO(int placeId, int contentTypeId) {
-        Class<? extends PlaceDTO> placeChildClass = tourAPIDomainConverter.convertPlaceToChildDomain(contentTypeId);
-
-        PlaceDTO place = ObjectMerger.merge(placeChildClass,
-                tourAPIService.bringDetailCommonDomain(placeId, contentTypeId),
-                tourAPIService.bringDetailImageDomains(placeId, contentTypeId),
-                tourAPIService.bringDetailIntroDomain(placeId, contentTypeId)
-        );
+    public PlaceInfoGetResponse bringPlaceInfo(PlaceInfoGetRequest placeInfoGetRequest) {
+        PlaceDTO place = tourAPIService.bringDetailDomain(placeInfoGetRequest.toTourAPIRequest());
 
         if (place == null) {
             throw new PlaceException(PLACE_NOT_LOADED);
         }
-        return place;
+
+        return new PlaceInfoGetResponse(place);
     }
 
-    public PlaceSearchResponse bringSearchKeywordResults(
-            int pageNo, int numOfRows,
-            int areaCode, int sigunguCode,
-            int contentTypeId,
-            String keyword,
-            char sortedBy,
-            String categoryCode
-    ) {
-
-        List<PlaceDTO> places = tourAPIService.bringSearchKeywordDomains(
-                pageNo, numOfRows,
-                areaCode, sigunguCode,
-                contentTypeId,
-                keyword,
-                sortedBy,
-                categoryCode
-        );
+    public PlaceSearchResponse bringSearchKeywordResults(PlaceSearchRequest placeSearchRequest) {
+        List<PlaceDTO> places = tourAPIService.bringSearchKeywordDomains(placeSearchRequest.toTourAPIRequest());
 
         if (places == null) {
             throw new PlaceException(PLACE_NOT_LOADED);
@@ -99,20 +68,8 @@ public class PlaceService {
         return PlaceSearchResponse.from(places);
     }
 
-    public PlaceNearbyResponse bringNearbyPlaces(
-            int pageNo, int numOfRows,
-            int areaCode, int sigunguCode,
-            int contentTypeId,
-            char sortedBy,
-            String categoryCode
-    ) {
-        List<PlaceDTO> places = tourAPIService.bringAreaBasedSyncDomains(
-                pageNo, numOfRows,
-                areaCode, sigunguCode,
-                contentTypeId,
-                sortedBy,
-                categoryCode
-        );
+    public PlaceNearbyResponse bringNearbyPlaces(PlaceNearbyRequest placeNearbyRequest) {
+        List<PlaceDTO> places = tourAPIService.bringAreaBasedSyncDomains(placeNearbyRequest.toTourAPIRequest());
 
         if (places == null) {
             throw new PlaceException(PLACE_NOT_LOADED);
