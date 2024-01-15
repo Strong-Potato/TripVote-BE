@@ -32,7 +32,11 @@ public class PlaceService {
 
     @Transactional
     public Place saveOrUpdatePlace(final int placeId, final int placeTypeId) {
-        Place newPlace = bringPlaceInfo(new PlaceInfoGetRequest(placeId, placeTypeId)).toPlace();
+        PlaceDTO placeDTO = tourAPIService.bringDetailDomain(
+                new PlaceInfoGetRequest(placeId, placeTypeId).toTourAPIRequest()
+        );
+
+        Place newPlace = new PlaceInfoGetResponse(placeDTO).toPlace();
         Place existingPlace = placeRepository.findById(placeId).orElse(null);
 
         if (existingPlace == null) {
