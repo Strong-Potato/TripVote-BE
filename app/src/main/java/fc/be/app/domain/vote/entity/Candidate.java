@@ -27,6 +27,10 @@ public class Candidate {
     private List<VotedMember> votedMember;
 
     @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member owner;
+
+    @ManyToOne
     @JoinColumn(name = "place_id")
     @Comment("후보지의 장소(FK)")
     private Place place;
@@ -40,17 +44,24 @@ public class Candidate {
     private String tagline;
 
     @Builder
-    private Candidate(Long id, List<VotedMember> votedMember, Place place, Vote vote, String tagline) {
+    private Candidate(Long id,
+                      List<VotedMember> votedMember,
+                      Member owner,
+                      Place place,
+                      Vote vote,
+                      String tagline) {
         this.id = id;
         this.votedMember = votedMember;
+        this.owner = owner;
         this.place = place;
         this.vote = vote;
         this.tagline = tagline;
     }
 
-    public static Candidate of(Place place, Vote vote, String tagline) {
+    public static Candidate of(Place place, Member owner, Vote vote, String tagline) {
         return Candidate.builder()
                 .place(place)
+                .owner(owner)
                 .vote(vote)
                 .tagline(tagline)
                 .votedMember(new ArrayList<>())
