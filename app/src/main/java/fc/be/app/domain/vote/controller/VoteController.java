@@ -44,8 +44,6 @@ public class VoteController {
                 new CandidateAddRequest(
                         userPrincipal.id(),
                         voteId,
-                        request.datas())));
+                        request.candidateInfos())));
     }
-
-
 }
