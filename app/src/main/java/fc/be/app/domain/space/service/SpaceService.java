@@ -208,13 +208,4 @@ public class SpaceService {
         return Period.between(startDate, endDate).getDays();
     }
 
-    private static void validateSpace(Space space, Member requestMember) {
-        if (space.isReadOnly(LocalDate.now())) {
-            throw new SpaceException(SPACE_IS_READ_ONLY);
-        }
-
-        if (!space.isBelong(requestMember)) {
-            throw new SpaceException(NOT_JOINED_MEMBER);
-        }
-    }
 }
