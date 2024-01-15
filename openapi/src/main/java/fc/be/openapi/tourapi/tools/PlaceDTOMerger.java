@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import fc.be.openapi.tourapi.dto.bone.PlaceDTO;
+import fc.be.openapi.tourapi.dto.response.bone.PlaceDTO;
 import fc.be.openapi.tourapi.exception.TourAPIError;
 import lombok.NoArgsConstructor;
 

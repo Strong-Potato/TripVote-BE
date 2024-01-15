@@ -4,16 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import fc.be.openapi.tourapi.constant.ContentTypeId;
-import fc.be.openapi.tourapi.dto.bone.*;
-import fc.be.openapi.tourapi.dto.form.diff_property.detail_intro1.Item;
-import fc.be.openapi.tourapi.dto.form.same_property.area_based_sync_list1.AreaBasedSyncList1Response;
-import fc.be.openapi.tourapi.dto.form.same_property.detail_common1.DetailCommon1Response;
-import fc.be.openapi.tourapi.dto.form.same_property.detail_image1.DetailImage1Response;
-import fc.be.openapi.tourapi.dto.form.same_property.search_keyword1.SearchKeyword1Response;
 import fc.be.openapi.tourapi.dto.mapper.AreaBasedSyncMapper;
 import fc.be.openapi.tourapi.dto.mapper.DetailCommonMapper;
 import fc.be.openapi.tourapi.dto.mapper.DetailIntroMapper;
 import fc.be.openapi.tourapi.dto.mapper.SearchKeywordMapper;
+import fc.be.openapi.tourapi.dto.response.bone.*;
+import fc.be.openapi.tourapi.dto.response.form.diff_property.detail_intro1.Item;
+import fc.be.openapi.tourapi.dto.response.form.same_property.area_based_sync_list1.AreaBasedSyncList1Response;
+import fc.be.openapi.tourapi.dto.response.form.same_property.detail_common1.DetailCommon1Response;
+import fc.be.openapi.tourapi.dto.response.form.same_property.detail_image1.DetailImage1Response;
+import fc.be.openapi.tourapi.dto.response.form.same_property.search_keyword1.SearchKeyword1Response;
 import fc.be.openapi.tourapi.exception.TourAPIError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -53,17 +53,17 @@ public class DomainConverter {
         };
     }
 
-    public PlaceDTO buildDetailIntroFromItem(Item item, int contentTypeId) {
+    public PlaceDTO fromDetailIntro(Item item, int contentTypeId) {
         var itemClass = convertPlaceToChildDomain(contentTypeId);
         return generateAndCastItem(item, detailIntroMapper::generate, itemClass);
     }
 
-    public PlaceDTO buildDetailCommonFromItem(DetailCommon1Response.Item item, int contentTypeId) {
+    public PlaceDTO fromDetailCommon(DetailCommon1Response.Item item, int contentTypeId) {
         var itemClass = convertPlaceToChildDomain(contentTypeId);
         return generateAndCastItem(item, detailCommonMapper::generate, itemClass);
     }
 
-    public List<PlaceDTO> buildAreaBasedSyncListFromItem(
+    public List<PlaceDTO> fromAreaBasedSyncList(
             List<AreaBasedSyncList1Response.Item> items,
             int contentTypeId
     ) {
@@ -78,7 +78,7 @@ public class DomainConverter {
     }
 
     @SuppressWarnings("all")
-    public PlaceDTO buildDetailImageListFromItem(
+    public PlaceDTO fromDetailImageList(
             List<DetailImage1Response.Item> items,
             int contentTypeId
     ) {
@@ -99,7 +99,7 @@ public class DomainConverter {
         }
     }
 
-    public List<PlaceDTO> buildSearchKeywordListFromItem(
+    public List<PlaceDTO> fromSearchKeywordList(
             List<SearchKeyword1Response.Item> items,
             int contentTypeId
     ) {
