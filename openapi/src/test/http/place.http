@@ -1,47 +1,55 @@
 ## 장소 상세 정보
 ### spot
-GET http://localhost:8080/places/{{spotId}}?contentTypeId={{spotTypeId}}
+GET http://localhost:8080/places/info?placeId={{spotId}}&placeTypeId={{spotTypeId}}
 
 ### facility
-GET http://localhost:8080/places/{{facilityId}}?contentTypeId={{facilityTypeId}}
+GET http://localhost:8080/places/info?placeId={{facilityId}}&placeTypeId={{facilityTypeId}}
 
 ### festival
-GET http://localhost:8080/places/{{festivalId}}?contentTypeId={{festivalTypeId}}
+GET http://localhost:8080/places/info?placeId={{festivalId}}&placeTypeId={{festivalTypeId}}
 
 ### leports
-GET http://localhost:8080/places/{{leportsId}}?contentTypeId={{leportsTypeId}}
+GET http://localhost:8080/places/info?placeId={{leportsId}}&placeTypeId={{leportsTypeId}}
 
 ### accommodation
-GET http://localhost:8080/places/{{accommodationId}}?contentTypeId={{accommodationTypeId}}
+GET http://localhost:8080/places/info?placeId={{accommodationId}}&placeTypeId={{accommodationTypeId}}
 
 ### shop
-GET http://localhost:8080/places/{{shopId}}?contentTypeId={{shopTypeId}}
+GET http://localhost:8080/places/info?placeId={{shopId}}&placeTypeId={{shopTypeId}}
 
 ### restaurant
-GET http://localhost:8080/places/{{restaurantId}}?contentTypeId={{restaurantTypeId}}
+GET http://localhost:8080/places/info?placeId={{restaurantId}}&placeTypeId={{restaurantTypeId}}
 
 ## 장소 검색
 ### 전체
-GET http://localhost:8080/places/search/{{pageNo}}
+GET http://localhost:8080/places/search?page={{page}}
 
 ### ContentTypeId 만 포함
-GET http://localhost:8080/places/search/{{pageNo}}?contentTypeId={{spotTypeId}}
+GET http://localhost:8080/places/search?page={{page}}&placeTypeId={{spotTypeId}}
 
 ### keyword 포함
-GET http://localhost:8080/places/search/{{pageNo}}?keyword={{keyword}}
+GET http://localhost:8080/places/search?page={{page}}&keyword=saqdsadasdsadasdsadad
 
 ### category만 포함(카페)
-GET http://localhost:8080/places/search/{{pageNo}}?categoryCode={{cafeCategoryCode}}
+GET http://localhost:8080/places/search?page={{page}}&categoryCode={{cafeCategoryCode}}
+
+### 전체 parameter 포함
+GET http://localhost:8080/places/search?page={{page}}&size={{size}}&
+    placeTypeId={{restaurantTypeId}}&categoryCode={{cafeCategoryCode}}&
+    areaCode={{areaCode}}&sigunguCode={{sigunguCode}}
 
 ## 주변 장소 목록(areaSyncBased)
 ### spot
-GET http://localhost:8080/places/nearby/{{pageNo}}?areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&contentTypeId={{spotTypeId}}
+GET http://localhost:8080/places/nearby?page={{page}}&areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&
+    placeTypeId={{spotTypeId}}
 
 ### accommodation
-GET http://localhost:8080/places/nearby/{{pageNo}}?areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&contentTypeId={{accommodationTypeId}}
+GET http://localhost:8080/places/nearby?page={{page}}&areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&
+    placeTypeId={{accommodationTypeId}}
 
 ### restaurant + 카페
-GET http://localhost:8080/places/nearby/{{pageNo}}?areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&contentTypeId={{restaurantTypeId}}&categoryCode={{cafeCategoryCode}}&numOfRows=2
+GET http://localhost:8080/places/nearby?page={{page}}&areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&
+    placeTypeId={{restaurantTypeId}}&categoryCode={{cafeCategoryCode}}
 
 
 ## 30일간 인기 장소 목록
