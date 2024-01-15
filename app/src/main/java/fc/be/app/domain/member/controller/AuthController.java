@@ -1,8 +1,6 @@
 package fc.be.app.domain.member.controller;
 
-import fc.be.app.domain.member.dto.request.CheckTokenRequest;
-import fc.be.app.domain.member.dto.request.RegisterMemberRequest;
-import fc.be.app.domain.member.dto.request.SendEmailRequest;
+import fc.be.app.domain.member.dto.request.*;
 import fc.be.app.domain.member.exception.MemberErrorCode;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.service.AuthCommand;
@@ -10,10 +8,12 @@ import fc.be.app.domain.member.service.MemberCommand;
 import fc.be.app.domain.member.service.MemberCommand.MemberRegisterRequest;
 import fc.be.app.domain.member.service.MemberQuery;
 import fc.be.app.domain.member.service.MemberQuery.MemberRequest;
+import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.http.ApiResponse;
 import fc.be.app.global.mail.service.MailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,6 +58,26 @@ public class AuthController {
         authCommand.authenticate(request.email(), request.token());
         memberCommand.register(memberRegisterRequest);
         authCommand.removeRegisterToken(request.token());
+        return ApiResponse.ok();
+    }
+
+    @PostMapping("/modify/password/check")
+    public ApiResponse checkPassword(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody CheckPasswordRequest request) {
+        Long id = userPrincipal.id();
+        String password = request.password();
+        String modifyToken = authCommand.generateAndStoreModifyToken(id, password);
+        return ApiResponse.ok(Map.of("token", modifyToken));
+    }
+
+    @PostMapping("/modify/password")
+    public ApiResponse changePassword(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody ModifyPasswordRequest request) {
+        Long id = userPrincipal.id();
+        String modifyToken = request.token();
+        String newPassword = request.newPassword();
+        authCommand.authenticateModifyToken(id, modifyToken);
+        memberCommand.modifyPassword(id, newPassword);
+        authCommand.removeModifyToken(id);
+
         return ApiResponse.ok();
     }
 }

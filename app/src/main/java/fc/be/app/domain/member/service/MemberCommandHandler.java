@@ -1,6 +1,8 @@
 package fc.be.app.domain.member.service;
 
 import fc.be.app.domain.member.entity.Member;
+import fc.be.app.domain.member.exception.MemberErrorCode;
+import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.member.vo.AuthProvider;
 import lombok.RequiredArgsConstructor;
@@ -47,5 +49,12 @@ public class MemberCommandHandler implements MemberCommand {
                 .providedId(request.providedId())
                 .build();
         memberRepository.save(newProviderMember);
+    }
+
+    @Override
+    public void modifyPassword(Long id, String newPassword) {
+        Member targetMember =
+                memberRepository.findById(id).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        targetMember.changePassword(passwordEncoder.encode(newPassword));
     }
 }

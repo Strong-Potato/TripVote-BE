@@ -29,6 +29,8 @@ public class TokenProvider {
     private static final Duration BLOCKED_EMAIL_DURATION = Duration.ofSeconds(300);
     private static final String REGISTER_TOKEN_PREFIX = "register_token_";
     private static final Duration REGISTER_TOKEN_DURATION = Duration.ofMinutes(300);
+    private static final String MODIFY_TOKEN_PREFIX = "modify_token_";
+    private static final Duration MODIFY_TOKEN_DURATION = Duration.ofMinutes(300);
 
     /**
      * generate and store code for later verification
@@ -120,7 +122,7 @@ public class TokenProvider {
      * @param registerToken token for member register
      * @return true if registerToken matches requested email
      * @throws AuthException with TOKEN_EXPIRED when registerToken is outdated
-     * @throws AuthException when INCORRECT_CODE when registerToken is incorrect
+     * @throws AuthException when INCORRECT_TOKEN when registerToken is incorrect
      */
     public boolean authenticateRegisterToken(String email, String registerToken) throws AuthException {
         String key = REGISTER_TOKEN_PREFIX + registerToken;
@@ -129,7 +131,7 @@ public class TokenProvider {
             throw new AuthException(AuthErrorCode.TOKEN_EXPIRED);
         }
         if (!verifiedEmail.equals(email)) {
-            throw new AuthException(AuthErrorCode.INCORRECT_CODE);
+            throw new AuthException(AuthErrorCode.INCORRECT_TOKEN);
         }
         return true;
     }
@@ -144,6 +146,52 @@ public class TokenProvider {
         redisTemplate.opsForValue().getAndDelete(key);
     }
 
+    /**
+     * generate and store modify token for modifying password
+     *
+     * @param id target user id for modify password
+     * @return modify token
+     */
+    public String generateModifyToken(Long id) {
+        String key = MODIFY_TOKEN_PREFIX + id;
+        String value = UUID.randomUUID().toString();
+        redisTemplate.opsForValue().set(key, value, MODIFY_TOKEN_DURATION);
+        return value;
+    }
+
+    /**
+     * authenticate modify token
+     *
+     * @param id          target user id for modify password
+     * @param modifyToken token for modify password
+     * @return true if stored modify-token matches requested token
+     * @throws AuthException with TOKEN_EXPIRED when modify-token is outdated
+     * @throws AuthException when INCORRECT_TOKEN when modify-token is incorrect
+     */
+    public boolean authenticateModifyToken(Long id, String modifyToken) throws AuthException {
+        String key = MODIFY_TOKEN_PREFIX + id;
+        String storedModifyToken = redisTemplate.opsForValue().get(key);
+        if (storedModifyToken == null) {
+            throw new AuthException(AuthErrorCode.TOKEN_EXPIRED);
+        }
+        if (!storedModifyToken.equals(modifyToken)) {
+            throw new AuthException(AuthErrorCode.INCORRECT_TOKEN);
+        }
+        return true;
+    }
+
+    /**
+     * remove modify token
+     *
+     * @param id modified user id
+     */
+    public void removeModifyToken(Long id) {
+        String key = MODIFY_TOKEN_PREFIX + id;
+        redisTemplate.opsForValue().getAndDelete(key);
+    }
+
+
+    // template
 
     /**
      * Set Set Type
