@@ -1,11 +1,11 @@
-package fc.be.app.domain.member.dto;
+package fc.be.app.domain.member.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-public record RegisterRequest(
+public record RegisterMemberRequest(
         @NotBlank
         String token,
         @Email
@@ -15,6 +15,7 @@ public record RegisterRequest(
         String password,
         @NotBlank
         String nickname,
+        @Pattern(regexp = "^https?://\\S+$")
         String profile
 ) {
 }

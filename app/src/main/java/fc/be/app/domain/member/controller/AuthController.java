@@ -1,8 +1,8 @@
 package fc.be.app.domain.member.controller;
 
-import fc.be.app.domain.member.dto.CheckTokenRequest;
-import fc.be.app.domain.member.dto.RegisterRequest;
-import fc.be.app.domain.member.dto.SendEmailRequest;
+import fc.be.app.domain.member.dto.request.CheckTokenRequest;
+import fc.be.app.domain.member.dto.request.RegisterMemberRequest;
+import fc.be.app.domain.member.dto.request.SendEmailRequest;
 import fc.be.app.domain.member.exception.MemberErrorCode;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.service.AuthCommand;
@@ -52,7 +52,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ApiResponse register(@Valid @RequestBody RegisterRequest request) {
+    public ApiResponse register(@Valid @RequestBody RegisterMemberRequest request) {
         MemberRegisterRequest memberRegisterRequest =
                 new MemberRegisterRequest(request.email(), request.password(), request.nickname(), request.profile());
         authCommand.authenticate(request.email(), request.token());
