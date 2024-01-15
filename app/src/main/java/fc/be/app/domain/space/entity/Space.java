@@ -1,5 +1,6 @@
 package fc.be.app.domain.space.entity;
 
+import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.vote.entity.Vote;
 import jakarta.persistence.*;
@@ -103,5 +104,15 @@ public class Space {
         if (startDate == null || endDate == null || startDate.isAfter(endDate)) {
             throw new SpaceException(INVALID_START_DATE);
         }
+    }
+
+    public boolean isReadOnly(LocalDate requestDate) {
+        return requestDate.isAfter(this.endDate);
+    }
+
+    public boolean isBelong(Member member) {
+        return this.joinedMembers
+                .stream()
+                .anyMatch(joinedMember -> joinedMember.getMember().equals(member));
     }
 }
