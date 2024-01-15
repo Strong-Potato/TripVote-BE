@@ -11,19 +11,19 @@ public record ApiResponse<T>(
     private static final HttpStatus CREATED = HttpStatus.CREATED;
     private static final String DEFAULT_MESSAGE = "SUCCESS";
 
-    public static ApiResponse ok() {
-        return new ApiResponse(OK.value(), DEFAULT_MESSAGE, null);
+    public static ApiResponse<Void> ok() {
+        return new ApiResponse<>(OK.value(), DEFAULT_MESSAGE, null);
     }
 
-    public static <T> ApiResponse ok(T data) {
-        return new ApiResponse(OK.value(), DEFAULT_MESSAGE, data);
+    public static <T> ApiResponse<T> ok(T data) {
+        return new ApiResponse<>(OK.value(), DEFAULT_MESSAGE, data);
     }
 
-    public static ApiResponse created() {
-        return new ApiResponse(CREATED.value(), DEFAULT_MESSAGE, null);
+    public static ApiResponse<Void> created() {
+        return new ApiResponse<>(CREATED.value(), DEFAULT_MESSAGE, null);
     }
 
-    public static <T> ApiResponse created(T data) {
-        return new ApiResponse(CREATED.value(), DEFAULT_MESSAGE, data);
+    public static <T> ApiResponse<T> created(T data) {
+        return new ApiResponse<>(CREATED.value(), DEFAULT_MESSAGE, data);
     }
 }
