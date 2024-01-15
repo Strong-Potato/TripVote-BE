@@ -38,7 +38,7 @@ public class AuthController {
         if (isExists) {
             throw new MemberException(MemberErrorCode.EMAIL_ALREADY_EXISTS);
         }
-        String verificationCode = authCommand.generateAndStoreCode(targetEmail);
+        String verificationCode = authCommand.generateVerifyCode(targetEmail);
         mailService.sendSimpleMessage(targetEmail, "토큰 발급합니다잉~", verificationCode);
         return ApiResponse.ok();
     }
@@ -47,7 +47,7 @@ public class AuthController {
     public ApiResponse verifyEmail(@Valid @RequestBody CheckTokenRequest request) {
         String targetEmail = request.email();
         String verificationCode = request.code();
-        String registerToken = authCommand.generateAndStoreToken(targetEmail, verificationCode);
+        String registerToken = authCommand.generateRegisterToken(targetEmail, verificationCode);
         return ApiResponse.ok(Map.of("token", registerToken));
     }
 
@@ -55,7 +55,7 @@ public class AuthController {
     public ApiResponse register(@Valid @RequestBody RegisterMemberRequest request) {
         MemberRegisterRequest memberRegisterRequest =
                 new MemberRegisterRequest(request.email(), request.password(), request.nickname(), request.profile());
-        authCommand.authenticate(request.email(), request.token());
+        authCommand.authenticateRegisterToken(request.email(), request.token());
         memberCommand.register(memberRegisterRequest);
         authCommand.removeRegisterToken(request.token());
         return ApiResponse.ok();
@@ -65,7 +65,7 @@ public class AuthController {
     public ApiResponse checkPassword(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody CheckPasswordRequest request) {
         Long id = userPrincipal.id();
         String password = request.password();
-        String modifyToken = authCommand.generateAndStoreModifyToken(id, password);
+        String modifyToken = authCommand.generateModifyToken(id, password);
         return ApiResponse.ok(Map.of("token", modifyToken));
     }
 
@@ -78,6 +78,19 @@ public class AuthController {
         memberCommand.modifyPassword(id, newPassword);
         authCommand.removeModifyToken(id);
 
+        return ApiResponse.ok();
+    }
+
+    @PostMapping("/modify/lost-password/send-email")
+    public ApiResponse changeLostPassword(@Valid @RequestBody SendEmailRequest request) {
+        String targetEmail = request.email();
+        MemberRequest memberRequest = new MemberRequest(targetEmail);
+        boolean isExists = memberQuery.exists(memberRequest);
+        if (!isExists) {
+            throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND);
+        }
+        String verificationCode = authCommand.generateVerifyCode(targetEmail);
+        mailService.sendSimpleMessage(targetEmail, "토큰 발급합니다잉~", verificationCode);
         return ApiResponse.ok();
     }
 }

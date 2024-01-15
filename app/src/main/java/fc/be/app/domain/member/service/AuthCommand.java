@@ -12,7 +12,7 @@ public interface AuthCommand {
      * @return VerificationCode
      * @throws AuthException when target email is blocked due to frequent generate request
      */
-    String generateAndStoreCode(String email) throws AuthException;
+    String generateVerifyCode(String email) throws AuthException;
 
     /**
      * authenticate verification code
@@ -24,7 +24,7 @@ public interface AuthCommand {
      * @throws AuthException with CODE_EXPIRED when verificationCode is outdated
      * @throws AuthException when INCORRECT_CODE when verificationCode is incorrect
      */
-    String generateAndStoreToken(String email, String verificationCode) throws AuthException;
+    String generateRegisterToken(String email, String verificationCode) throws AuthException;
 
     /**
      * authenticate register token
@@ -34,7 +34,7 @@ public interface AuthCommand {
      * @throws AuthException with TOKEN_EXPIRED when registerToken is outdated
      * @throws AuthException when INCORRECT_TOKEN when registerToken is incorrect
      */
-    void authenticate(String email, String registerToken) throws AuthException;
+    void authenticateRegisterToken(String email, String registerToken) throws AuthException;
 
     /**
      * remove token used for member register
@@ -50,7 +50,7 @@ public interface AuthCommand {
      * @throws MemberException if target user doesn't exist
      * @throws AuthException   if password is incorrect
      */
-    String generateAndStoreModifyToken(Long id, String password) throws MemberException, AuthException;
+    String generateModifyToken(Long id, String password) throws MemberException, AuthException;
 
     /**
      * @param id          target user id for modify password
