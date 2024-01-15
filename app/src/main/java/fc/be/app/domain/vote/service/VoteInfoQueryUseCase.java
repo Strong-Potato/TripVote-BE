@@ -46,6 +46,7 @@ public interface VoteInfoQueryUseCase {
             Integer placeId,
             String placeName,
             String category,
+            MemberProfile ownerProfile,
             String tagline
     ) {
 
@@ -55,11 +56,17 @@ public interface VoteInfoQueryUseCase {
                     candidate.getPlace().getId(),
                     candidate.getPlace().getThumbnail(),
                     candidate.getPlace().getCategory(),
+                    new MemberProfile(
+                            candidate.getOwner().getId(),
+                            candidate.getOwner().getNickname(),
+                            candidate.getOwner().getProfile()),
                     candidate.getTagline());
         }
     }
 
+
     record VoteResultResponse() {
 
     }
+
 }

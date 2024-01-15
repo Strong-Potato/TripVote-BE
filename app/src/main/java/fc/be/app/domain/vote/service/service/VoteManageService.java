@@ -94,9 +94,9 @@ public class VoteManageService implements VoteManageUseCase {
         List<Place> places = placeRepository.findAllById(placeIds);
 
         for (Place place : places) {
-            Optional<String> first = findMatchTagline(request, place);
+            Optional<String> matchedTagline = findMatchTagline(request, place);
 
-            vote.addCandidate(Candidate.of(place, vote, first.orElseGet(() -> "")));
+            vote.addCandidate(Candidate.of(place, requestMember, vote, matchedTagline.orElse("")));
         }
 
         // TODO : Sending a new Candidate Add event to all members of the space
@@ -120,13 +120,15 @@ public class VoteManageService implements VoteManageUseCase {
     }
 
     private List<Integer> extractPlaceIdsFromRequest(CandidateAddRequest request) {
-        return request.candidateInfo().stream()
+        return request.candidateInfo()
+                .stream()
                 .map(CandidateInfo::placeId)
                 .toList();
     }
 
     private Optional<String> findMatchTagline(CandidateAddRequest request, Place place) {
-        return request.candidateInfo().stream()
+        return request.candidateInfo()
+                .stream()
                 .filter(info -> info.placeId().equals(place.getId()))
                 .map(CandidateInfo::tagline)
                 .findFirst();
