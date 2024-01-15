@@ -8,10 +8,12 @@ import fc.be.app.domain.space.dto.response.JourneyResponse;
 import fc.be.app.domain.space.dto.response.JourneysResponse;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
 import fc.be.app.domain.space.service.SpaceService;
+import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -23,10 +25,8 @@ public class SpaceController {
     private final SpaceService spaceService;
 
     @PostMapping
-    public ApiResponse<SpaceResponse> createSpace() {
-        // todo 로그인 구현 시 @AuthenticationPrincipal 어노테이션 등으로 변경할 예정
-        Long memberId = 1L;
-        return ApiResponse.created(spaceService.createSpace(memberId));
+    public ApiResponse<SpaceResponse> createSpace(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return ApiResponse.created(spaceService.createSpace(userPrincipal.id()));
     }
 
     @GetMapping("/{spaceId}")
@@ -53,10 +53,11 @@ public class SpaceController {
     }
 
     @PutMapping("/{spaceId}/exit")
-    public ApiResponse<Void> exitSpace(@PathVariable Long spaceId) {
-        // todo 로그인 구현 시 @AuthenticationPrincipal 어노테이션 등으로 변경할 예정
-        Long memberId = 1L;
-        spaceService.exitSpace(spaceId, memberId);
+    public ApiResponse<Void> exitSpace(
+            @PathVariable Long spaceId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        spaceService.exitSpace(spaceId, userPrincipal.id());
         return ApiResponse.ok();
     }
 
@@ -65,14 +66,25 @@ public class SpaceController {
         return ApiResponse.ok(spaceService.getJourneyForSpace(spaceId));
     }
 
-    @PostMapping("/select-places")
-    public ApiResponse<JourneyResponse> selectedPlacesForSpace(@Valid @RequestBody SelectedPlaceRequest request) {
+    @PostMapping("/{spaceId}/places")
+    public ApiResponse<JourneyResponse> selectedPlacesForSpace(
+            @PathVariable Long spaceId,
+            @Valid @RequestBody SelectedPlaceRequest request
+    ) {
         return ApiResponse.ok(spaceService.selectedPlacesForSpace(request));
     }
 
-    @PutMapping("/select-places")
-    public ApiResponse<JourneysResponse> updatePlacesForSpace(@Valid @RequestBody SelectedPlacesRequest request) {
+    @PutMapping("/{spaceId}/places")
+    public ApiResponse<JourneysResponse> updatePlacesForSpace(
+            @PathVariable Long spaceId,
+            @Valid @RequestBody SelectedPlacesRequest request
+    ) {
         return ApiResponse.ok(spaceService.updatePlacesForSpace(request));
     }
 
+    @GetMapping
+    public ApiResponse<SpaceResponse> getLatestSpace() {
+        // todo API 명세를 위한 껍데기이며 최근 작업한 여행스페이스 검색로직 추가 예정
+        return ApiResponse.ok(SpaceResponse.builder().build());
+    }
 }
