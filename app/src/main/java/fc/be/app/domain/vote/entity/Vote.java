@@ -4,12 +4,10 @@ import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.vo.VoteStatus;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,6 +16,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false, of = {"id"})
 @Comment("투표")
 public class Vote {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("투표 id")
@@ -47,8 +46,29 @@ public class Vote {
     @OneToMany(mappedBy = "vote")
     private List<VotedMember> votedMembers;
 
+    @Builder
+    private Vote(Long id, Space space, String title, VoteStatus status, Member owner, List<Candidate> candidates, List<VotedMember> votedMembers) {
+        this.id = id;
+        this.space = space;
+        this.title = title;
+        this.status = status;
+        this.owner = owner;
+        this.candidates = candidates;
+        this.votedMembers = votedMembers;
+    }
+
     public void addCandidate(Candidate candidate) {
         candidate.setVote(this);
         this.candidates.add(candidate);
+    }
+
+    public static Vote of(Space space, String title, Member owner) {
+        return Vote.builder()
+                .space(space)
+                .title(title)
+                .owner(owner)
+                .candidates(new ArrayList<>())
+                .votedMembers(new ArrayList<>())
+                .build();
     }
 }
