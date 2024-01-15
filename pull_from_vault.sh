@@ -13,16 +13,7 @@ echo "
 
 echo "update application profiles from TripVote-BE-vaults..."
 git submodule init
-git submodule foreach git pull origin main
+git submodule foreach git submodule update
+git submodule foreach git checkout main
 
 echo "done!"
-
-echo "remove old application profiles"
-rm ./app/src/main/resources/application-common.yml
-rm ./app/src/main/resources/application-prod.yml
-
-rm ./openapi/src/main/resources/application-openapi.yml
-
-echo "copy application profiles to application resources path"
-cp ./vault/app/* ./app/src/main/resources
-cp ./vault/openapi/* ./openapi/src/main/resources
