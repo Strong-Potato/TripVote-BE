@@ -2,56 +2,88 @@
 ### spot
 GET http://localhost:8080/places/info?placeId={{spotId}}&placeTypeId={{spotTypeId}}
 
+>> response/spot.json
+
 ### facility
 GET http://localhost:8080/places/info?placeId={{facilityId}}&placeTypeId={{facilityTypeId}}
+
+>> response/facility.json
 
 ### festival
 GET http://localhost:8080/places/info?placeId={{festivalId}}&placeTypeId={{festivalTypeId}}
 
+>> response/festival.json
+
 ### leports
 GET http://localhost:8080/places/info?placeId={{leportsId}}&placeTypeId={{leportsTypeId}}
+
+>> response/leports.json
 
 ### accommodation
 GET http://localhost:8080/places/info?placeId={{accommodationId}}&placeTypeId={{accommodationTypeId}}
 
+>> response/accommodation.json
+
 ### shop
 GET http://localhost:8080/places/info?placeId={{shopId}}&placeTypeId={{shopTypeId}}
 
+>> response/shop.json
+
 ### restaurant
 GET http://localhost:8080/places/info?placeId={{restaurantId}}&placeTypeId={{restaurantTypeId}}
+
+>> response/restaurant.json
 
 ## 장소 검색
 ### 전체
 GET http://localhost:8080/places/search?page={{page}}
 
+>> response/search.json
+
 ### ContentTypeId 만 포함
 GET http://localhost:8080/places/search?page={{page}}&placeTypeId={{spotTypeId}}
+
+>> response/search_spot.json
 
 ### keyword 포함
 GET http://localhost:8080/places/search?page={{page}}&keyword=saqdsadasdsadasdsadad
 
+>> response/search_keyword.json
+
 ### category만 포함(카페)
 GET http://localhost:8080/places/search?page={{page}}&categoryCode={{cafeCategoryCode}}
+
+>> response/search_cafe.json
 
 ### 전체 parameter 포함
 GET http://localhost:8080/places/search?page={{page}}&size={{size}}&
     placeTypeId={{restaurantTypeId}}&categoryCode={{cafeCategoryCode}}&
     areaCode={{areaCode}}&sigunguCode={{sigunguCode}}
 
+>> response/search_all.json
+
 ## 주변 장소 목록(areaSyncBased)
 ### spot
 GET http://localhost:8080/places/nearby?page={{page}}&areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&
     placeTypeId={{spotTypeId}}
 
+>> response/nearby_spot.json
+
 ### accommodation
 GET http://localhost:8080/places/nearby?page={{page}}&areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&
     placeTypeId={{accommodationTypeId}}
+
+>> response/nearby_accommodation.json
 
 ### restaurant + 카페
 GET http://localhost:8080/places/nearby?page={{page}}&areaCode={{areaCode}}&sigunguCode={{sigunguCode}}&
     placeTypeId={{restaurantTypeId}}&categoryCode={{cafeCategoryCode}}
 
+>> response/nearby_restaurant_cafe.json
+
 
 ## 30일간 인기 장소 목록
 ### 모든 장소
 GET http://localhost:8080/places/popular
+
+>> response/popular.json
