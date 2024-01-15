@@ -87,8 +87,8 @@ public class SpaceService {
                 .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
 
         if (space.getJourneys().isEmpty()) {
-            List<Journey> journeys = Journey.createJourneys(space.getStartDate(),
-                    space.getEndDate(),
+            List<Journey> journeys = Journey.createJourneys(updateRequest.startDate(),
+                    updateRequest.endDate(),
                     space);
             journeyRepository.saveAll(journeys);
         } else {
@@ -207,4 +207,5 @@ public class SpaceService {
     private static int countDaysBetween(LocalDate startDate, LocalDate endDate) {
         return Period.between(startDate, endDate).getDays();
     }
+
 }

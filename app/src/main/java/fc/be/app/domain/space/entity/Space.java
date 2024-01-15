@@ -44,7 +44,7 @@ public class Space {
     private List<Vote> voteSpaces;
 
     @OneToMany(mappedBy = "space")
-    private List<JoinedMember> joinedMembers;
+    private List<JoinedMember> joinedMembers = new ArrayList<>();
 
     @Builder
     private Space(String title, LocalDate startDate, LocalDate endDate) {
