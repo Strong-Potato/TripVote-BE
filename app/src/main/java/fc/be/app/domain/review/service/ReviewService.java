@@ -98,30 +98,23 @@ public class ReviewService {
     // 구글 API를 호출하는 실제 메서드
     public ReviewRatingResponse bringReviewRatingAndCount(ReviewGetRequest reviewGetRequest) {
         GoogleRatingResponse googleReviewResponse = googlePlacesService.bringGoogleRatingCount(reviewGetRequest.placeTitle());
+
         double googleRating = googleReviewResponse.rating();
         long googleCount = googleReviewResponse.userRatingCount();
 
-        List<Number> tripVoteResponse = reviewRepository.countAndAverageRatingByPlaceId(reviewGetRequest.placeId());
-        double tripVoteRating = 0;
-        long tripVoteCount = 0;
+        List<Number> tripVoteResponse = getNumbersFromList(reviewRepository.countAndAverageRatingByPlaceId
+                (reviewGetRequest.placeId()));
 
-        if (!tripVoteResponse.isEmpty()) {
-            tripVoteRating = tripVoteResponse.getFirst().doubleValue();
-            tripVoteCount = tripVoteResponse.getLast().longValue();
-        }
+        double tripVoteRating = tripVoteResponse.getFirst().doubleValue();
+        long tripVoteCount = tripVoteResponse.getLast().longValue();
 
-        long totalCount = googleCount + tripVoteCount;
-        double totalRating = 0;
+        var calResult = calculateReviewAverage(googleRating, googleCount, tripVoteRating, tripVoteCount);
 
-        if (totalCount != 0) {
-            totalRating = (googleRating * googleCount + tripVoteRating * tripVoteCount) / totalCount;
-        }
-
-        totalRating = Math.round(totalRating * 10) / 10.0;
-
-        return new ReviewRatingResponse(totalRating, totalCount);
+        return new ReviewRatingResponse(
+                calResult.getFirst().doubleValue(),
+                calResult.getLast().longValue()
+        );
     }
-
 
     //Json에서 구글 리뷰+별점을 가져오는 메서드
     public ReviewGetResponse bringJsonReviewInfo(ReviewGetRequest reviewGetRequest, Pageable pageable) {
@@ -142,27 +135,41 @@ public class ReviewService {
     public ReviewRatingResponse bringJsonReviewRatingAndCount(ReviewGetRequest reviewGetRequest) {
         var googleReviewResponse = ReviewJsonReader.googleTempRatingResponse //임시로 Json파일에서 읽어옴
                 ("./review-example/rating/place_rating_" + reviewGetRequest.contentTypeId() + ".json");
+
         double googleRating = googleReviewResponse.rating();
         long googleCount = googleReviewResponse.userRatingCount();
 
-        List<Number> tripVoteResponse = reviewRepository.countAndAverageRatingByPlaceId(reviewGetRequest.placeId());
-        double tripVoteRating = 0;
-        long tripVoteCount = 0;
+        List<Number> tripVoteResponse = responseToList(reviewRepository.countAndAverageRatingByPlaceId
+                (reviewGetRequest.placeId()));
 
-        if (!tripVoteResponse.isEmpty()) {
-            tripVoteRating = tripVoteResponse.getFirst().doubleValue();
-            tripVoteCount = tripVoteResponse.getLast().longValue();
+        double tripVoteRating = tripVoteResponse.getFirst().doubleValue();
+        long tripVoteCount = tripVoteResponse.getLast().longValue();
+
+        var calResult = calculateReviewAverage(googleRating, googleCount, tripVoteRating, tripVoteCount);
+
+        return new ReviewRatingResponse(
+                calResult.getFirst().doubleValue(),
+                calResult.getLast().longValue()
+        );
+    }
+
+    private List<Number> responseToList(List<Number> response) {
+        if (response.isEmpty()) {
+            return List.of(0.0, 0L);
         }
+        return List.of(response.getFirst().doubleValue(), response.getLast().longValue());
+    }
 
-        long totalCount = googleCount + tripVoteCount;
+    private List<Number> calculateReviewAverage(double rating1, long count1, double rating2, long count2) {
+        long totalCount = count1 + count2;
         double totalRating = 0;
 
-        if (totalCount != 0) {
-            totalRating = (googleRating * googleCount + tripVoteRating * tripVoteCount) / totalCount;
+        if (totalCount == 0) {
+            return List.of(0.0, 0L);
         }
 
+        totalRating = (rating1 * count1 + rating2 * count2) / totalCount;
         totalRating = Math.round(totalRating * 10) / 10.0;
-
-        return new ReviewRatingResponse(totalRating, totalCount);
+        return List.of(totalRating, totalCount);
     }
 }
