@@ -9,6 +9,7 @@ import fc.be.app.domain.place.exception.PlaceException;
 import fc.be.app.domain.place.repository.PlaceRepository;
 import fc.be.openapi.tourapi.TourAPIService;
 import fc.be.openapi.tourapi.dto.response.bone.PlaceDTO;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ import static fc.be.app.domain.place.exception.PlaceErrorCode.PLACE_NOT_LOADED;
 public class PlaceService {
     private final TourAPIService tourAPIService;
     private final PlaceRepository placeRepository;
+
+    private List<PlaceDTO> popularPlaces = Collections.emptyList();
 
     @Transactional
     public Place saveOrUpdatePlace(final int placeId, final int placeTypeId) {
@@ -83,24 +86,22 @@ public class PlaceService {
     }
 
     public PlacePopularGetResponse bringPopularPlaces(int numOfRows) {
+        List<PlaceDTO> places = popularPlaces.subList(0, Math.min(numOfRows, popularPlaces.size()));
+        return PlacePopularGetResponse.from(places);
+    }
+
+    @PostConstruct
+    private void loadPopularPlaces() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        TypeReference<List<PlaceDTO>> typeReference = new TypeReference<>() {
-        };
-
-        List<PlaceDTO> places;
-
         try (InputStream inputStream = TypeReference.class.getResourceAsStream("/popular-places.json")) {
-            places = objectMapper.readValue(inputStream, typeReference);
-            places.subList(0, Math.min(numOfRows, places.size()));
+            popularPlaces = objectMapper.readValue(inputStream, new TypeReference<>() {
+            });
         } catch (IOException e) {
             log.warn("30일간 인기 여행지를 가져오지 못했습니다: {}", e.getMessage());
-            places = Collections.emptyList();
         }
-
-        return PlacePopularGetResponse.from(places);
     }
 
 }
