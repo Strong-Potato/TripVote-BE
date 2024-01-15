@@ -7,6 +7,6 @@ import java.util.List;
 import static fc.be.app.domain.vote.service.VoteManageUseCase.CandidateAddRequest.CandidateInfo;
 
 public record CandidateAddApiRequest(
-        @NotNull List<CandidateInfo> datas
+        @NotNull List<CandidateInfo> candidateInfos
 ) {
 }
