@@ -1,6 +1,6 @@
 package fc.be.openapi.tourapi.dto.mapper;
 
-import fc.be.openapi.tourapi.dto.bone.PlaceDTO;
+import fc.be.openapi.tourapi.dto.response.bone.PlaceDTO;
 
 /**
  * TourAPI의 응답을 도메인 객체로 변환하는 인터페이스

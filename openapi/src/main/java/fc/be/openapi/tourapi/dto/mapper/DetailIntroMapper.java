@@ -1,8 +1,8 @@
 package fc.be.openapi.tourapi.dto.mapper;
 
-import fc.be.openapi.tourapi.dto.bone.*;
-import fc.be.openapi.tourapi.dto.form.diff_property.detail_intro1.Item;
-import fc.be.openapi.tourapi.dto.form.diff_property.detail_intro1.item.*;
+import fc.be.openapi.tourapi.dto.response.bone.*;
+import fc.be.openapi.tourapi.dto.response.form.diff_property.detail_intro1.Item;
+import fc.be.openapi.tourapi.dto.response.form.diff_property.detail_intro1.item.*;
 import fc.be.openapi.tourapi.exception.TourAPIError;
 import org.springframework.stereotype.Component;
 
