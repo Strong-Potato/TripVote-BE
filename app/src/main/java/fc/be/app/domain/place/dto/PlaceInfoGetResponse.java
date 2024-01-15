@@ -9,7 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import fc.be.app.domain.place.Place;
 import fc.be.app.domain.place.entity.*;
 import fc.be.openapi.tourapi.constant.ContentTypeId;
-import fc.be.openapi.tourapi.dto.bone.*;
+import fc.be.openapi.tourapi.dto.response.bone.*;
 
 import java.io.IOException;
 import java.util.Map;

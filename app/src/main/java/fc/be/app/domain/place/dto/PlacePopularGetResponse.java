@@ -1,6 +1,6 @@
 package fc.be.app.domain.place.dto;
 
-import fc.be.openapi.tourapi.dto.bone.PlaceDTO;
+import fc.be.openapi.tourapi.dto.response.bone.PlaceDTO;
 import lombok.Builder;
 
 import java.util.ArrayList;
