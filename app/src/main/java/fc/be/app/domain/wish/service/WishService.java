@@ -54,4 +54,8 @@ public class WishService {
     public boolean deleteWish(Long memberId, Integer placeId) {
         return wishRepository.deleteByMemberIdAndPlaceId(memberId, placeId) > 0;
     }
+
+    public boolean isWished(Long memberId, Integer placeId) {
+        return wishRepository.existsByMemberIdAndPlaceId(memberId, placeId);
+    }
 }
