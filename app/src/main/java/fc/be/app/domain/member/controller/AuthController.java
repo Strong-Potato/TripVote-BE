@@ -80,7 +80,7 @@ public class AuthController {
     }
 
     @PostMapping("/modify/lost-password/send-email")
-    public ApiResponse changeLostPassword(@Valid @RequestBody SendEmailRequest request) {
+    public ApiResponse<Void> changeLostPassword(@Valid @RequestBody SendEmailRequest request) {
         String targetEmail = request.email();
         MemberRequest memberRequest = new MemberRequest(targetEmail);
         boolean isExists = memberQuery.exists(memberRequest);
