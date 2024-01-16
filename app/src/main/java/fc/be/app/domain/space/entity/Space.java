@@ -70,32 +70,34 @@ public class Space {
         this.endDate = endDate;
     }
 
-    public List<Long> findByDeletedJourneyIds(LocalDate ㄹstartDate, LocalDate endDate,
-                                              int daysToRemove) {
+    public List<Long> findByDeletedJourneyIds(int daysToRemove) {
         List<Long> journeyIds = new ArrayList<>();
 
         for (int i = 0; i < daysToRemove; i++) {
-            journeyIds.add(journeys.get(journeys.size() - 1).getId());
+            int journeysIndex = journeys.size() - 1 - i;
+            journeyIds.add(this.journeys.get(journeysIndex).getId());
         }
 
         return journeyIds;
     }
 
-    public List<Journey> findByAddedJourneys(LocalDate startDate, LocalDate endDate,
+    public List<Journey> findByAddedJourneys(LocalDate endDate,
                                              int daysToAdd) {
         List<Journey> journeyList = new ArrayList<>();
 
         for (int i = 0; i < daysToAdd; i++) {
-            journeyList.add(Journey.builder()
-                    .date(startDate.plusDays(i))
-                    .space(this)
-                    .build());
+            journeyList.add(
+                    Journey.builder()
+                            .date(endDate.minusDays(i))
+                            .space(this)
+                            .build()
+            );
         }
 
         return journeyList;
     }
 
-    public void updateJourneys(int day) {
+    public void updateJourneys(int day, LocalDate startDate) {
         IntStream.rangeClosed(0, day)
                 .forEach(index -> journeys.get(index).updateDate(startDate.plusDays(index)));
     }
@@ -113,6 +115,6 @@ public class Space {
     public boolean isBelong(Member member) {
         return this.joinedMembers
                 .stream()
-                .anyMatch(joinedMember -> joinedMember.getMember().equals(member));
+                .anyMatch(joinedMember -> !joinedMember.isLeftSpace() && joinedMember.getMember().equals(member));
     }
 }

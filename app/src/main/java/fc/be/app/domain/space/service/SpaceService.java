@@ -35,7 +35,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static fc.be.app.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
 import static fc.be.app.domain.place.exception.PlaceErrorCode.PLACE_NOT_LOADED;
@@ -74,17 +73,28 @@ public class SpaceService {
     }
 
     @Transactional
-    public SpaceResponse updateSpaceByTitle(Long spaceId, TitleUpdateRequest updateRequest) {
+    public SpaceResponse updateSpaceByTitle(Long spaceId, Long memberId, TitleUpdateRequest updateRequest, LocalDate currentDate) {
+        final Member requestMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
         Space space = spaceRepository.findById(spaceId)
                 .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+
+        validateSpace(space, requestMember, currentDate);
+
         space.updateByTitle(updateRequest.title());
         return SpaceResponse.of(space);
     }
 
     @Transactional
-    public SpaceResponse updateSpaceByDates(Long spaceId, DateUpdateRequest updateRequest) {
+    public SpaceResponse updateSpaceByDates(Long spaceId, Long memberId, DateUpdateRequest updateRequest, LocalDate currentDate) {
+        final Member requestMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
         Space space = spaceRepository.findById(spaceId)
                 .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+
+        validateSpace(space, requestMember, currentDate);
 
         if (space.getJourneys().isEmpty()) {
             List<Journey> journeys = Journey.createJourneys(updateRequest.startDate(),
@@ -96,21 +106,12 @@ public class SpaceService {
             int newDays = countDaysBetween(updateRequest.startDate(), updateRequest.endDate());
 
             if (originalDays > newDays) {
-                List<Long> journeys = space.findByDeletedJourneyIds(
-                        updateRequest.startDate(),
-                        updateRequest.endDate(), originalDays - newDays);
-
-                journeyRepository.deleteAllByIdInBatch(journeys);
-                selectedPlaceRepository.deleteByJourneyIds(journeys);
+                deleteJourneys(updateRequest, space, originalDays - newDays);
             } else if (originalDays < newDays) {
-                List<Journey> journeys = space.findByAddedJourneys(
-                        updateRequest.startDate(),
-                        updateRequest.endDate(), newDays - originalDays);
-
-                journeyRepository.saveAll(journeys);
+                addJourneys(updateRequest, space, newDays - originalDays);
+            } else {
+                space.updateJourneys(newDays, updateRequest.startDate());
             }
-
-            space.updateJourneys(newDays);
         }
 
         space.updateByDates(updateRequest.startDate(), updateRequest.endDate());
@@ -127,21 +128,21 @@ public class SpaceService {
         int size = myPages.getSize();
         boolean first = myPages.isFirst();
         boolean last = myPages.isLast();
-        List<SpaceResponse> content = myPages.get().map(SpaceResponse::of).collect(Collectors.toList());
+        List<SpaceResponse> content = myPages.get().map(SpaceResponse::of).toList();
 
         return new SpacesResponse(content, number, size, totalPages, totalElements, first, last);
     }
 
     @Transactional
     public void exitSpace(Long spaceId, Long memberId) {
-        Space space = spaceRepository.findById(spaceId)
+        final Space space = spaceRepository.findById(spaceId)
                 .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
 
-        Member member = memberRepository.findById(memberId)
+        final Member requestMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
         JoinedMember joinedMember = joinedMemberRepository.findBySpaceAndMember(space,
-                member).orElseThrow(() -> new SpaceException(SPACE_NOT_INVITE));
+                requestMember).orElseThrow(() -> new SpaceException(NOT_JOINED_MEMBER));
 
         joinedMember.updateLeftSpace(true);
     }
@@ -157,7 +158,15 @@ public class SpaceService {
     }
 
     @Transactional
-    public JourneyResponse selectedPlacesForSpace(SelectedPlaceRequest request) {
+    public JourneyResponse selectedPlacesForSpace(Long spaceId, Long memberId, SelectedPlaceRequest request, LocalDate currentDate) {
+        final Space space = spaceRepository.findById(spaceId)
+                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+
+        final Member requestMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
+        validateSpace(space, requestMember, currentDate);
+
         Journey journey = journeyRepository.findById(request.journeyId())
                 .orElseThrow(() -> new SpaceException(JOURNEY_NOT_FOUND));
 
@@ -168,10 +177,18 @@ public class SpaceService {
     }
 
     @Transactional
-    public JourneysResponse updatePlacesForSpace(SelectedPlacesRequest request) {
+    public JourneysResponse updatePlacesForSpace(Long spaceId, Long memberId, SelectedPlacesRequest request, LocalDate currentDate) {
+        final Space space = spaceRepository.findById(spaceId)
+                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+
+        final Member requestMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
+        validateSpace(space, requestMember, currentDate);
+
         List<Journey> journeys = new ArrayList<>();
 
-        for (SelectedPlaceRequest selectedPlaceRequest : request.selectedPlaceRequests()) {
+        for (SelectedPlaceRequest selectedPlaceRequest : request.places()) {
             Journey journey = journeyRepository.findById(selectedPlaceRequest.journeyId())
                     .orElseThrow(() -> new SpaceException(JOURNEY_NOT_FOUND));
 
@@ -186,11 +203,21 @@ public class SpaceService {
         return JourneysResponse.from(journeys);
     }
 
+    private void addJourneys(DateUpdateRequest updateRequest, Space space, int daysDiff) {
+        List<Journey> journeys = space.findByAddedJourneys(updateRequest.endDate(), daysDiff);
+        journeyRepository.saveAll(journeys);
+        space.updateJourneys(countDaysBetween(space.getStartDate(), space.getEndDate()), updateRequest.startDate());
+    }
+
+    private void deleteJourneys(DateUpdateRequest updateRequest, Space space, int daysDiff) {
+        List<Long> journeys = space.findByDeletedJourneyIds(daysDiff);
+        selectedPlaceRepository.deleteByJourneyIds(journeys);
+        journeyRepository.deleteAllByIdInBatch(journeys);
+        space.updateJourneys(countDaysBetween(updateRequest.startDate(), updateRequest.endDate()), updateRequest.startDate());
+    }
+
     private List<SelectedPlace> insertSelectedPlace(SelectedPlaceRequest selectedPlaceRequest, Journey journey) {
-        int lastOrder = journey.getPlace().stream()
-                .mapToInt(SelectedPlace::getOrders)
-                .max()
-                .orElse(0);
+        int lastOrder = journey.getPlace().size();
 
         List<SelectedPlace> selectedPlaces = new ArrayList<>();
 
@@ -206,6 +233,16 @@ public class SpaceService {
 
     private static int countDaysBetween(LocalDate startDate, LocalDate endDate) {
         return Period.between(startDate, endDate).getDays();
+    }
+
+    private static void validateSpace(Space space, Member requestMember, LocalDate currentDate) {
+        if (space.getStartDate() != null && space.isReadOnly(currentDate)) {
+            throw new SpaceException(SPACE_IS_READ_ONLY);
+        }
+
+        if (!space.isBelong(requestMember)) {
+            throw new SpaceException(NOT_JOINED_MEMBER);
+        }
     }
 
 }
