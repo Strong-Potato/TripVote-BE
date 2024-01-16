@@ -19,8 +19,11 @@ Content-Type: application/json
   "contentTypeId": {{restaurantTypeId}}
 }
 
-### 찜 목록 조회(다건)
-GET http://localhost:8080/wishes?page={{page}}&size={{size}}
+### 찜 목록 조회(다건) - 토큰이 담긴 쿠키 값 필요
+GET http://localhost:8080/members/my-places
+
+### 찜 조회(단건) - 토큰이 담긴 쿠키 값 필요
+GET http://localhost:8080/wishes/{{accommodationId}}
 
 ### 찜 목록 삭제(단건)
 DELETE http://localhost:8080/wishes/{{accommodationId}}
