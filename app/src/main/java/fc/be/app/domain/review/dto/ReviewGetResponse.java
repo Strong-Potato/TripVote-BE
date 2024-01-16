@@ -8,36 +8,30 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-public record ReviewGetResponse(
-        List<Item> reviews
-) {
+public record ReviewGetResponse(List<Item> reviews) {
 
-    public static ReviewGetResponse from(
-            List<Review> reviews
-    ) {
+    public static ReviewGetResponse from(List<Review> reviews) {
         List<Item> items = new ArrayList<>();
         for (var review : reviews) {
-            items.add(
-                    new Item(
-                            review.getMember().getNickname(),
-                            review.getMember().getProfile(),
-                            review.getRating(),
-                            review.getVisitedAt(),
-                            review.getContent(),
-                            review.getIsGoogle()
+            items.add(new Item(
+                    review.getMember().getNickname(),
+                    review.getMember().getProfile(),
+                    review.getRating(),
+                    review.getVisitedAt(),
+                    review.getContent(),
+                    review.getIsGoogle()
                     )
             );
         }
-        return new ReviewGetResponse(
-                items
-        );
+        return new ReviewGetResponse(items);
     }
 
-    public static List<Review> convertToReviews(APIReviewResponse googleReviewResponse) {
+    public static List<Review> convertToReviews(APIReviewResponse reviewResponse) {
         List<Review> reviews = new ArrayList<>();
-        for (var review : googleReviewResponse.reviews()) {
+        for (var review : reviewResponse.reviews()) {
             reviews.add(
                     Review.builder()
                             .content(review.content())
@@ -51,7 +45,7 @@ public record ReviewGetResponse(
                             .build()
             );
         }
-        reviews.sort((r1, r2) -> r2.getVisitedAt().compareTo(r1.getVisitedAt()));
+        reviews.sort(Comparator.comparing(Review::getVisitedAt).reversed());
         return reviews;
     }
 
@@ -66,7 +60,7 @@ public record ReviewGetResponse(
         return LocalDate.parse(strLocalDateTime, formatter);
     }
 
-    private record Item(
+    public record Item(
             String nickname,
             String profileImage,
             Integer rating,

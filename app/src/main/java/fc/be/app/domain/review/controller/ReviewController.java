@@ -40,7 +40,7 @@ public class ReviewController {
     public ApiResponse<ReviewRatingResponse> getRatingAndReviewCount(
             @Valid @RequestBody ReviewGetRequest reviewGetRequest
     ) {
-        return ApiResponse.ok(reviewService.bringJsonReviewRatingAndCount(reviewGetRequest));
+        return ApiResponse.ok(reviewService.bringReviewRatingAndCount(reviewGetRequest));
     }
 
     @GetMapping
@@ -49,7 +49,7 @@ public class ReviewController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        return ApiResponse.ok(reviewService.bringJsonReviewInfo(reviewGetRequest,
+        return ApiResponse.ok(reviewService.bringReviewInfo(reviewGetRequest,
                 PageRequest.of(page, size, Sort.by("visitedAt").descending())));
     }
 }

@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,21 +72,22 @@ public class ReviewService {
         return reviewRepository.deleteByIdAndMemberId(reviewId, memberId);
     }
 
-    public ReviewGetResponse bringJsonReviewInfo(ReviewGetRequest reviewGetRequest, Pageable pageable) {
+    public ReviewGetResponse bringReviewInfo(ReviewGetRequest reviewGetRequest, Pageable pageable) {
         Integer placeId = reviewGetRequest.placeId();
-
-        if (pageable.getPageNumber() == 0) {
+        final int firstPage = 0;
+        if (pageable.getPageNumber() == firstPage) {
             var response = reviewAPIService.bringReview
                     (reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId());
 
-            List<Review> reviews = new ArrayList<>(ReviewGetResponse.convertToReviews(response));
+
+            List<Review> reviews = ReviewGetResponse.convertToReviews(response);
             reviews.addAll(reviewRepository.findByPlaceId(placeId, pageable).toList());
             return ReviewGetResponse.from(reviews);
         }
         return ReviewGetResponse.from(reviewRepository.findByPlaceId(placeId, pageable).toList());
     }
 
-    public ReviewRatingResponse bringJsonReviewRatingAndCount(ReviewGetRequest reviewGetRequest) {
+    public ReviewRatingResponse bringReviewRatingAndCount(ReviewGetRequest reviewGetRequest) {
         var googleReviewResponse = reviewAPIService.bringRatingCount
                 (reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId());
 
@@ -117,7 +117,7 @@ public class ReviewService {
 
     private List<Number> calculateReviewAverage(double rating1, long count1, double rating2, long count2) {
         long totalCount = count1 + count2;
-        double totalRating = 0;
+        double totalRating;
 
         if (totalCount == 0) {
             return List.of(0.0, 0L);

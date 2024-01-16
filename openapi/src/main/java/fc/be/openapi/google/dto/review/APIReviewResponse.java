@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record APIReviewResponse(
-        List<Item> reviews
+        List<APIReviewItem> reviews
 ) {
     public static APIReviewResponse convertToAPIReviewResponse(GoogleReviewResponse googleReviewResponse) {
-        List<Item> items = new ArrayList<>();
+        List<APIReviewItem> APIReviewItems = new ArrayList<>();
 
         for (Review review : googleReviewResponse.reviews()) {
-            Item item = new Item(
+            APIReviewItem APIReviewItem = new APIReviewItem(
                     review.authorAttribution().displayName(),
                     review.authorAttribution().photoUri(),
                     review.rating(),
@@ -20,12 +20,13 @@ public record APIReviewResponse(
                     review.originalText().text(),
                     true
             );
-            items.add(item);
+
+            APIReviewItems.add(APIReviewItem);
         }
-        return new APIReviewResponse(items);
+        return new APIReviewResponse(APIReviewItems);
     }
 
-    public record Item(
+    public record APIReviewItem(
             String nickname,
             String profileImage,
             Integer rating,
@@ -33,6 +34,5 @@ public record APIReviewResponse(
             String content,
             Boolean isGoogle
     ) {
-
     }
 }

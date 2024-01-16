@@ -7,7 +7,7 @@ public record APIRatingResponse(
         Integer userRatingCount
 ) {
 
-    public static APIRatingResponse convertToTempRatingResponse(GoogleRatingResponse googleRatingResponse) {
+    public static APIRatingResponse convertToRatingResponse(GoogleRatingResponse googleRatingResponse) {
         return new APIRatingResponse(
                 googleRatingResponse.rating(),
                 googleRatingResponse.userRatingCount()
