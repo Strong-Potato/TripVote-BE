@@ -1,9 +1,5 @@
 package fc.be.app.domain.space.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.groups.Tuple.tuple;
-
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
@@ -19,11 +15,7 @@ import fc.be.app.domain.space.repository.JoinedMemberRepository;
 import fc.be.app.domain.space.repository.JourneyRepository;
 import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.SpaceType;
-import fc.be.openapi.google.GooglePlacesService;
-
-import java.time.LocalDate;
-import java.util.List;
-
+import fc.be.openapi.google.service.ReviewAPIService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,12 +25,19 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.groups.Tuple.tuple;
+
 @ActiveProfiles("test")
 @SpringBootTest
 class SpaceServiceTest {
 
     @MockBean
-    private GooglePlacesService placesService;
+    private ReviewAPIService reviewAPIService;
 
     @Autowired
     private SpaceService spaceService;
