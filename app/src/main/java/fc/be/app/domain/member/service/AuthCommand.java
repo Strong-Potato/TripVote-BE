@@ -53,6 +53,13 @@ public interface AuthCommand {
     String generateModifyToken(Long id, String password) throws MemberException, AuthException;
 
     /**
+     * @param email            email of which password to be modified
+     * @param verificationCode verificationCode sent to target email
+     * @return modify token
+     */
+    String generateModifyToken(String email, String verificationCode);
+
+    /**
      * @param id          target user id for modify password
      * @param modifyToken token for modify password
      * @throws AuthException with TOKEN_EXPIRED when modify-token is outdated
@@ -61,9 +68,24 @@ public interface AuthCommand {
     void authenticateModifyToken(Long id, String modifyToken) throws AuthException;
 
     /**
+     * @param email       target user email for modify password
+     * @param modifyToken token for modify password
+     * @throws AuthException with TOKEN_EXPIRED when modify-token is outdated
+     * @throws AuthException when INCORRECT_TOKEN when modify-token is incorrect
+     */
+    void authenticateModifyToken(String email, String modifyToken) throws AuthException;
+
+    /**
      * remove modify token
      *
      * @param id modified user id
      */
     void removeModifyToken(Long id);
+
+    /**
+     * remove modify token
+     *
+     * @param email modified user email
+     */
+    void removeModifyToken(String email);
 }

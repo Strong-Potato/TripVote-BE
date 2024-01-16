@@ -1,6 +1,7 @@
 package fc.be.app.domain.member.controller;
 
 import fc.be.app.domain.member.dto.request.*;
+import fc.be.app.domain.member.dto.response.TokenResponse;
 import fc.be.app.domain.member.exception.MemberErrorCode;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.service.AuthCommand;
@@ -19,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ public class AuthController {
     private final MailService mailService;
 
     @PostMapping("/register/send-email")
-    public ApiResponse sendCodeToEmail(@Valid @RequestBody SendEmailRequest request) {
+    public ApiResponse<Void> sendCodeToEmail(@Valid @RequestBody SendEmailRequest request) {
         String targetEmail = request.email();
         MemberRequest memberRequest = new MemberRequest(targetEmail);
         boolean isExists = memberQuery.exists(memberRequest);
@@ -44,15 +43,15 @@ public class AuthController {
     }
 
     @PostMapping("/register/check-token")
-    public ApiResponse verifyEmail(@Valid @RequestBody CheckTokenRequest request) {
+    public ApiResponse<TokenResponse> verifyEmail(@Valid @RequestBody CheckTokenRequest request) {
         String targetEmail = request.email();
         String verificationCode = request.code();
         String registerToken = authCommand.generateRegisterToken(targetEmail, verificationCode);
-        return ApiResponse.ok(Map.of("token", registerToken));
+        return ApiResponse.ok(new TokenResponse(registerToken));
     }
 
     @PostMapping("/register")
-    public ApiResponse register(@Valid @RequestBody RegisterMemberRequest request) {
+    public ApiResponse<Void> register(@Valid @RequestBody RegisterMemberRequest request) {
         MemberRegisterRequest memberRegisterRequest =
                 new MemberRegisterRequest(request.email(), request.password(), request.nickname(), request.profile());
         authCommand.authenticateRegisterToken(request.email(), request.token());
@@ -62,22 +61,21 @@ public class AuthController {
     }
 
     @PostMapping("/modify/password/check")
-    public ApiResponse checkPassword(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody CheckPasswordRequest request) {
+    public ApiResponse<TokenResponse> checkPassword(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody CheckPasswordRequest request) {
         Long id = userPrincipal.id();
         String password = request.password();
         String modifyToken = authCommand.generateModifyToken(id, password);
-        return ApiResponse.ok(Map.of("token", modifyToken));
+        return ApiResponse.ok(new TokenResponse(modifyToken));
     }
 
     @PostMapping("/modify/password")
-    public ApiResponse changePassword(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody ModifyPasswordRequest request) {
+    public ApiResponse<Void> changePassword(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody ModifyPasswordRequest request) {
         Long id = userPrincipal.id();
         String modifyToken = request.token();
         String newPassword = request.newPassword();
         authCommand.authenticateModifyToken(id, modifyToken);
         memberCommand.modifyPassword(id, newPassword);
         authCommand.removeModifyToken(id);
-
         return ApiResponse.ok();
     }
 
@@ -91,6 +89,25 @@ public class AuthController {
         }
         String verificationCode = authCommand.generateVerifyCode(targetEmail);
         mailService.sendSimpleMessage(targetEmail, "토큰 발급합니다잉~", verificationCode);
+        return ApiResponse.ok();
+    }
+
+    @PostMapping("/modify/lost-password/check-token")
+    public ApiResponse<TokenResponse> changeLostPassword(@Valid @RequestBody CheckTokenRequest request) {
+        String targetEmail = request.email();
+        String verificationCode = request.code();
+        String registerToken = authCommand.generateModifyToken(targetEmail, verificationCode);
+        return ApiResponse.ok(new TokenResponse(registerToken));
+    }
+
+    @PostMapping("/modify/lost-password")
+    public ApiResponse<Void> changeLostPassword(@Valid @RequestBody ModifyLostPasswordRequest request) {
+        String email = request.email();
+        String modifyToken = request.token();
+        String newPassword = request.newPassword();
+        authCommand.authenticateModifyToken(email, modifyToken);
+        memberCommand.modifyPassword(email, newPassword);
+        authCommand.removeModifyToken(request.token());
         return ApiResponse.ok();
     }
 }

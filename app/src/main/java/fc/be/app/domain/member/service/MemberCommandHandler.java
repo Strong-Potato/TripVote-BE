@@ -59,6 +59,13 @@ public class MemberCommandHandler implements MemberCommand {
     }
 
     @Override
+    public void modifyPassword(String email, String newPassword) {
+        Member targetMember =
+                memberRepository.findByProviderAndEmail(AuthProvider.NONE, email).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        targetMember.changePassword(passwordEncoder.encode(newPassword));
+    }
+
+    @Override
     public void modifyUserInfo(Long id, String newNickname, String newProfile) {
         Member targetMember =
                 memberRepository.findById(id).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));

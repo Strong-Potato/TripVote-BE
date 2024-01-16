@@ -76,13 +76,33 @@ public class AuthCommandHandler implements AuthCommand {
     }
 
     @Override
+    public String generateModifyToken(String email, String verificationCode) {
+        tokenProvider.authenticate(VERIFICATION_CODE_PREFIX, email, verificationCode);
+        return tokenProvider.generateWithRandomKey(
+                MODIFY_TOKEN_PREFIX,
+                email,
+                () -> UUID.randomUUID().toString(),
+                MODIFY_TOKEN_DURATION);
+    }
+
+    @Override
     public void authenticateModifyToken(Long id, String modifyToken) {
         tokenProvider.authenticate(MODIFY_TOKEN_PREFIX, modifyToken, String.valueOf(id));
     }
 
     @Override
+    public void authenticateModifyToken(String email, String modifyToken) throws AuthException {
+        tokenProvider.authenticate(MODIFY_TOKEN_PREFIX, modifyToken, email);
+    }
+
+    @Override
     public void removeModifyToken(Long id) {
         tokenProvider.removeToken(MODIFY_TOKEN_PREFIX, String.valueOf(id));
+    }
+
+    @Override
+    public void removeModifyToken(String email) {
+        tokenProvider.removeToken(MODIFY_TOKEN_PREFIX, email);
     }
 
     private String generateSecureRandomCode(int length) {
