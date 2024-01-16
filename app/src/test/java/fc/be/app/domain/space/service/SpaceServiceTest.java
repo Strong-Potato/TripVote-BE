@@ -1,9 +1,5 @@
 package fc.be.app.domain.space.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.groups.Tuple.tuple;
-
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
@@ -12,7 +8,6 @@ import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
 import fc.be.app.domain.space.dto.response.SpacesResponse;
 import fc.be.app.domain.space.entity.JoinedMember;
-import fc.be.app.domain.space.entity.Journey;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.space.repository.JoinedMemberRepository;
@@ -20,10 +15,6 @@ import fc.be.app.domain.space.repository.JourneyRepository;
 import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.SpaceType;
 import fc.be.openapi.google.GooglePlacesService;
-
-import java.time.LocalDate;
-import java.util.List;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,6 +23,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.groups.Tuple.tuple;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -119,16 +117,28 @@ class SpaceServiceTest {
     @Test
     void updateSpaceWithTitle() {
         // given
+        Member member = Member.builder()
+                .nickname("tester")
+                .build();
+        Member savedMember = memberRepository.save(member);
+
         Space space = createSpace(LocalDate.of(2024, 1, 7), LocalDate.of(2024, 1, 10));
         Space savedSpace = spaceRepository.save(space);
+
+        JoinedMember joinedMember = createJoinedMember(space, savedMember);
+        joinedMemberRepository.save(joinedMember);
 
         TitleUpdateRequest updateRequest = TitleUpdateRequest.builder()
                 .title("서울 여행")
                 .build();
 
         // when
-        SpaceResponse spaceResponse = spaceService.updateSpaceByTitle(savedSpace.getId(),
-                updateRequest);
+        SpaceResponse spaceResponse = spaceService.updateSpaceByTitle(
+                savedSpace.getId(),
+                savedMember.getId(),
+                updateRequest,
+                LocalDate.of(2024, 1, 7)
+        );
 
         // then
         assertThat(spaceResponse.title()).isEqualTo(updateRequest.title());
@@ -138,8 +148,16 @@ class SpaceServiceTest {
     @Test
     void updateSpaceWithDates() {
         // given
+        Member member = Member.builder()
+                .nickname("tester")
+                .build();
+        Member savedMember = memberRepository.save(member);
+
         Space space = createSpace(LocalDate.of(2024, 1, 7), LocalDate.of(2024, 1, 10));
         Space savedSpace = spaceRepository.save(space);
+
+        JoinedMember joinedMember = createJoinedMember(space, savedMember);
+        joinedMemberRepository.save(joinedMember);
 
         DateUpdateRequest updateRequest = DateUpdateRequest.builder()
                 .startDate(LocalDate.of(2024, 1, 6))
@@ -148,33 +166,7 @@ class SpaceServiceTest {
 
         // when
         SpaceResponse spaceResponse = spaceService.updateSpaceByDates(savedSpace.getId(),
-                updateRequest);
-
-        // then
-        assertThat(spaceResponse.startDate()).isEqualTo(updateRequest.startDate());
-        assertThat(spaceResponse.endDate()).isEqualTo(updateRequest.endDate());
-    }
-
-    @DisplayName("여행 스페이스의 시작일자와 종료일자에 대한 값을 업데이트를 한다.")
-    @Test
-    void updateSpaceWithDatesAndUpdateJourney() {
-        // given
-        Space space = createSpace(LocalDate.of(2024, 1, 7), LocalDate.of(2024, 1, 10));
-        Space savedSpace = spaceRepository.save(space);
-
-        List<Journey> journeys = Journey.createJourneys(LocalDate.of(2024, 1, 7),
-                LocalDate.of(2024, 1, 10), savedSpace);
-
-        journeyRepository.saveAll(journeys);
-
-        DateUpdateRequest updateRequest = DateUpdateRequest.builder()
-                .startDate(LocalDate.of(2024, 1, 6))
-                .endDate(LocalDate.of(2024, 1, 8))
-                .build();
-
-        // when
-        SpaceResponse spaceResponse = spaceService.updateSpaceByDates(savedSpace.getId(),
-                updateRequest);
+                savedMember.getId(), updateRequest, LocalDate.of(2024, 1, 7));
 
         // then
         assertThat(spaceResponse.startDate()).isEqualTo(updateRequest.startDate());
@@ -329,7 +321,7 @@ class SpaceServiceTest {
         // when then
         assertThatThrownBy(() -> spaceService.exitSpace(space.getId(), savedMember.getId()))
                 .isInstanceOf(SpaceException.class)
-                .hasMessageContaining("해당 여행스페이스의 초대되어 있지 않습니다.");
+                .hasMessageContaining("여행스페이스에 속한 회원이 아닙니다.");
     }
 
     private JoinedMember createJoinedMember(Space space1, Member member) {
