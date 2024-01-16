@@ -49,7 +49,7 @@ public class Place {
     @Convert(converter = ListImagesConverter.class)
     @Column(length = Short.MAX_VALUE)
     @Comment("장소 정보 추가 진열 이미지")
-    private final List<String> gallery = new ArrayList<>();
+    private List<String> gallery = new ArrayList<>();
 
     @Comment("장소 등록일")
     private LocalDateTime createdTime;
@@ -62,8 +62,7 @@ public class Place {
         this.location = place.getLocation();
         this.thumbnail = place.getThumbnail();
         this.originalImage = place.getOriginalImage();
-        this.gallery.clear();
-        this.gallery.addAll(place.getGallery());
+        this.gallery = place.getGallery();
         this.modifiedTime = place.getModifiedTime();
     }
 }

@@ -1,8 +1,8 @@
 package fc.be.openapi.tourapi.dto.mapper;
 
-import fc.be.openapi.tourapi.dto.bone.LocationDTO;
-import fc.be.openapi.tourapi.dto.bone.PlaceDTO;
-import fc.be.openapi.tourapi.dto.form.same_property.detail_common1.DetailCommon1Response;
+import fc.be.openapi.tourapi.dto.response.bone.LocationDTO;
+import fc.be.openapi.tourapi.dto.response.bone.PlaceDTO;
+import fc.be.openapi.tourapi.dto.response.form.same_property.detail_common1.DetailCommon1Response;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
