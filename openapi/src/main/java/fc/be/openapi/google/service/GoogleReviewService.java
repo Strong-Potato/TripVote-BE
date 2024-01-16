@@ -1,8 +1,8 @@
 package fc.be.openapi.google.service;
 
-import fc.be.openapi.google.dto.review.GoogleReviewResponse;
 import fc.be.openapi.google.dto.review.APIRatingResponse;
 import fc.be.openapi.google.dto.review.APIReviewResponse;
+import fc.be.openapi.google.dto.review.GoogleReviewResponse;
 import fc.be.openapi.google.dto.review.form.GoogleRatingResponse;
 import fc.be.openapi.google.dto.search.GoogleSearchResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
-@Profile("dev")
+@Profile("prod")
 @RequiredArgsConstructor
 public class GoogleReviewService implements ReviewAPIService {
 
@@ -24,16 +24,18 @@ public class GoogleReviewService implements ReviewAPIService {
 
     @Override
     public APIReviewResponse bringReview(String textQuery, Integer contentTypeId) {
-        String placeId = bringPlaceId(textQuery).places().getFirst().id();
-        var response = searchReview(placeId);
-        return APIReviewResponse.convertToAPIReviewResponse(response);
+        var places = bringPlaceId(textQuery).places();
+        var googleReviewResponse = places.isEmpty() ?
+                new GoogleReviewResponse(null) : searchReview(places.getFirst().id());
+
+        return APIReviewResponse.convertToAPIReviewResponse(googleReviewResponse);
     }
 
     @Override
     public APIRatingResponse bringRatingCount(String textQuery, Integer contentTypeId) {
         String placeId = bringPlaceId(textQuery).places().getFirst().id();
         var response = searchRating(placeId);
-        return APIRatingResponse.convertToTempRatingResponse(response);
+        return APIRatingResponse.convertToRatingResponse(response);
     }
 
     private GoogleSearchResponse bringPlaceId(String textQuery) {
