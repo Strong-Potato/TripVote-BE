@@ -17,6 +17,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Integer deleteByIdAndMemberId(Long reviewId, Long memberId);
 
+    Review findByIdAndMemberId(Long reviewId, Long memberId);
+
     @Query("SELECT count(r), avg(r.rating) FROM Review r WHERE r.place.id = :placeId")
     List<Number> countAndAverageRatingByPlaceId(@Param("placeId") Integer placeId);
 }

@@ -9,13 +9,9 @@ import fc.be.app.domain.review.dto.*;
 import fc.be.app.domain.review.dto.response.ReviewResponse;
 import fc.be.app.domain.review.dto.response.ReviewsResponse;
 import fc.be.app.domain.review.entity.Review;
-import fc.be.app.domain.review.exception.ReviewErrorCode;
-import fc.be.app.domain.review.exception.ReviewException;
 import fc.be.app.domain.review.repository.ReviewRepository;
-import fc.be.openapi.google.GooglePlacesService;
-import fc.be.openapi.google.ReviewJsonReader;
-import fc.be.openapi.google.dto.review.GoogleReviewResponse;
-import fc.be.openapi.google.dto.review.form.GoogleRatingResponse;
+import fc.be.app.global.config.security.model.user.UserPrincipal;
+import fc.be.openapi.google.service.ReviewAPIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,16 +30,14 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
     private final PlaceService placeService;
-    private final GooglePlacesService googlePlacesService;
+    private final ReviewAPIService reviewAPIService;
 
     @Transactional
-    public ReviewCreateResponse createReview(ReviewCreateRequest reviewCreateRequest) {
-        //todo [Review] Security 적용 -1
+    public ReviewCreateResponse createReview(ReviewCreateRequest reviewCreateRequest, UserPrincipal userPrincipal) {
 
         Integer placeId = reviewCreateRequest.placeId();
         Integer contentTypeId = reviewCreateRequest.contentTypeId();
-
-        Member member = memberRepository.findById(1L).orElseThrow(() ->
+        Member member = memberRepository.findById(userPrincipal.id()).orElseThrow(() ->
                 new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         placeService.saveOrUpdatePlace(placeId, contentTypeId);
@@ -53,10 +47,8 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewEditResponse editReview(ReviewEditRequest reviewEditRequest) {
-        Review review = reviewRepository.findById(reviewEditRequest.reviewId())
-                .orElseThrow(() -> new ReviewException(ReviewErrorCode.REVIEW_NOT_FOUND));
-
+    public ReviewEditResponse editReview(ReviewEditRequest reviewEditRequest, UserPrincipal userPrincipal) {
+        Review review = reviewRepository.findByIdAndMemberId(reviewEditRequest.reviewId(), userPrincipal.id());
         review.editReview(reviewEditRequest);
         return ReviewEditResponse.from(reviewRepository.save(review));
     }
@@ -76,65 +68,28 @@ public class ReviewService {
     }
 
     @Transactional
-    public Integer deleteReview(Long reviewId) {
-        Long memberId = 1L;
+    public Integer deleteReview(Long reviewId, UserPrincipal userPrincipal) {
+        Long memberId = userPrincipal.id();
         return reviewRepository.deleteByIdAndMemberId(reviewId, memberId);
     }
 
-    // 구글 API를 호출하는 실제 메서드
-    public ReviewGetResponse bringReviewInfo(ReviewGetRequest reviewGetRequest, Pageable pageable) {
-        Integer placeId = reviewGetRequest.placeId();
-
-        if (pageable.getPageNumber() == 0) {
-            GoogleReviewResponse response = googlePlacesService.bringGoogleReview(reviewGetRequest.placeTitle());
-            List<Review> reviews = new ArrayList<>(ReviewGetResponse.convertToReviews(response));
-
-            reviews.addAll(reviewRepository.findByPlaceId(placeId, pageable).toList());
-            return ReviewGetResponse.from(reviews);
-        }
-        return ReviewGetResponse.from(reviewRepository.findByPlaceId(placeId, pageable).toList());
-    }
-
-    // 구글 API를 호출하는 실제 메서드
-    public ReviewRatingResponse bringReviewRatingAndCount(ReviewGetRequest reviewGetRequest) {
-        GoogleRatingResponse googleReviewResponse = googlePlacesService.bringGoogleRatingCount(reviewGetRequest.placeTitle());
-
-        double googleRating = googleReviewResponse.rating();
-        long googleCount = googleReviewResponse.userRatingCount();
-
-        List<Number> tripVoteResponse = getNumbersFromList(reviewRepository.countAndAverageRatingByPlaceId
-                (reviewGetRequest.placeId()));
-
-        double tripVoteRating = tripVoteResponse.getFirst().doubleValue();
-        long tripVoteCount = tripVoteResponse.getLast().longValue();
-
-        var calResult = calculateReviewAverage(googleRating, googleCount, tripVoteRating, tripVoteCount);
-
-        return new ReviewRatingResponse(
-                calResult.getFirst().doubleValue(),
-                calResult.getLast().longValue()
-        );
-    }
-
-    //Json에서 구글 리뷰+별점을 가져오는 메서드
     public ReviewGetResponse bringJsonReviewInfo(ReviewGetRequest reviewGetRequest, Pageable pageable) {
         Integer placeId = reviewGetRequest.placeId();
 
         if (pageable.getPageNumber() == 0) {
-            var response = ReviewJsonReader.readReviewsJsonFile    //임시로 Json파일에서 읽어옴
-                    ("./review-example/reviews/place_" + reviewGetRequest.contentTypeId() + ".json");
+            var response = reviewAPIService.bringReview
+                    (reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId());
 
-            List<Review> reviews = new ArrayList<>(ReviewGetResponse.testConvertToReviews(response));
+            List<Review> reviews = new ArrayList<>(ReviewGetResponse.convertToReviews(response));
             reviews.addAll(reviewRepository.findByPlaceId(placeId, pageable).toList());
             return ReviewGetResponse.from(reviews);
         }
         return ReviewGetResponse.from(reviewRepository.findByPlaceId(placeId, pageable).toList());
     }
 
-    //Json에서 구글 리뷰+별점을 가져오는 메서드
     public ReviewRatingResponse bringJsonReviewRatingAndCount(ReviewGetRequest reviewGetRequest) {
-        var googleReviewResponse = ReviewJsonReader.googleTempRatingResponse //임시로 Json파일에서 읽어옴
-                ("./review-example/rating/place_rating_" + reviewGetRequest.contentTypeId() + ".json");
+        var googleReviewResponse = reviewAPIService.bringRatingCount
+                (reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId());
 
         double googleRating = googleReviewResponse.rating();
         long googleCount = googleReviewResponse.userRatingCount();
