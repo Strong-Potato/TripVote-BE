@@ -1,4 +1,4 @@
-package fc.be.openapi.google;
+package fc.be.openapi.google.service;
 
 import fc.be.openapi.google.dto.review.GoogleReviewResponse;
 import fc.be.openapi.google.dto.review.form.GoogleRatingResponse;

@@ -1,22 +1,40 @@
-package fc.be.openapi.google;
+package fc.be.openapi.google.service;
 
 import fc.be.openapi.google.dto.review.GoogleReviewResponse;
+import fc.be.openapi.google.dto.review.APIRatingResponse;
+import fc.be.openapi.google.dto.review.APIReviewResponse;
 import fc.be.openapi.google.dto.review.form.GoogleRatingResponse;
 import fc.be.openapi.google.dto.search.GoogleSearchResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
 @Service
+@Profile("dev")
 @RequiredArgsConstructor
-public class GooglePlacesService {
+public class GoogleReviewService implements ReviewAPIService {
 
     private final GooglePlacesClient googlePlacesClient;
 
     @Value("${google.places.api.key}")
     private String apiKey;
+
+    @Override
+    public APIReviewResponse bringReview(String textQuery, Integer contentTypeId) {
+        String placeId = bringPlaceId(textQuery).places().getFirst().id();
+        var response = searchReview(placeId);
+        return APIReviewResponse.convertToAPIReviewResponse(response);
+    }
+
+    @Override
+    public APIRatingResponse bringRatingCount(String textQuery, Integer contentTypeId) {
+        String placeId = bringPlaceId(textQuery).places().getFirst().id();
+        var response = searchRating(placeId);
+        return APIRatingResponse.convertToTempRatingResponse(response);
+    }
 
     private GoogleSearchResponse bringPlaceId(String textQuery) {
         return googlePlacesClient.searchText(
@@ -42,15 +60,5 @@ public class GooglePlacesService {
                 "ko",
                 placeId
         );
-    }
-
-    public GoogleReviewResponse bringGoogleReview(String textQuery) {
-        String placeId = bringPlaceId(textQuery).places().getFirst().id();
-        return searchReview(placeId);
-    }
-
-    public GoogleRatingResponse bringGoogleRatingCount(String textQuery) {
-        String placeId = bringPlaceId(textQuery).places().getFirst().id();
-        return searchRating(placeId);
     }
 }
