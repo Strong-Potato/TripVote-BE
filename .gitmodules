@@ -1,0 +1,3 @@
+[submodule "vault"]
+	path = vault
+	url = https://github.com/Strong-Potato/TripVote-BE-vault.git
