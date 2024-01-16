@@ -12,6 +12,12 @@ public interface MemberCommand {
 
     void register(@Valid ProviderMemberRegisterRequest request);
 
+    void modifyPassword(Long id, String newPassword);
+
+    void modifyPassword(String email, String newPassword);
+
+    void modifyUserInfo(Long id, String newNickname, String newProfile);
+
     record MemberRegisterRequest(
             @Email
             String email,
