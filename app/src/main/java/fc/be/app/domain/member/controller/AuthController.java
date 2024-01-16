@@ -38,7 +38,7 @@ public class AuthController {
             throw new MemberException(MemberErrorCode.EMAIL_ALREADY_EXISTS);
         }
         String verificationCode = authCommand.generateVerifyCode(targetEmail);
-        mailService.sendSimpleMessage(targetEmail, "토큰 발급합니다잉~", verificationCode);
+        mailService.sendVerificationCode(targetEmail, "[트립보트] 이메일 인증을 해주세요", verificationCode);
         return ApiResponse.ok();
     }
 
@@ -88,7 +88,7 @@ public class AuthController {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND);
         }
         String verificationCode = authCommand.generateVerifyCode(targetEmail);
-        mailService.sendSimpleMessage(targetEmail, "토큰 발급합니다잉~", verificationCode);
+        mailService.sendVerificationCode(targetEmail, "[트립보트] 이메일 인증을 해주세요", verificationCode);
         return ApiResponse.ok();
     }
 
