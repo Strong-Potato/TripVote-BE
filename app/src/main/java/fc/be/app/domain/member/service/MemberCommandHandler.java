@@ -57,4 +57,11 @@ public class MemberCommandHandler implements MemberCommand {
                 memberRepository.findById(id).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         targetMember.changePassword(passwordEncoder.encode(newPassword));
     }
+
+    @Override
+    public void modifyUserInfo(Long id, String newNickname, String newProfile) {
+        Member targetMember =
+                memberRepository.findById(id).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        targetMember.changeInfo(newNickname, newProfile);
+    }
 }

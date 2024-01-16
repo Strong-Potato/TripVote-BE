@@ -14,6 +14,8 @@ public interface MemberCommand {
 
     void modifyPassword(Long id, String newPassword);
 
+    void modifyUserInfo(Long id, String newNickname, String newProfile);
+
     record MemberRegisterRequest(
             @Email
             String email,

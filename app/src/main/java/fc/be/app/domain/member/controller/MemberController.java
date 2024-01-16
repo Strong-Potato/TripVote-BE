@@ -7,6 +7,7 @@ import fc.be.app.domain.member.dto.response.MyReviewsResponse;
 import fc.be.app.domain.member.dto.response.MySpacesResponse;
 import fc.be.app.domain.member.exception.MemberErrorCode;
 import fc.be.app.domain.member.exception.MemberException;
+import fc.be.app.domain.member.service.MemberCommand;
 import fc.be.app.domain.member.service.MemberQuery;
 import fc.be.app.domain.member.service.MemberQuery.MemberResponse;
 import fc.be.app.domain.review.dto.response.ReviewsResponse;
@@ -31,6 +32,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberQuery memberQuery;
+    private final MemberCommand memberCommand;
     private final SpaceService spaceService;
     private final ReviewService reviewService;
     private final WishService wishService;
@@ -73,6 +75,10 @@ public class MemberController {
 
     @PutMapping("/my-info")
     public ApiResponse<Void> changeProfileAndNickname(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody UpdateMemberRequest request) {
+        Long id = userPrincipal.id();
+        String newNickname = request.nickname();
+        String newProfile = request.profile();
+        memberCommand.modifyUserInfo(id, newNickname, newProfile);
         return ApiResponse.ok();
     }
 }
