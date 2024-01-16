@@ -22,7 +22,7 @@ public class ReviewController {
     }
 
     @PatchMapping
-    public ApiResponse<ReviewCreateResponse> editReview(@Valid @RequestBody ReviewEditRequest reviewEditRequest) {
+    public ApiResponse<ReviewEditResponse> editReview(@Valid @RequestBody ReviewEditRequest reviewEditRequest) {
         return ApiResponse.ok(reviewService.editReview(reviewEditRequest));
     }
 
