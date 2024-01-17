@@ -38,7 +38,7 @@ public class AuthController {
             throw new MemberException(MemberErrorCode.EMAIL_ALREADY_EXISTS);
         }
         String verificationCode = authCommand.generateVerifyCode(targetEmail);
-        mailService.sendSimpleMessage(targetEmail, "토큰 발급합니다잉~", verificationCode);
+        mailService.sendVerificationCode(targetEmail, "[트립보트] 이메일 인증을 해주세요", verificationCode);
         return ApiResponse.ok();
     }
 
@@ -80,7 +80,7 @@ public class AuthController {
     }
 
     @PostMapping("/modify/lost-password/send-email")
-    public ApiResponse changeLostPassword(@Valid @RequestBody SendEmailRequest request) {
+    public ApiResponse<Void> changeLostPassword(@Valid @RequestBody SendEmailRequest request) {
         String targetEmail = request.email();
         MemberRequest memberRequest = new MemberRequest(targetEmail);
         boolean isExists = memberQuery.exists(memberRequest);
@@ -88,7 +88,7 @@ public class AuthController {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND);
         }
         String verificationCode = authCommand.generateVerifyCode(targetEmail);
-        mailService.sendSimpleMessage(targetEmail, "토큰 발급합니다잉~", verificationCode);
+        mailService.sendVerificationCode(targetEmail, "[트립보트] 이메일 인증을 해주세요", verificationCode);
         return ApiResponse.ok();
     }
 
