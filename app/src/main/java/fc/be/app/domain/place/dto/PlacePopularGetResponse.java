@@ -1,14 +1,14 @@
 package fc.be.app.domain.place.dto;
 
+import fc.be.openapi.google.dto.review.APIRatingResponse;
 import fc.be.openapi.tourapi.dto.response.bone.PlaceDTO;
 import lombok.Builder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public record PlacePopularGetResponse(
-        List<Item> places
-) {
+public record PlacePopularGetResponse(List<Item> places) {
 
     public static PlacePopularGetResponse from(List<? extends PlaceDTO> places) {
         List<Item> items = new ArrayList<>();
@@ -27,12 +27,22 @@ public record PlacePopularGetResponse(
         return new PlacePopularGetResponse(items);
     }
 
-    @Builder
+    public PlacePopularGetResponse with(List<APIRatingResponse> apiRatingResponses) {
+        for (int i = 0; i < places.size(); i++) {
+            var rating = Optional.ofNullable(apiRatingResponses.get(i).rating()).orElse(0.0);
+            var updated = places.get(i).toBuilder().rating(rating).build();
+            places.set(i, updated);
+        }
+
+        return new PlacePopularGetResponse(places);
+    }
+
+    @Builder(toBuilder = true)
     private record Item(
             Integer id, Integer contentTypeId,
             String title, String thumbnail,
             Integer areaCode, Integer sigunguCode,
-            String category
+            String category, Double rating
     ) {
     }
 }
