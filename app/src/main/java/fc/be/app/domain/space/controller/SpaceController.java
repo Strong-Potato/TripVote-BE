@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -37,18 +39,20 @@ public class SpaceController {
     @PutMapping("/{spaceId}/title")
     public ApiResponse<SpaceResponse> updateSpaceByTitle(
             @PathVariable Long spaceId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody TitleUpdateRequest updateRequest
     ) {
-        SpaceResponse spaceResponse = spaceService.updateSpaceByTitle(spaceId, updateRequest);
+        SpaceResponse spaceResponse = spaceService.updateSpaceByTitle(spaceId, userPrincipal.id(), updateRequest, LocalDate.now());
         return ApiResponse.ok(spaceResponse);
     }
 
     @PutMapping("/{spaceId}/dates")
     public ApiResponse<SpaceResponse> updateSpaceByDates(
             @PathVariable Long spaceId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody DateUpdateRequest updateRequest
     ) {
-        SpaceResponse spaceResponse = spaceService.updateSpaceByDates(spaceId, updateRequest);
+        SpaceResponse spaceResponse = spaceService.updateSpaceByDates(spaceId, userPrincipal.id(), updateRequest, LocalDate.now());
         return ApiResponse.ok(spaceResponse);
     }
 
@@ -69,22 +73,23 @@ public class SpaceController {
     @PostMapping("/{spaceId}/places")
     public ApiResponse<JourneyResponse> selectedPlacesForSpace(
             @PathVariable Long spaceId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody SelectedPlaceRequest request
     ) {
-        return ApiResponse.ok(spaceService.selectedPlacesForSpace(request));
+        return ApiResponse.ok(spaceService.selectedPlacesForSpace(spaceId, userPrincipal.id(), request, LocalDate.now()));
     }
 
     @PutMapping("/{spaceId}/places")
     public ApiResponse<JourneysResponse> updatePlacesForSpace(
             @PathVariable Long spaceId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody SelectedPlacesRequest request
     ) {
-        return ApiResponse.ok(spaceService.updatePlacesForSpace(request));
+        return ApiResponse.ok(spaceService.updatePlacesForSpace(spaceId, userPrincipal.id(), request, LocalDate.now()));
     }
 
     @GetMapping
     public ApiResponse<SpaceResponse> getLatestSpace() {
-        // todo API 명세를 위한 껍데기이며 최근 작업한 여행스페이스 검색로직 추가 예정
         return ApiResponse.ok(SpaceResponse.builder().build());
     }
 }
