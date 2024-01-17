@@ -7,6 +7,7 @@ import lombok.Builder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 public record PlaceNearbyResponse(List<Item> places) {
 
@@ -28,13 +29,12 @@ public record PlaceNearbyResponse(List<Item> places) {
     }
 
     public PlaceNearbyResponse with(List<APIRatingResponse> apiRatingResponses) {
-        for (int i = 0; i < places.size(); i++) {
+        List<Item> updatedPlaces = IntStream.range(0, places.size()).mapToObj(i -> {
             var rating = Optional.ofNullable(apiRatingResponses.get(i).rating()).orElse(0.0);
-            var updated = places.get(i).toBuilder().rating(rating).build();
-            places.set(i, updated);
-        }
+            return places.get(i).toBuilder().rating(rating).build();
+        }).toList();
 
-        return new PlaceNearbyResponse(places);
+        return new PlaceNearbyResponse(updatedPlaces);
     }
 
     @Builder(toBuilder = true)
