@@ -14,7 +14,7 @@ import fc.be.app.domain.space.repository.JoinedMemberRepository;
 import fc.be.app.domain.space.repository.JourneyRepository;
 import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.SpaceType;
-import fc.be.openapi.google.GooglePlacesService;
+import fc.be.openapi.google.service.ReviewAPIService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ import static org.assertj.core.groups.Tuple.tuple;
 class SpaceServiceTest {
 
     @MockBean
-    private GooglePlacesService placesService;
+    private ReviewAPIService reviewAPIService;
 
     @Autowired
     private SpaceService spaceService;
