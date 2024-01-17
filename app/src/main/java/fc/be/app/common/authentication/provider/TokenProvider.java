@@ -1,8 +1,8 @@
-package fc.be.app.domain.member.provider;
+package fc.be.app.common.authentication.provider;
 
-import fc.be.app.domain.member.exception.AuthErrorCode;
-import fc.be.app.domain.member.exception.AuthException;
-import fc.be.app.domain.member.provider.strategy.TokenGenerator;
+import fc.be.app.common.authentication.exception.AuthErrorCode;
+import fc.be.app.common.authentication.exception.AuthException;
+import fc.be.app.common.authentication.provider.strategy.TokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;

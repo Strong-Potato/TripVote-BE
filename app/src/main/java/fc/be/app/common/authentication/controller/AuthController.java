@@ -1,10 +1,10 @@
-package fc.be.app.domain.member.controller;
+package fc.be.app.common.authentication.controller;
 
-import fc.be.app.domain.member.dto.request.*;
-import fc.be.app.domain.member.dto.response.TokenResponse;
+import fc.be.app.common.authentication.controller.dto.request.*;
+import fc.be.app.common.authentication.controller.dto.response.TokenResponse;
 import fc.be.app.domain.member.exception.MemberErrorCode;
 import fc.be.app.domain.member.exception.MemberException;
-import fc.be.app.domain.member.service.AuthCommand;
+import fc.be.app.common.authentication.service.AuthCommand;
 import fc.be.app.domain.member.service.MemberCommand;
 import fc.be.app.domain.member.service.MemberCommand.MemberRegisterRequest;
 import fc.be.app.domain.member.service.MemberQuery;

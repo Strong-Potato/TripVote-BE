@@ -1,4 +1,4 @@
-package fc.be.app.domain.member.dto.request;
+package fc.be.app.common.authentication.controller.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

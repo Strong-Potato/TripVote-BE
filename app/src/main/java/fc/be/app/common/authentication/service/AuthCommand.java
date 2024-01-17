@@ -1,7 +1,7 @@
-package fc.be.app.domain.member.service;
+package fc.be.app.common.authentication.service;
 
 
-import fc.be.app.domain.member.exception.AuthException;
+import fc.be.app.common.authentication.exception.AuthException;
 import fc.be.app.domain.member.exception.MemberException;
 
 public interface AuthCommand {

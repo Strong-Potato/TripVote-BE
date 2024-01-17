@@ -1,10 +1,11 @@
-package fc.be.app.domain.member.service;
+package fc.be.app.common.authentication.service;
 
-import fc.be.app.domain.member.exception.AuthErrorCode;
-import fc.be.app.domain.member.exception.AuthException;
+import fc.be.app.common.authentication.exception.AuthErrorCode;
+import fc.be.app.common.authentication.exception.AuthException;
+import fc.be.app.common.authentication.provider.TokenProvider;
 import fc.be.app.domain.member.exception.MemberErrorCode;
 import fc.be.app.domain.member.exception.MemberException;
-import fc.be.app.domain.member.provider.TokenProvider;
+import fc.be.app.domain.member.service.MemberQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.UUID;
 
-import static fc.be.app.domain.member.provider.properties.TokenProperties.*;
-
+import static fc.be.app.common.authentication.provider.properties.TokenProperties.*;
 
 @Service
 @Transactional

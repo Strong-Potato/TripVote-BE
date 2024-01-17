@@ -1,4 +1,4 @@
-package fc.be.app.domain.member.provider.properties;
+package fc.be.app.common.authentication.provider.properties;
 
 import java.time.Duration;
 

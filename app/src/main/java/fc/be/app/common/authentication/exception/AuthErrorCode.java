@@ -1,4 +1,4 @@
-package fc.be.app.domain.member.exception;
+package fc.be.app.common.authentication.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
