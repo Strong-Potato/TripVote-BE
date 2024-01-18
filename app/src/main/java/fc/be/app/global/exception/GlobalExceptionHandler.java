@@ -20,7 +20,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestControllerAdvice
 @Slf4j
@@ -73,7 +75,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ex.setType(type);
 
         ProblemDetail body = ex.getBody();
-        addRequestedProperties(body, request);
+        body.setProperties(addRequestedProperties(body, request));
 
         return handleExceptionInternal(ex, ex.getBody(), ex.getHeaders(), ex.getStatusCode(), request);
     }
@@ -94,7 +96,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private Map<String, Object> addRequestedProperties(ProblemDetail body, WebRequest request) {
-        Map<String, Object> properties = body.getProperties();
+        Map<String, Object> properties = new HashMap<>(Objects.requireNonNull(body.getProperties()));
 
         for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
             String parameters = String.join(", ", entry.getValue());
