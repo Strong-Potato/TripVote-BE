@@ -4,6 +4,7 @@ import fc.be.app.domain.place.dto.*;
 import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +37,8 @@ public class PlaceController {
 
     @GetMapping("/popular")
     public ApiResponse<PlacePopularGetResponse> sendPopularPlaces(
-            @RequestParam(defaultValue = "10") int numOfRows
+            @RequestParam(defaultValue = "10")  @Positive int size
     ) {
-        return ApiResponse.ok(placeService.bringPopularPlaces(numOfRows));
+        return ApiResponse.ok(placeService.bringPopularPlaces(size));
     }
 }
