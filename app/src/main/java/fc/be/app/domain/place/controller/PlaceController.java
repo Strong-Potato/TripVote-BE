@@ -37,8 +37,8 @@ public class PlaceController {
 
     @GetMapping("/popular")
     public ApiResponse<PlacePopularGetResponse> sendPopularPlaces(
-            @RequestParam(defaultValue = "10")  @Positive int size
+            @Valid @ModelAttribute PlacePopularGetRequest placePopularGetRequest
     ) {
-        return ApiResponse.ok(placeService.bringPopularPlaces(size));
+        return ApiResponse.ok(placeService.bringPopularPlaces(placePopularGetRequest));
     }
 }
