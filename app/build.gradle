@@ -1,3 +1,9 @@
+plugins {
+    id 'java'
+    id 'org.springdoc.openapi-gradle-plugin' version '1.8.0'
+    id 'io.swagger.swaggerhub' version '1.1.0'
+}
+
 jar {
     enabled = false
 }
@@ -39,6 +45,9 @@ dependencies {
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.637'
 
+    // documentation
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:+'
+
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -55,4 +64,27 @@ tasks.withType(JavaCompile).configureEach {
 
 clean.doLast {
     file(querydslDir).deleteDir()
+}
+
+openApi {
+    apiDocsUrl.set("http://localhost:8080/v3/api-docs.yaml")
+    outputDir.set(file("$buildDir/docs"))
+    outputFileName.set("swagger.yaml")
+    waitTimeInSeconds.set(10)
+    customBootRun {
+        args.set(["--spring.profiles.active=dev"])
+    }
+}
+
+import java.text.SimpleDateFormat
+
+swaggerhubUpload {
+    def dateVersion = new SimpleDateFormat('yyyy-MM-dd').format(new Date())
+
+    api 'trip-vote_api'
+    owner 'strong-potato'
+    version dateVersion
+    format 'yaml'
+    inputFile "$buildDir/docs/swagger.yaml"
+    token System.getenv("SWAGGERHUB_API_KEY")
 }
