@@ -19,7 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static fc.be.app.domain.place.exception.PlaceErrorCode.PLACE_NOT_LOADED;
@@ -33,7 +36,7 @@ public class PlaceService {
     private final PlaceRepository placeRepository;
     private final ReviewAPIService reviewAPIService;
 
-    private PlacePopularGetResponse popularPlacesResponse;
+    private List<PlaceDTO> popularPlaces = Collections.emptyList();
 
     @Transactional
     public Place saveOrUpdatePlace(final int placeId, final int placeTypeId) {
@@ -91,9 +94,16 @@ public class PlaceService {
         return PlaceNearbyResponse.from(places).with(apiRatingResponses);
     }
 
-    public PlacePopularGetResponse bringPopularPlaces(int numOfRows) {
-        var popularPlaces = popularPlacesResponse.places();
-        return new PlacePopularGetResponse(popularPlaces.subList(0, Math.min(numOfRows, popularPlaces.size())));
+    public PlacePopularGetResponse bringPopularPlaces(PlacePopularGetRequest placePopularGetRequest) {
+        Stream<PlaceDTO> stream = popularPlaces.stream();
+
+        if (placePopularGetRequest.placeTypeId() != null) {
+            stream = stream.filter(placeDTO -> Objects.equals(placeDTO.getContentTypeId(), placePopularGetRequest.placeTypeId()));
+        }
+
+        List<PlaceDTO> places = stream.toList().subList(0, Math.min(placePopularGetRequest.size(), popularPlaces.size()));
+
+        return PlacePopularGetResponse.from(places);
     }
 
     @PostConstruct
@@ -103,14 +113,8 @@ public class PlaceService {
         objectMapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         try (InputStream inputStream = TypeReference.class.getResourceAsStream("/popular-places.json")) {
-            List<PlaceDTO> popularPlaces = objectMapper.readValue(inputStream, new TypeReference<>() {
+            popularPlaces = objectMapper.readValue(inputStream, new TypeReference<>() {
             });
-
-            List<APIRatingResponse> apiRatingResponses = popularPlaces.stream()
-                    .map(place -> reviewAPIService.bringRatingCount(place.getTitle(), place.getContentTypeId()))
-                    .toList();
-
-            popularPlacesResponse = PlacePopularGetResponse.from(popularPlaces).with(apiRatingResponses);
         } catch (IOException e) {
             log.warn("30일간 인기 여행지를 가져오지 못했습니다: {}", e.getMessage());
         }
