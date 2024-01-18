@@ -209,11 +209,11 @@ public class ReviewServiceTest implements ReviewDTOFixture {
             // Given
             var reviewGetRequest = reviewGetRequest();
             // Mock behavior of reviewAPIService
-            when(reviewAPIService.bringReview(reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId()))
-                    .thenReturn(APIReviewResponse());
+            given(reviewAPIService.bringReview(reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId()))
+                    .willReturn(APIReviewResponse());
             // Mock behavior of reviewRepository
-            when(reviewRepository.findByPlaceId(reviewGetRequest.placeId(), pageable()))
-                    .thenReturn(page());
+            given(reviewRepository.findByPlaceId(reviewGetRequest.placeId(), pageable()))
+                    .willReturn(page());
 
             // When
             var actual = reviewService.bringReviewInfo(reviewGetRequest, pageable());
@@ -232,11 +232,11 @@ public class ReviewServiceTest implements ReviewDTOFixture {
             var reviewGetRequest = reviewGetRequest();
             var APIRatingResponse = APIRatingResponse();
             // Mock behavior of reviewAPIService
-            when(reviewAPIService.bringRatingCount(reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId()))
-                    .thenReturn(APIRatingResponse);
+            given(reviewAPIService.bringRatingCount(reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId()))
+                    .willReturn(APIRatingResponse);
             // Mock behavior of reviewRepository
-            when(reviewRepository.countAndAverageRatingByPlaceId(reviewGetRequest.placeId()))
-                    .thenReturn(List.of(APIRatingResponse.rating(), APIRatingResponse.userRatingCount()));
+            given(reviewRepository.countAndAverageRatingByPlaceId(reviewGetRequest.placeId()))
+                    .willReturn(List.of(APIRatingResponse.rating(), APIRatingResponse.userRatingCount()));
 
             // When
             var actual = reviewService.bringReviewRatingAndCount(reviewGetRequest);
@@ -254,11 +254,11 @@ public class ReviewServiceTest implements ReviewDTOFixture {
             // Given
             var reviewGetRequest = reviewGetRequest();
             // Mock behavior of reviewAPIService
-            when(reviewAPIService.bringReview(reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId()))
-                    .thenReturn(new APIReviewResponse(List.of()));
+            given(reviewAPIService.bringReview(reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId()))
+                    .willReturn(new APIReviewResponse(List.of()));
             // Mock behavior of reviewRepository
-            when(reviewRepository.findByPlaceId(reviewGetRequest.placeId(), pageable()))
-                    .thenReturn(page());
+            given(reviewRepository.findByPlaceId(reviewGetRequest.placeId(), pageable()))
+                    .willReturn(page());
 
             // When
             var actual = reviewService.bringReviewInfo(reviewGetRequest, pageable());
@@ -276,11 +276,11 @@ public class ReviewServiceTest implements ReviewDTOFixture {
             // Given
             var reviewGetRequest = reviewGetRequest();
             // Mock behavior of reviewAPIService
-            when(reviewAPIService.bringRatingCount(reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId()))
-                    .thenReturn(new APIRatingResponse(0.0, 0));
+            given(reviewAPIService.bringRatingCount(reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId()))
+                    .willReturn(new APIRatingResponse(0.0, 0));
             // Mock behavior of reviewRepository
-            when(reviewRepository.countAndAverageRatingByPlaceId(reviewGetRequest.placeId()))
-                    .thenReturn(List.of(0.0, 0));
+            given(reviewRepository.countAndAverageRatingByPlaceId(reviewGetRequest.placeId()))
+                    .willReturn(List.of(0.0, 0));
 
             // When
             var actual = reviewService.bringReviewRatingAndCount(reviewGetRequest);
