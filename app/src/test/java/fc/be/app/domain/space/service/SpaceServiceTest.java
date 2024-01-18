@@ -3,6 +3,7 @@ package fc.be.app.domain.space.service;
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
+import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.domain.space.dto.request.DateUpdateRequest;
 import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
@@ -37,6 +38,9 @@ class SpaceServiceTest {
 
     @MockBean
     private ReviewAPIService reviewAPIService;
+
+    @MockBean
+    private PlaceService placeService;
 
     @Autowired
     private SpaceService spaceService;
