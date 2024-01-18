@@ -38,11 +38,3 @@ jwt:
   issuer: tripvote-1
 
 domain: localhost:8080
-
-spring.mail:
-  host: host
-  port: 111
-  username: username
-  password: password
-  protocol: protocol
-  default-encoding: UTF-8
