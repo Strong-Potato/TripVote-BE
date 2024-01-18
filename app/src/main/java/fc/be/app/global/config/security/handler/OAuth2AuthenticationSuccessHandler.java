@@ -1,7 +1,6 @@
 package fc.be.app.global.config.security.handler;
 
 import com.auth0.jwt.exceptions.JWTCreationException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fc.be.app.domain.member.service.MemberQuery;
 import fc.be.app.domain.member.vo.AuthProvider;
 import fc.be.app.global.config.security.converter.Converter;
@@ -11,14 +10,11 @@ import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.config.security.properties.TokenProperties;
 import fc.be.app.global.config.security.provider.AuthenticationDetails;
 import fc.be.app.global.config.security.service.RefreshTokenService;
-import fc.be.app.global.http.ApiResponse;
 import fc.be.app.global.util.CookieUtil;
 import fc.be.app.global.util.JwtService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -38,7 +34,6 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     private final ClientRegistrationRepository clientRegistrationRepository;
     private final RefreshTokenService refreshTokenService;
     private final TokenProperties tokenProperties;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public OAuth2AuthenticationSuccessHandler(MemberQuery memberQuery, Converter<ProviderUserConvertRequest, ProviderUser> converter, JwtService jwtService, ClientRegistrationRepository clientRegistrationRepository, RefreshTokenService refreshTokenService, TokenProperties tokenProperties) {
         this.memberQuery = memberQuery;
@@ -82,10 +77,6 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         String refreshToken = refreshTokenService.refresh(accessToken, userPrincipal, (AuthenticationDetails) oauth2Authentication.getDetails());
         CookieUtil.addCookie(response, tokenProperties.getRefreshTokenName(), refreshToken, Integer.parseInt(tokenProperties.getRefreshTokenCookieExpireTime()));
 
-        response.setStatus(HttpStatus.OK.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding("UTF-8");
-
-        objectMapper.writeValue(response.getWriter(), ApiResponse.ok());
+        response.sendRedirect("https://tripvote.site");
     }
 }
