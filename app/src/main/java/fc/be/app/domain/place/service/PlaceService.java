@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
@@ -95,13 +96,17 @@ public class PlaceService {
     }
 
     public PlacePopularGetResponse bringPopularPlaces(PlacePopularGetRequest placePopularGetRequest) {
-        Stream<PlaceDTO> stream = popularPlaces.stream();
+        Supplier<Stream<PlaceDTO>> streamSupplier = () -> popularPlaces.stream();
+
+        Stream<PlaceDTO> filteredStream = streamSupplier.get();
 
         if (placePopularGetRequest.placeTypeId() != null) {
-            stream = stream.filter(placeDTO -> Objects.equals(placeDTO.getContentTypeId(), placePopularGetRequest.placeTypeId()));
+            filteredStream = filteredStream.filter(placeDTO ->
+                    Objects.equals(placeDTO.getContentTypeId(), placePopularGetRequest.placeTypeId())
+            );
         }
 
-        List<PlaceDTO> places = stream.toList().subList(0, Math.min(placePopularGetRequest.size(), popularPlaces.size()));
+        List<PlaceDTO> places = filteredStream.limit(placePopularGetRequest.size()).toList();
 
         return PlacePopularGetResponse.from(places);
     }
