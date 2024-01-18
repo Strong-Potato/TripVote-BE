@@ -37,7 +37,7 @@ public class MailService {
         MimeMessageHelper helper;
         try {
             helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setFrom("admin@tripvote.site");
+            helper.setFrom("donghar2004@gmail.com");
             helper.setTo(to);
             helper.setSubject(subject);
 
