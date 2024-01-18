@@ -16,13 +16,13 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String email = "ok@gmail.com";
+        String email = "test@test.com";
         boolean isExists = memberRepository.existsByProviderAndEmail(AuthProvider.NONE, email);
         if (!isExists) {
             Member member = Member.builder()
-                    .email("ok@gmail.com")
+                    .email(email)
                     .nickname("ok")
-                    .password(passwordEncoder.encode("1234"))
+                    .password(passwordEncoder.encode("1q2w3e4r!Q"))
                     .provider(AuthProvider.NONE)
                     .build();
 

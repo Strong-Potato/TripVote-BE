@@ -46,12 +46,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         } else if (ex instanceof AuthenticationException exception) {
             log.warn("[AUTHENTICATION_EXCEPTION] AUTHENTICATION FAILED : {}", exception.getMessage(), exception.getCause());
             switch (exception) {
-                case BadCredentialsException
-                        badCredentialsException -> errorMessage = "이메일 또는 비밀번호를 확인해주세요.";
-                case InsufficientAuthenticationException
-                        insufficientAuthenticationException -> errorMessage = "로그인을 먼저 해주세요.";
-                case UsernameNotFoundException
-                        usernameNotFoundException -> errorMessage = "회원가입되지 않은 이메일입니다.";
+                case UsernameNotFoundException usernameNotFoundException -> {
+                    httpStatus = HttpStatus.OK;
+                    errorMessage = "회원가입되지 않은 이메일입니다.";
+                }
+                case BadCredentialsException badCredentialsException -> {
+                    httpStatus = HttpStatus.OK;
+                    errorMessage = "이메일 또는 비밀번호를 확인해주세요.";
+                }
+                case InsufficientAuthenticationException insufficientAuthenticationException -> {
+                    errorMessage = "로그인을 먼저 해주세요.";
+                }
                 default -> {
                 }
             }
