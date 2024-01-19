@@ -20,6 +20,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -73,7 +74,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ex.setType(type);
 
         ProblemDetail body = ex.getBody();
-        addRequestedProperties(body, request);
+        body.setProperties(addRequestedProperties(body, request));
 
         return handleExceptionInternal(ex, ex.getBody(), ex.getHeaders(), ex.getStatusCode(), request);
     }
@@ -94,7 +95,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private Map<String, Object> addRequestedProperties(ProblemDetail body, WebRequest request) {
-        Map<String, Object> properties = body.getProperties();
+        Map<String, Object> properties = new LinkedHashMap<>();
+
+        if (body.getProperties() != null) {
+            properties.putAll(body.getProperties());
+        }
 
         for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
             String parameters = String.join(", ", entry.getValue());

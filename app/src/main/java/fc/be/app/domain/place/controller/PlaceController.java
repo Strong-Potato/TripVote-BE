@@ -4,9 +4,11 @@ import fc.be.app.domain.place.dto.*;
 import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/places")
 @RestController
@@ -37,8 +39,8 @@ public class PlaceController {
 
     @GetMapping("/popular")
     public ApiResponse<PlacePopularGetResponse> sendPopularPlaces(
-            @RequestParam(defaultValue = "10")  @Positive int size
+            @Valid @ModelAttribute PlacePopularGetRequest placePopularGetRequest
     ) {
-        return ApiResponse.ok(placeService.bringPopularPlaces(size));
+        return ApiResponse.ok(placeService.bringPopularPlaces(placePopularGetRequest));
     }
 }

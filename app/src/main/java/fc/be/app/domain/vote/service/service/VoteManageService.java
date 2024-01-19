@@ -8,13 +8,16 @@ import fc.be.app.domain.place.repository.PlaceRepository;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.space.repository.SpaceRepository;
-import fc.be.app.domain.vote.dto.MemberProfile;
 import fc.be.app.domain.vote.entity.Candidate;
 import fc.be.app.domain.vote.entity.Vote;
 import fc.be.app.domain.vote.exception.VoteErrorCode;
 import fc.be.app.domain.vote.exception.VoteException;
 import fc.be.app.domain.vote.repository.VoteRepository;
-import fc.be.app.domain.vote.service.VoteManageUseCase;
+import fc.be.app.domain.vote.service.dto.request.CandidateAddRequest;
+import fc.be.app.domain.vote.service.dto.request.VoteCreateRequest;
+import fc.be.app.domain.vote.service.dto.response.VoteDetailResponse;
+import fc.be.app.domain.vote.service.dto.response.vo.CandidateInfo;
+import fc.be.app.domain.vote.service.dto.response.vo.MemberProfile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +28,10 @@ import java.util.Optional;
 import static fc.be.app.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
 import static fc.be.app.domain.space.exception.SpaceErrorCode.*;
 import static fc.be.app.domain.vote.exception.VoteErrorCode.CANDIDATE_IS_MAX;
-import static fc.be.app.domain.vote.service.VoteInfoQueryUseCase.CandidateResponse;
-import static fc.be.app.domain.vote.service.VoteInfoQueryUseCase.VoteResponse;
-import static fc.be.app.domain.vote.service.VoteManageUseCase.CandidateAddRequest.CandidateInfo;
+import static fc.be.app.domain.vote.service.dto.request.CandidateAddRequest.*;
 
 @Service
-public class VoteManageService implements VoteManageUseCase {
+public class VoteManageService {
 
     private static final int CANDIDATE_COUNT_THRESHOLD = 15;
 
@@ -42,7 +43,8 @@ public class VoteManageService implements VoteManageUseCase {
     public VoteManageService(VoteRepository voteRepository,
                              SpaceRepository spaceRepository,
                              MemberRepository memberRepository,
-                             PlaceRepository placeRepository) {
+                             PlaceRepository placeRepository
+    ) {
         this.voteRepository = voteRepository;
         this.spaceRepository = spaceRepository;
         this.memberRepository = memberRepository;
@@ -76,8 +78,7 @@ public class VoteManageService implements VoteManageUseCase {
         }
     }
 
-    @Override
-    public VoteResponse addCandidate(CandidateAddRequest request) {
+    public VoteDetailResponse addCandidate(CandidateAddRequest request) {
         final Member requestMember = memberRepository.findById(request.memberId())
                 .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
@@ -100,16 +101,13 @@ public class VoteManageService implements VoteManageUseCase {
         }
 
         // TODO : Sending a new Candidate Add event to all members of the space
-        return new VoteResponse(
+        return new VoteDetailResponse(
                 vote.getId(),
                 vote.getTitle(),
-                new MemberProfile(
-                        vote.getOwner().getId(),
-                        vote.getOwner().getNickname(),
-                        vote.getOwner().getProfile()
-                ),
+                vote.getStatus(),
+                MemberProfile.of(vote.getOwner()),
                 vote.getCandidates().stream()
-                        .map(CandidateResponse::of)
+                        .map(candidate -> CandidateInfo.of(request.memberId(), candidate))
                         .toList());
     }
 
@@ -120,17 +118,17 @@ public class VoteManageService implements VoteManageUseCase {
     }
 
     private List<Integer> extractPlaceIdsFromRequest(CandidateAddRequest request) {
-        return request.candidateInfo()
+        return request.candidateAddInfo()
                 .stream()
-                .map(CandidateInfo::placeId)
+                .map(CandidateAddInfo::placeId)
                 .toList();
     }
 
     private Optional<String> findMatchTagline(CandidateAddRequest request, Place place) {
-        return request.candidateInfo()
+        return request.candidateAddInfo()
                 .stream()
                 .filter(info -> info.placeId().equals(place.getId()))
-                .map(CandidateInfo::tagline)
+                .map(CandidateAddInfo::tagline)
                 .findFirst();
     }
 }

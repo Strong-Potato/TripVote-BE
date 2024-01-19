@@ -6,6 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 
 @Getter
 @Setter
@@ -13,7 +15,15 @@ import java.time.format.DateTimeFormatter;
 @ConfigurationProperties(prefix = "tourapi")
 public class TourAPIProperties {
 
-    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    public static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder()
+            .appendPattern("[yyyyMMddHHmmss]")
+            .appendPattern("[yyyyMMddHHmm]")
+            .appendPattern("[yyyyMMddHH]")
+            .appendPattern("[yyyyMMdd]")
+            .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+            .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+            .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
+            .toFormatter();
 
     private String baseUrl;
     private String areaBasedSyncList;
