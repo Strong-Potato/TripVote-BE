@@ -1,6 +1,7 @@
 package fc.be.app.domain.space.entity;
 
 import fc.be.app.domain.member.entity.Member;
+import fc.be.app.global.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +18,7 @@ import org.hibernate.annotations.Comment;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Comment("여행 스페이스의 초대멤버")
-public class JoinedMember {
+public class JoinedMember extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
