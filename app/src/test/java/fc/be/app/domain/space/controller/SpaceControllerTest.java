@@ -5,6 +5,7 @@ import fc.be.app.domain.space.dto.request.DateUpdateRequest;
 import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
 import fc.be.app.domain.space.service.SpaceService;
+import fc.be.app.global.config.WebConfig;
 import fc.be.app.global.config.security.SecurityAppConfig;
 import fc.be.app.global.config.security.SecurityConfig;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +22,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -32,11 +35,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = SpaceController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-                    classes = {SecurityConfig.class, SecurityAppConfig.class})
+                        classes = {SecurityConfig.class, SecurityAppConfig.class, WebConfig.class})
         },
         excludeAutoConfiguration = {
                 SecurityAutoConfiguration.class,
-                OAuth2ClientAutoConfiguration.class,
+                OAuth2ClientAutoConfiguration.class
         }
 )
 class SpaceControllerTest {
@@ -48,10 +51,10 @@ class SpaceControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    SpaceService spaceService;
+    private SpaceService spaceService;
 
     @MockBean
-    CommandLineRunner commandLineRunner;
+    private CommandLineRunner commandLineRunner;
 
     @DisplayName("여행 스페이스를 생성한다.")
     @Test
@@ -69,15 +72,18 @@ class SpaceControllerTest {
     void getSpaceById() throws Exception {
         // given
         SpaceResponse spaceResponse = SpaceResponse.builder()
+                .id(1L)
                 .title("부산 여행")
+                .members(List.of(SpaceResponse.MemberInfo.builder()
+                        .id(1L)
+                        .build()))
                 .build();
-        when(spaceService.getSpaceById(anyLong())).thenReturn(spaceResponse);
+        when(spaceService.getSpaceById(anyLong(), any())).thenReturn(spaceResponse);
 
         // when then
         Long spaceId = 1L;
         mockMvc.perform(
                         get("/spaces/{spaceId}", spaceId)
-                                .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("200"))
