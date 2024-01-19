@@ -40,4 +40,8 @@ public class VotedMember {
         this.member = member;
         this.vote = vote;
     }
+
+    public boolean isMemberVote(Long memberId) {
+        return memberId.equals(member.getId());
+    }
 }

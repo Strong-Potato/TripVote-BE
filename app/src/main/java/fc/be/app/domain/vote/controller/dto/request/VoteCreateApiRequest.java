@@ -1,4 +1,4 @@
-package fc.be.app.domain.vote.controller.dto;
+package fc.be.app.domain.vote.controller.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
