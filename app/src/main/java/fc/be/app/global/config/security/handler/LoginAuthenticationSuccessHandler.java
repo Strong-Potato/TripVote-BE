@@ -50,9 +50,11 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
             throw new InternalAuthenticationServiceException(ex.getMessage(), ex);
         }
         CookieUtil.addCookie(response, tokenProperties.getAccessTokenName(), accessToken, Integer.parseInt(tokenProperties.getAccessTokenCookieExpireTime()));
+        CookieUtil.addCookieForLocal(response, tokenProperties.getAccessTokenName(), accessToken, Integer.parseInt(tokenProperties.getAccessTokenCookieExpireTime()));
 
         String refreshToken = refreshTokenService.refresh(accessToken, principal, (AuthenticationDetails) loginAuthentication.getDetails());
         CookieUtil.addCookie(response, tokenProperties.getRefreshTokenName(), refreshToken, Integer.parseInt(tokenProperties.getRefreshTokenCookieExpireTime()));
+        CookieUtil.addCookieForLocal(response, tokenProperties.getRefreshTokenName(), refreshToken, Integer.parseInt(tokenProperties.getRefreshTokenCookieExpireTime()));
 
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
