@@ -1,15 +1,11 @@
 package fc.be.app.domain.vote.repository;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.Tuple;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import fc.be.app.domain.space.vo.VoteStatus;
 import fc.be.app.domain.vote.entity.Vote;
-import fc.be.app.domain.vote.repository.dto.VotesQueryResponse;
 import fc.be.app.domain.vote.service.dto.request.VoteStatusOption;
 import jakarta.persistence.EntityManager;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -22,16 +18,6 @@ public class VoteRepositoryCustomImpl implements VoteRepositoryCustom {
 
     public VoteRepositoryCustomImpl(EntityManager entityManager) {
         this.jpaQueryFactory = new JPAQueryFactory(entityManager);
-    }
-
-    @Override
-    public VotesQueryResponse findByVoteId(Long id) {
-        jpaQueryFactory
-                .select()
-                .from(vote)
-                .where(vote.id.eq(id));
-
-        return null;
     }
 
     @Override
