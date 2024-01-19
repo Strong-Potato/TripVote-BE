@@ -39,7 +39,7 @@ public record SpaceResponse(
     }
 
     @Builder
-    private record MemberInfo(
+    public record MemberInfo(
             Long id,
             String nickname,
             String profile
