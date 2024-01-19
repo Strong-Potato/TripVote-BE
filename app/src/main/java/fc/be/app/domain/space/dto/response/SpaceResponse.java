@@ -22,7 +22,7 @@ public record SpaceResponse(
 
         for (JoinedMember joinedMember : space.getJoinedMembers()) {
             memberInfos.add(MemberInfo.builder()
-                    .id(joinedMember.getId())
+                    .id(joinedMember.getMember().getId())
                     .nickname(joinedMember.getMember().getNickname())
                     .profile(joinedMember.getMember().getProfile())
                     .build());
