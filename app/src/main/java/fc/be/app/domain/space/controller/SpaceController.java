@@ -32,8 +32,8 @@ public class SpaceController {
     }
 
     @GetMapping("/{spaceId}")
-    public ApiResponse<SpaceResponse> getSpaceById(@PathVariable Long spaceId) {
-        return ApiResponse.ok(spaceService.getSpaceById(spaceId));
+    public ApiResponse<SpaceResponse> getSpaceById(@PathVariable Long spaceId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return ApiResponse.ok(spaceService.getSpaceById(spaceId, userPrincipal.id()));
     }
 
     @PutMapping("/{spaceId}/title")
@@ -66,8 +66,8 @@ public class SpaceController {
     }
 
     @GetMapping("/{spaceId}/journey")
-    public ApiResponse<JourneysResponse> getJourneyForSpace(@PathVariable Long spaceId) {
-        return ApiResponse.ok(spaceService.getJourneyForSpace(spaceId));
+    public ApiResponse<JourneysResponse> getJourneyForSpace(@PathVariable Long spaceId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return ApiResponse.ok(spaceService.getJourneyForSpace(spaceId, userPrincipal.id()));
     }
 
     @PostMapping("/{spaceId}/places")

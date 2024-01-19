@@ -15,6 +15,7 @@ import fc.be.app.domain.space.repository.JoinedMemberRepository;
 import fc.be.app.domain.space.repository.JourneyRepository;
 import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.SpaceType;
+import fc.be.app.global.config.security.handler.OAuth2AuthenticationSuccessHandler;
 import fc.be.openapi.google.service.ReviewAPIService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
@@ -41,6 +43,12 @@ class SpaceServiceTest {
 
     @MockBean
     private PlaceService placeService;
+
+    @MockBean
+    private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+
+    @MockBean
+    private ClientRegistrationRepository clientRegistrationRepository;
 
     @Autowired
     private SpaceService spaceService;
@@ -89,11 +97,19 @@ class SpaceServiceTest {
     @Test
     void getSpaceById() {
         // given
+        Member member = Member.builder()
+                .nickname("tester")
+                .build();
+        Member savedMember = memberRepository.save(member);
+
         Space space = createSpace(LocalDate.of(2024, 1, 7), LocalDate.of(2024, 1, 10));
         Space savedSpace = spaceRepository.save(space);
 
+        JoinedMember joinedMember = createJoinedMember(space, savedMember);
+        joinedMemberRepository.save(joinedMember);
+
         // when
-        SpaceResponse target = spaceService.getSpaceById(savedSpace.getId());
+        SpaceResponse target = spaceService.getSpaceById(savedSpace.getId(), savedMember.getId());
 
         // then
         assertThat(target)
@@ -106,13 +122,18 @@ class SpaceServiceTest {
     @Test
     void getSpaceByIdWithNoSpace() {
         // given
+        Member member = Member.builder()
+                .nickname("tester")
+                .build();
+        Member savedMember = memberRepository.save(member);
+
         Space space = createSpace(LocalDate.of(2024, 1, 7), LocalDate.of(2024, 1, 10));
         Space savedSpace = spaceRepository.save(space);
 
         Long spaceId = savedSpace.getId() + 1L;
 
         // when then
-        assertThatThrownBy(() -> spaceService.getSpaceById(spaceId))
+        assertThatThrownBy(() -> spaceService.getSpaceById(spaceId, savedMember.getId()))
                 .isInstanceOf(SpaceException.class)
                 .hasMessageContaining("여행스페이스 정보가 존재하지 않습니다.");
     }
