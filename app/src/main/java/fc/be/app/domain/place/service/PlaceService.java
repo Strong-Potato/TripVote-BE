@@ -22,8 +22,6 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static fc.be.app.domain.place.exception.PlaceErrorCode.PLACE_NOT_LOADED;
@@ -96,13 +94,18 @@ public class PlaceService {
     }
 
     public PlacePopularGetResponse bringPopularPlaces(PlacePopularGetRequest placePopularGetRequest) {
-               List<PlaceDTO> places = popularPlaces
-                .stream()
-                .filter(placeDTO -> placePopularGetRequest.placeTypeId() != null
-                        && Objects.equals(placeDTO.getContentTypeId(), placePopularGetRequest.placeTypeId()))
+        final Integer placeTypeId = placePopularGetRequest.placeTypeId();
+
+        List<PlaceDTO> places = popularPlaces.stream()
+                .filter(place -> checkPlaceTypeIdNullOrSame(placeTypeId, place.getContentTypeId()))
                 .limit(placePopularGetRequest.size())
                 .toList();
+
         return PlacePopularGetResponse.from(places);
+    }
+
+    private boolean checkPlaceTypeIdNullOrSame(Integer placeTypeId, Integer contentTypeId) {
+        return placeTypeId == null || Objects.equals(contentTypeId, placeTypeId);
     }
 
     @PostConstruct
