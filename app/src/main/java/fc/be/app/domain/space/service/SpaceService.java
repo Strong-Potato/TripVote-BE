@@ -58,6 +58,10 @@ public class SpaceService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
+        if (spaceRepository.countSpaceByJoinedMembers(member) >= 15) {
+            throw new SpaceException(SPACE_MAX_COUNT_OVER);
+        }
+
         Space savedSpace = spaceRepository.save(Space.create());
 
         JoinedMember joinedMember = JoinedMember.create(savedSpace, member);
@@ -66,9 +70,15 @@ public class SpaceService {
         return SpaceResponse.of(savedSpace);
     }
 
-    public SpaceResponse getSpaceById(Long spaceId) {
+    public SpaceResponse getSpaceById(Long spaceId, Long memberId) {
+        final Member requestMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
         Space space = spaceRepository.findById(spaceId)
                 .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+
+        validateJoinedMember(space, requestMember);
+
         return SpaceResponse.of(space);
     }
 
@@ -147,9 +157,14 @@ public class SpaceService {
         joinedMember.updateLeftSpace(true);
     }
 
-    public JourneysResponse getJourneyForSpace(Long spaceId) {
-        Space space = spaceRepository.findById(spaceId)
+    public JourneysResponse getJourneyForSpace(Long spaceId, Long memberId) {
+        final Member requestMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
+        final Space space = spaceRepository.findById(spaceId)
                 .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+
+        validateJoinedMember(space, requestMember);
 
         List<Journey> journeys = journeyRepository.findAllBySpaceOrderByDateAsc(
                 space);
@@ -240,6 +255,10 @@ public class SpaceService {
             throw new SpaceException(SPACE_IS_READ_ONLY);
         }
 
+        validateJoinedMember(space, requestMember);
+    }
+
+    private static void validateJoinedMember(Space space, Member requestMember) {
         if (!space.isBelong(requestMember)) {
             throw new SpaceException(NOT_JOINED_MEMBER);
         }

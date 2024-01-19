@@ -31,7 +31,8 @@ public class Journey {
     private LocalDate date;
 
     @OneToMany(mappedBy = "journey")
-    private List<SelectedPlace> place;
+    @OrderBy("orders, id")
+    private List<SelectedPlace> place = new ArrayList<>();
 
     @Builder
     private Journey(Space space, LocalDate date) {
