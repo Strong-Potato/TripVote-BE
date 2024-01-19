@@ -96,18 +96,12 @@ public class PlaceService {
     }
 
     public PlacePopularGetResponse bringPopularPlaces(PlacePopularGetRequest placePopularGetRequest) {
-        Supplier<Stream<PlaceDTO>> streamSupplier = () -> popularPlaces.stream();
-
-        Stream<PlaceDTO> filteredStream = streamSupplier.get();
-
-        if (placePopularGetRequest.placeTypeId() != null) {
-            filteredStream = filteredStream.filter(placeDTO ->
-                    Objects.equals(placeDTO.getContentTypeId(), placePopularGetRequest.placeTypeId())
-            );
-        }
-
-        List<PlaceDTO> places = filteredStream.limit(placePopularGetRequest.size()).toList();
-
+               List<PlaceDTO> places = popularPlaces
+                .stream()
+                .filter(placeDTO -> placePopularGetRequest.placeTypeId() != null
+                        && Objects.equals(placeDTO.getContentTypeId(), placePopularGetRequest.placeTypeId()))
+                .limit(placePopularGetRequest.size())
+                .toList();
         return PlacePopularGetResponse.from(places);
     }
 
