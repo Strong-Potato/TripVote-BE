@@ -90,6 +90,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             TokenPair newTokenPair = (TokenPair) jwtAuthToken.getCredentials();
             if (newTokenPair.isRegenerated()) {
                 CookieUtil.addCookie(response, tokenProperties.getAccessTokenName(), newTokenPair.accessToken(), Integer.parseInt(tokenProperties.getAccessTokenCookieExpireTime()));
+                CookieUtil.addCookieForLocal(response, tokenProperties.getAccessTokenName(), newTokenPair.accessToken(), Integer.parseInt(tokenProperties.getAccessTokenCookieExpireTime()));
             }
         }
     }
