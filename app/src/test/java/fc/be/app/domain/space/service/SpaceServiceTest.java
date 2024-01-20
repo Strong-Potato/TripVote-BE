@@ -50,6 +50,9 @@ class SpaceServiceTest {
     @MockBean
     private ClientRegistrationRepository clientRegistrationRepository;
 
+    @MockBean
+    private SearchEngineService searchEngineService;
+
     @Autowired
     private SpaceService spaceService;
 
