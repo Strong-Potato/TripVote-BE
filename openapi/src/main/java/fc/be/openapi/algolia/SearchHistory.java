@@ -7,7 +7,8 @@ import java.time.LocalDateTime;
 @Builder(toBuilder = true)
 record SearchHistory(
         String objectID,
-        String keyword,
+        String categoryCode,
+        String categoryName,
         int hitCount,
         LocalDateTime modifiedAt
 ) {
