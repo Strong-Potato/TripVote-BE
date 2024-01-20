@@ -1,5 +1,7 @@
 package fc.be.app.domain.member.service;
 
+import fc.be.app.common.authentication.exception.AuthErrorCode;
+import fc.be.app.common.authentication.exception.AuthException;
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberErrorCode;
 import fc.be.app.domain.member.exception.MemberException;
@@ -55,6 +57,9 @@ public class MemberCommandHandler implements MemberCommand {
     public void modifyPassword(Long id, String newPassword) {
         Member targetMember =
                 memberRepository.findById(id).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        if (passwordEncoder.matches(newPassword, targetMember.getPassword())) {
+            throw new AuthException(AuthErrorCode.SAME_PASSWORD);
+        }
         targetMember.changePassword(passwordEncoder.encode(newPassword));
     }
 
@@ -62,7 +67,9 @@ public class MemberCommandHandler implements MemberCommand {
     public void modifyPassword(String email, String newPassword) {
         Member targetMember =
                 memberRepository.findByProviderAndEmail(AuthProvider.NONE, email).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-        // TODO: 같은 비밀번호로 변경하려고 하면 throw Exception
+        if (passwordEncoder.matches(newPassword, targetMember.getPassword())) {
+            throw new AuthException(AuthErrorCode.SAME_PASSWORD);
+        }
         targetMember.changePassword(passwordEncoder.encode(newPassword));
     }
 
