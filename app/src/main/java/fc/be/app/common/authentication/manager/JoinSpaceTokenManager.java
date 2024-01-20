@@ -37,7 +37,6 @@ public class JoinSpaceTokenManager extends AbstractJwtTokenManager {
                 .withClaim(PURPOSE_KEY, PURPOSE_VALUE)
                 .withClaim(TARGET_SPACE_ID_KEY, targetSpaceId)
                 .withIssuedAt(now.atZone(ZoneId.systemDefault()).toInstant())
-                // TODO: join code 만료시간을 토큰의 만료시간으로 지정
 //                .withExpiresAt(now.atZone(ZoneId.systemDefault()).plusSeconds(expireSecond).toInstant())
                 .sign(algorithm);
         return JoinSpaceToken.unauthenticated(jwtTokenValue, issuer, targetSpaceId);
