@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -49,7 +50,12 @@ public class SearchEngineService {
         var result = searchIndex.search(new Query().setHitsPerPage(size));
 
         return result.getHits().stream()
-                .collect(Collectors.toMap(SearchHistory::categoryCode, SearchHistory::categoryName));
+                .collect(Collectors.toMap(
+                        SearchHistory::categoryCode,
+                        SearchHistory::categoryName,
+                        (oldValue, newValue) -> oldValue,
+                        LinkedHashMap::new
+                ));
     }
 
     private static SearchHistory createSearchHistory(String categoryCode, String categoryName) {
