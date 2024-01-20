@@ -1,12 +1,16 @@
 package fc.be.app.domain.space.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
+
+import java.util.List;
 
 @Builder
 public record TitleUpdateRequest(
-        @NotBlank(message = "타이틀은 빈값을 넣을 수 없습니다.")
-        String title
+        @NotNull
+        @Size(min = 1)
+        List<String> cities
 ) {
 
 }

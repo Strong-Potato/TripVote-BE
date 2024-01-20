@@ -2,7 +2,9 @@ package fc.be.app.domain.space.entity;
 
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.space.exception.SpaceException;
+import fc.be.app.domain.space.vo.KoreanCity;
 import fc.be.app.domain.vote.entity.Vote;
+import fc.be.app.global.util.DelimiterConverter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,6 +39,10 @@ public class Space {
     @Comment("종료일")
     private LocalDate endDate;
 
+    @Convert(converter = DelimiterConverter.class)
+    @Comment("선택된도시리스트")
+    private List<String> city;
+
     @OneToMany(mappedBy = "space")
     private List<Journey> journeys;
 
@@ -53,15 +59,18 @@ public class Space {
         this.endDate = endDate;
     }
 
-    public static Space create() {
+    public static Space create(String nickname) {
         return Space.builder()
+                .title(nickname + "의 여행")
                 .build();
     }
 
     public void updateByTitle(String title) {
-        if (title != null && !title.isEmpty()) {
-            this.title = title;
-        }
+        this.title = title;
+    }
+
+    public void updateByCity(List<String> cities) {
+        this.city = cities;
     }
 
     public void updateByDates(LocalDate startDate, LocalDate endDate) {
@@ -117,4 +126,13 @@ public class Space {
                 .stream()
                 .anyMatch(joinedMember -> !joinedMember.isLeftSpace() && joinedMember.getMember().equals(member));
     }
+
+    public String getCityThumbnail() {
+        if (this.city == null || this.city.isEmpty()) {
+            return null;
+        }
+
+        return KoreanCity.getByCityName(this.city.get(0));
+    }
+
 }

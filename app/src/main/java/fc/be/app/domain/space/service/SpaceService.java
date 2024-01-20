@@ -10,10 +10,7 @@ import fc.be.app.domain.space.dto.request.DateUpdateRequest;
 import fc.be.app.domain.space.dto.request.SelectedPlaceRequest;
 import fc.be.app.domain.space.dto.request.SelectedPlacesRequest;
 import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
-import fc.be.app.domain.space.dto.response.JourneyResponse;
-import fc.be.app.domain.space.dto.response.JourneysResponse;
-import fc.be.app.domain.space.dto.response.SpaceResponse;
-import fc.be.app.domain.space.dto.response.SpacesResponse;
+import fc.be.app.domain.space.dto.response.*;
 import fc.be.app.domain.space.entity.JoinedMember;
 import fc.be.app.domain.space.entity.Journey;
 import fc.be.app.domain.space.entity.SelectedPlace;
@@ -23,6 +20,7 @@ import fc.be.app.domain.space.repository.JoinedMemberRepository;
 import fc.be.app.domain.space.repository.JourneyRepository;
 import fc.be.app.domain.space.repository.SelectedPlaceRepository;
 import fc.be.app.domain.space.repository.SpaceRepository;
+import fc.be.app.domain.space.vo.KoreanCity;
 import fc.be.app.domain.space.vo.SpaceType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,7 +60,7 @@ public class SpaceService {
             throw new SpaceException(SPACE_MAX_COUNT_OVER);
         }
 
-        Space savedSpace = spaceRepository.save(Space.create());
+        Space savedSpace = spaceRepository.save(Space.create(member.getNickname()));
 
         JoinedMember joinedMember = JoinedMember.create(savedSpace, member);
         joinedMemberRepository.save(joinedMember);
@@ -92,7 +90,7 @@ public class SpaceService {
 
         validateSpace(space, requestMember, currentDate);
 
-        space.updateByTitle(updateRequest.title());
+        space.updateByCity(updateRequest.cities());
         return SpaceResponse.of(space);
     }
 
@@ -264,4 +262,9 @@ public class SpaceService {
         }
     }
 
+    public CitiesResponse getCities() {
+        List<CitiesResponse.CityResponse> cityList = KoreanCity.getCityList();
+
+        return CitiesResponse.of(cityList);
+    }
 }

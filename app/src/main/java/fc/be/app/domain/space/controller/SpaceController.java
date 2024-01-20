@@ -4,10 +4,7 @@ import fc.be.app.domain.space.dto.request.DateUpdateRequest;
 import fc.be.app.domain.space.dto.request.SelectedPlaceRequest;
 import fc.be.app.domain.space.dto.request.SelectedPlacesRequest;
 import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
-import fc.be.app.domain.space.dto.response.JourneyResponse;
-import fc.be.app.domain.space.dto.response.JourneysResponse;
-import fc.be.app.domain.space.dto.response.SpaceIdResponse;
-import fc.be.app.domain.space.dto.response.SpaceResponse;
+import fc.be.app.domain.space.dto.response.*;
 import fc.be.app.domain.space.service.SpaceService;
 import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.http.ApiResponse;
@@ -94,5 +91,10 @@ public class SpaceController {
     @GetMapping("/recent")
     public ApiResponse<SpaceIdResponse> recentSpace(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return ApiResponse.ok(spaceTokenService.getRecentSpace(userPrincipal.id()));
+    }
+
+    @GetMapping("/city")
+    public ApiResponse<CitiesResponse> getCities() {
+        return ApiResponse.ok(spaceService.getCities());
     }
 }
