@@ -1,4 +1,4 @@
-package fc.be.app.common.authentication.provider;
+package fc.be.app.common.authentication.manager;
 
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.exceptions.AlgorithmMismatchException;
@@ -10,10 +10,12 @@ import fc.be.app.common.authentication.exception.AuthErrorCode;
 import fc.be.app.common.authentication.exception.AuthException;
 import fc.be.app.common.authentication.model.JwtToken;
 import fc.be.app.common.authentication.model.Token;
+import fc.be.app.global.exception.InternalServiceErrorCode;
+import fc.be.app.global.exception.InternalServiceException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class JwtTokenAuthenticationProvider implements TokenAuthenticationProvider {
+public abstract class AbstractJwtTokenManager implements TokenManager {
     @Override
     public Token authenticate(Token token) {
         JwtToken jwtToken = (JwtToken) token;
@@ -30,20 +32,27 @@ public abstract class JwtTokenAuthenticationProvider implements TokenAuthenticat
             log.warn("Suspicious activity detected. {}", exception.getMessage(), exception);
             throw new AuthException(AuthErrorCode.INCORRECT_TOKEN);
         }
-        return createAuthenticatedToken(jwtToken, verified);
+        JwtToken authenticatedToken = createSuccessToken(jwtToken, verified);
+        if (!authenticatedToken.isAuthenticated()) {
+            log.error("isAuthenticated method of success token must return true");
+            throw new InternalServiceException(InternalServiceErrorCode.UN_KNOWN);
+        }
+        return authenticatedToken;
     }
 
     protected String determineTokenValue(JwtToken token) {
-        if (token.getTokenValue() == null
-                && String.class.isAssignableFrom(token.getTokenValue().getClass())) {
-            return (String) token.getTokenValue();
+        if (token.getTokenValue() == null) {
+            String.class.isAssignableFrom(token.getTokenValue().getClass());
+            return token.getTokenValue();
         }
         return "NONE_PROVIDED";
     }
 
     abstract protected JWTVerifier determineVerifier(JwtToken token);
 
-    abstract protected JwtToken createAuthenticatedToken(JwtToken token, DecodedJWT verified);
+    abstract protected JwtToken createSuccessToken(JwtToken token, DecodedJWT verified);
 
-    abstract protected JwtToken generate(JwtToken tokenToGenerate, long expireSecond);
+    @Override
+    public void remove(Token token) {
+    }
 }

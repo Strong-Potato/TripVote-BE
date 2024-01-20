@@ -62,6 +62,7 @@ public class MemberCommandHandler implements MemberCommand {
     public void modifyPassword(String email, String newPassword) {
         Member targetMember =
                 memberRepository.findByProviderAndEmail(AuthProvider.NONE, email).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        // TODO: 같은 비밀번호로 변경하려고 하면 throw Exception
         targetMember.changePassword(passwordEncoder.encode(newPassword));
     }
 

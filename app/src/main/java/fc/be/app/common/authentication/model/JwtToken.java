@@ -12,7 +12,7 @@ public abstract class JwtToken implements Token {
     }
 
     @Override
-    public Object getTokenValue() {
+    public String getTokenValue() {
         return decodedJWT.getToken();
     }
 

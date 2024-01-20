@@ -1,4 +1,4 @@
-package fc.be.app.common.authentication.provider;
+package fc.be.app.common.authentication.manager;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -14,15 +14,33 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Component
-public class JoinSpaceTokenAuthenticationProvider extends JwtTokenAuthenticationProvider {
+public class JoinSpaceTokenManager extends AbstractJwtTokenManager {
     private static final String PURPOSE_KEY = "purpose";
     private static final String PURPOSE_VALUE = "join-space";
     private static final String TARGET_SPACE_ID_KEY = "space-id";
 
+
     private final Algorithm algorithm;
 
-    public JoinSpaceTokenAuthenticationProvider(TokenProperties tokenProperties) {
+    public JoinSpaceTokenManager(TokenProperties tokenProperties) {
         this.algorithm = Algorithm.HMAC256(tokenProperties.getSecretKey());
+    }
+
+    @Override
+    public Token generate(Token tokenToGenerate) {
+        JoinSpaceToken joinSpaceTokenToGenerate = (JoinSpaceToken) tokenToGenerate;
+        String issuer = joinSpaceTokenToGenerate.getIssuer();
+        Long targetSpaceId = joinSpaceTokenToGenerate.getTargetSpaceId();
+        LocalDateTime now = LocalDateTime.now();
+        String jwtTokenValue = JWT.create()
+                .withIssuer(issuer)
+                .withClaim(PURPOSE_KEY, PURPOSE_VALUE)
+                .withClaim(TARGET_SPACE_ID_KEY, targetSpaceId)
+                .withIssuedAt(now.atZone(ZoneId.systemDefault()).toInstant())
+                // TODO: join code 만료시간을 토큰의 만료시간으로 지정
+//                .withExpiresAt(now.atZone(ZoneId.systemDefault()).plusSeconds(expireSecond).toInstant())
+                .sign(algorithm);
+        return JoinSpaceToken.unauthenticated(jwtTokenValue, issuer, targetSpaceId);
     }
 
     @Override
@@ -39,24 +57,8 @@ public class JoinSpaceTokenAuthenticationProvider extends JwtTokenAuthentication
     }
 
     @Override
-    protected JwtToken createAuthenticatedToken(JwtToken token, DecodedJWT verified) {
+    protected JwtToken createSuccessToken(JwtToken token, DecodedJWT verified) {
         return JoinSpaceToken.authenticated(verified.getIssuer(), verified.getClaim(TARGET_SPACE_ID_KEY).asLong());
-    }
-
-    @Override
-    protected JwtToken generate(JwtToken tokenToGenerate, long expireSecond) {
-        JoinSpaceToken joinSpaceTokenToGenerate = (JoinSpaceToken) tokenToGenerate;
-        String issuer = joinSpaceTokenToGenerate.getIssuer();
-        Long targetSpaceId = joinSpaceTokenToGenerate.getTargetSpaceId();
-        LocalDateTime now = LocalDateTime.now();
-        String jwtTokenValue = JWT.create()
-                .withIssuer(issuer)
-                .withClaim(PURPOSE_KEY, PURPOSE_VALUE)
-                .withClaim(TARGET_SPACE_ID_KEY, targetSpaceId)
-                .withIssuedAt(now.atZone(ZoneId.systemDefault()).toInstant())
-                .withExpiresAt(now.atZone(ZoneId.systemDefault()).plusSeconds(expireSecond).toInstant())
-                .sign(algorithm);
-        return JoinSpaceToken.unauthenticated(jwtTokenValue, issuer, targetSpaceId);
     }
 
     private JWTVerifier generateVerifier(String issuer, Long targetSpaceId) {
