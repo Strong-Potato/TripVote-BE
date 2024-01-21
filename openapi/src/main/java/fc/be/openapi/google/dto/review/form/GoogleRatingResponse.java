@@ -1,7 +1,10 @@
 package fc.be.openapi.google.dto.review.form;
 
+import java.util.List;
+
 public record GoogleRatingResponse(
-          Double rating,
-          Integer userRatingCount
+        List<Review> reviews,
+        Double rating,
+        Integer userRatingCount
 ) {
 }

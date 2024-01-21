@@ -10,7 +10,7 @@ public record APIRatingResponse(
     public static APIRatingResponse convertToRatingResponse(GoogleRatingResponse googleRatingResponse) {
         return new APIRatingResponse(
                 googleRatingResponse.rating(),
-                googleRatingResponse.userRatingCount()
+                googleRatingResponse.reviews().size()
         );
     }
 }
