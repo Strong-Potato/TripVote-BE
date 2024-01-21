@@ -22,7 +22,8 @@ public record ReviewGetResponse(List<Item> reviews) {
                     review.getRating(),
                     review.getVisitedAt(),
                     review.getContent(),
-                    review.getIsGoogle()
+                    review.getIsGoogle(),
+                    review.getImages()
                     )
             );
         }
@@ -42,6 +43,7 @@ public record ReviewGetResponse(List<Item> reviews) {
                                     .build())
                             .visitedAt(changeLocalDate(review.visitedAt()))
                             .isGoogle(Boolean.TRUE)
+                            .images(review.images())
                             .build()
             );
         }
@@ -66,7 +68,8 @@ public record ReviewGetResponse(List<Item> reviews) {
             Integer rating,
             LocalDate visitedAt,
             String content,
-            Boolean isGoogle
+            Boolean isGoogle,
+            List<String> images
     ) {
     }
 }

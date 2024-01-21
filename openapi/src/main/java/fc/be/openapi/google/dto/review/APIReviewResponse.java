@@ -18,7 +18,8 @@ public record APIReviewResponse(
                     review.rating(),
                     review.publishTime(),
                     review.originalText().text(),
-                    true
+                    true,
+                    List.of()
             );
 
             APIReviewItems.add(APIReviewItem);
@@ -32,7 +33,8 @@ public record APIReviewResponse(
             Integer rating,
             String visitedAt,
             String content,
-            Boolean isGoogle
+            Boolean isGoogle,
+            List<String> images
     ) {
     }
 }

@@ -5,8 +5,10 @@ import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.place.Place;
 import fc.be.app.domain.review.entity.Review;
 import fc.be.openapi.tourapi.tools.area.AreaFinder;
+import fc.be.openapi.tourapi.tools.category.CategoryFinder;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record ReviewResponse(
         Long id,
@@ -14,7 +16,8 @@ public record ReviewResponse(
         PlaceInfo place,
         LocalDate visitedAt,
         Integer rating,
-        String content
+        String content,
+        List<String> images
 ) {
     public record Author(
             Long id,
@@ -39,7 +42,7 @@ public record ReviewResponse(
             return new PlaceInfo(
                     place.getId(),
                     place.getTitle(),
-                    place.getCategory(),
+                    CategoryFinder.getCategoryByCode(place.getCategory()),
                     place.getThumbnail(),
                     AreaFinder.getCityName(place.getLocation().getAreaCode()),
                     AreaFinder.getDistrictName(place.getLocation().getSigunguCode())
@@ -54,7 +57,8 @@ public record ReviewResponse(
                 PlaceInfo.of(review.getPlace()),
                 review.getVisitedAt(),
                 review.getRating(),
-                review.getContent()
+                review.getContent(),
+                review.getImages()
         );
     }
 }

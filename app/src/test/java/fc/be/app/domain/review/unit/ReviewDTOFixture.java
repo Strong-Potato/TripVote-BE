@@ -79,7 +79,8 @@ public interface ReviewDTOFixture extends ReviewFixture {
                 (Integer) property.get("rating"),
                 (String) property.get("str_visitedAt"),
                 (String) property.get("content"),
-                (Boolean) property.get("isGoogle")
+                (Boolean) property.get("isGoogle"),
+                (List<String>) property.get("images")
         );
         return new APIReviewResponse(List.of(items));
     }

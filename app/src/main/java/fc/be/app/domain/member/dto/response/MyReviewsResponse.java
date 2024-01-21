@@ -20,7 +20,8 @@ public record MyReviewsResponse(
             ReviewedPlace place,
             LocalDate visitedAt,
             Integer rating,
-            String content
+            String content,
+            List<String> images
     ) {
         public record ReviewedPlace(
                 Long id,
@@ -46,7 +47,8 @@ public record MyReviewsResponse(
                     ReviewedPlace.from(reviewResponse.place()),
                     reviewResponse.visitedAt(),
                     reviewResponse.rating(),
-                    reviewResponse.content()
+                    reviewResponse.content(),
+                    reviewResponse.images()
             );
         }
     }
