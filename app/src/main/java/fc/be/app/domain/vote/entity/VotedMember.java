@@ -18,7 +18,7 @@ public class VotedMember {
     @Comment("id")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "candidate_id")
     @Comment("투표한 장소")
     private Candidate candidate;
@@ -28,7 +28,7 @@ public class VotedMember {
     @Comment("투표한 멤버 id")
     private Member member;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "vote_id")
     @Comment("투표 id")
     private Vote vote;
