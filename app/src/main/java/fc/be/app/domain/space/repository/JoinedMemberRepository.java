@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface JoinedMemberRepository extends JpaRepository<JoinedMember, Long> {
@@ -25,4 +26,7 @@ public interface JoinedMemberRepository extends JpaRepository<JoinedMember, Long
             @Param("currentDate") LocalDate currentDate,
             Pageable pageable
     );
+
+    @Query("select jm.member.id FROM JoinedMember jm WHERE jm.space.id = :spaceId")
+    List<Long> findMemberIdsBySpaceId(Long spaceId);
 }
