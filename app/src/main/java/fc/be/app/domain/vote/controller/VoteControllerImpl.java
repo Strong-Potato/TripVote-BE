@@ -2,6 +2,7 @@ package fc.be.app.domain.vote.controller;
 
 import fc.be.app.domain.vote.controller.dto.request.CandidateAddApiRequest;
 import fc.be.app.domain.vote.controller.dto.request.VoteCreateApiRequest;
+import fc.be.app.domain.vote.controller.dto.request.VotingApiRequest;
 import fc.be.app.domain.vote.service.dto.request.CandidateAddRequest;
 import fc.be.app.domain.vote.service.dto.request.VoteCreateRequest;
 import fc.be.app.domain.vote.service.dto.request.VotingRequest;
@@ -105,13 +106,12 @@ public class VoteControllerImpl implements VoteController {
         return ApiResponse.ok();
     }
 
-    @PostMapping("/{voteId}/candidates/{candidateId}")
+    @PostMapping("/voting")
     public ApiResponse<Void> voting(
-            @PathVariable Long voteId,
-            @PathVariable Long candidateId,
+            @RequestBody @Valid VotingApiRequest request,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        votingService.voteOrCancel(new VotingRequest(voteId, userPrincipal.id(), candidateId));
+        votingService.voteOrCancel(new VotingRequest(request.voteId(), userPrincipal.id(), request.candidateId()));
         return ApiResponse.ok();
     }
 }
