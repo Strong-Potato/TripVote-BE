@@ -16,6 +16,7 @@ import fc.be.app.domain.space.repository.JourneyRepository;
 import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.SpaceType;
 import fc.be.app.global.config.security.handler.OAuth2AuthenticationSuccessHandler;
+import fc.be.openapi.algolia.SearchEngineService;
 import fc.be.openapi.google.service.ReviewAPIService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -49,6 +50,9 @@ class SpaceServiceTest {
 
     @MockBean
     private ClientRegistrationRepository clientRegistrationRepository;
+
+    @MockBean
+    private SearchEngineService searchEngineService;
 
     @Autowired
     private SpaceService spaceService;

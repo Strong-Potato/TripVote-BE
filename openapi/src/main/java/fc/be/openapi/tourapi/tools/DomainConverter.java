@@ -107,8 +107,10 @@ public class DomainConverter {
 
         for (var item : items) {
             int itemContentTypeId = contentTypeId == 0 ? Integer.parseInt(item.contenttypeid()) : contentTypeId;
-            var itemClass = convertPlaceToChildDomain(itemContentTypeId);
-            result.add(generateAndCastItem(item, searchKeywordMapper::generate, itemClass));
+            if (ContentTypeId.contains(itemContentTypeId)) {
+                var itemClass = convertPlaceToChildDomain(itemContentTypeId);
+                result.add(generateAndCastItem(item, searchKeywordMapper::generate, itemClass));
+            }
         }
 
         return result;
