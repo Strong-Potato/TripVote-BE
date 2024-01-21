@@ -6,10 +6,12 @@ import fc.be.app.domain.space.dto.request.SelectedPlacesRequest;
 import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
 import fc.be.app.domain.space.dto.response.JourneyResponse;
 import fc.be.app.domain.space.dto.response.JourneysResponse;
+import fc.be.app.domain.space.dto.response.SpaceIdResponse;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
 import fc.be.app.domain.space.service.SpaceService;
 import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.http.ApiResponse;
+import fc.be.app.domain.space.service.SpaceTokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ import java.time.LocalDate;
 public class SpaceController {
 
     private final SpaceService spaceService;
+    private final SpaceTokenService spaceTokenService;
 
     @PostMapping
     public ApiResponse<SpaceResponse> createSpace(@AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -88,8 +91,8 @@ public class SpaceController {
         return ApiResponse.ok(spaceService.updatePlacesForSpace(spaceId, userPrincipal.id(), request, LocalDate.now()));
     }
 
-    @GetMapping
-    public ApiResponse<SpaceResponse> getLatestSpace() {
-        return ApiResponse.ok(SpaceResponse.builder().build());
+    @GetMapping("/recent")
+    public ApiResponse<SpaceIdResponse> recentSpace(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return ApiResponse.ok(spaceTokenService.getRecentSpace(userPrincipal.id()));
     }
 }

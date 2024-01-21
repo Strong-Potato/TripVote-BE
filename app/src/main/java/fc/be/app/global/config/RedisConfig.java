@@ -3,6 +3,7 @@ package fc.be.app.global.config;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fc.be.app.global.config.security.model.token.RefreshToken;
+import fc.be.app.domain.space.vo.SpaceToken;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -20,6 +21,22 @@ public class RedisConfig {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         Jackson2JsonRedisSerializer<RefreshToken> jsonSerializer = new Jackson2JsonRedisSerializer<>(objectMapper, RefreshToken.class);
+
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(jsonSerializer);
+
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, SpaceToken> redisTemplateWithSpace(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, SpaceToken> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        Jackson2JsonRedisSerializer<SpaceToken> jsonSerializer = new Jackson2JsonRedisSerializer<>(objectMapper, SpaceToken.class);
 
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(jsonSerializer);

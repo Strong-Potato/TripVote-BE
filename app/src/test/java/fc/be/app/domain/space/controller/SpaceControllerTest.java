@@ -8,6 +8,8 @@ import fc.be.app.domain.space.service.SpaceService;
 import fc.be.app.global.config.WebConfig;
 import fc.be.app.global.config.security.SecurityAppConfig;
 import fc.be.app.global.config.security.SecurityConfig;
+import fc.be.app.global.interceptor.SpaceInterceptor;
+import fc.be.app.domain.space.service.SpaceTokenService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,12 @@ class SpaceControllerTest {
 
     @MockBean
     private CommandLineRunner commandLineRunner;
+
+    @MockBean
+    private SpaceInterceptor spaceInterceptor;
+
+    @MockBean
+    private SpaceTokenService spaceVisitService;
 
     @DisplayName("여행 스페이스를 생성한다.")
     @Test
