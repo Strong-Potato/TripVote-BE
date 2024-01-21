@@ -1,9 +1,12 @@
 package fc.be.app.domain.member.service;
 
 import fc.be.app.domain.member.entity.Member;
+import fc.be.app.domain.member.exception.MemberErrorCode;
+import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.member.vo.AuthProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberQueryHandler implements MemberQuery {
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Optional<MemberResponse> findById(Long id) {
@@ -62,5 +66,19 @@ public class MemberQueryHandler implements MemberQuery {
     @Override
     public boolean exists(ProviderMemberRequest request) {
         return memberRepository.existsByProviderAndEmail(request.provider(), request.email());
+    }
+
+    @Override
+    public boolean verify(Long id, String password) {
+        Member targetMember =
+                memberRepository.findById(id).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        return passwordEncoder.matches(password, targetMember.getPassword());
+    }
+
+    @Override
+    public boolean verify(String email, String password) {
+        Member targetMember =
+                memberRepository.findByProviderAndEmail(AuthProvider.NONE, email).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        return passwordEncoder.matches(password, targetMember.getPassword());
     }
 }
