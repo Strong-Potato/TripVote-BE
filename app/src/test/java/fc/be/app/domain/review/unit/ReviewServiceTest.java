@@ -6,6 +6,7 @@ import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.place.exception.PlaceErrorCode;
 import fc.be.app.domain.place.exception.PlaceException;
 import fc.be.app.domain.place.service.PlaceService;
+import fc.be.app.domain.review.dto.RatingStatisticsDTO;
 import fc.be.app.domain.review.dto.ReviewEditResponse;
 import fc.be.app.domain.review.entity.Review;
 import fc.be.app.domain.review.exception.ReviewErrorCode;
@@ -30,7 +31,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
 public class ReviewServiceTest implements ReviewDTOFixture {
@@ -235,8 +237,9 @@ public class ReviewServiceTest implements ReviewDTOFixture {
             given(reviewAPIService.bringRatingCount(reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId()))
                     .willReturn(APIRatingResponse);
             // Mock behavior of reviewRepository
-            given(reviewRepository.countAndAverageRatingByPlaceId(reviewGetRequest.placeId()))
-                    .willReturn(List.of(APIRatingResponse.rating(), APIRatingResponse.userRatingCount()));
+            given(reviewRepository.findRatingStatisticsByPlaceId(reviewGetRequest.placeId()))
+                    .willReturn(new RatingStatisticsDTO(APIRatingResponse.rating(),
+                            APIRatingResponse.userRatingCount().longValue()));
 
             // When
             var actual = reviewService.bringReviewRatingAndCount(reviewGetRequest);
@@ -244,7 +247,7 @@ public class ReviewServiceTest implements ReviewDTOFixture {
             // Then
             then(reviewAPIService).should().bringRatingCount
                     (reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId());
-            then(reviewRepository).should().countAndAverageRatingByPlaceId(any());
+            then(reviewRepository).should().findRatingStatisticsByPlaceId(any());
             assertNotNull(actual);
         }
 
@@ -279,8 +282,9 @@ public class ReviewServiceTest implements ReviewDTOFixture {
             given(reviewAPIService.bringRatingCount(reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId()))
                     .willReturn(new APIRatingResponse(0.0, 0));
             // Mock behavior of reviewRepository
-            given(reviewRepository.countAndAverageRatingByPlaceId(reviewGetRequest.placeId()))
-                    .willReturn(List.of(0.0, 0));
+            given(reviewRepository.findRatingStatisticsByPlaceId(reviewGetRequest.placeId()))
+                    .willReturn(new RatingStatisticsDTO(
+                            0.0, 0L));
 
             // When
             var actual = reviewService.bringReviewRatingAndCount(reviewGetRequest);
@@ -288,7 +292,7 @@ public class ReviewServiceTest implements ReviewDTOFixture {
             // Then
             then(reviewAPIService).should().bringRatingCount
                     (reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId());
-            then(reviewRepository).should().countAndAverageRatingByPlaceId(any());
+            then(reviewRepository).should().findRatingStatisticsByPlaceId(any());
             assertEquals(0.0, actual.rating());
             assertEquals(0, actual.userRatingCount());
         }
