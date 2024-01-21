@@ -8,6 +8,7 @@ import fc.be.app.domain.place.repository.PlaceRepository;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.space.repository.SpaceRepository;
+import fc.be.app.domain.space.vo.VoteStatus;
 import fc.be.app.domain.vote.entity.Candidate;
 import fc.be.app.domain.vote.entity.Vote;
 import fc.be.app.domain.vote.exception.VoteErrorCode;
@@ -28,8 +29,9 @@ import java.util.Optional;
 import static fc.be.app.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
 import static fc.be.app.domain.space.exception.SpaceErrorCode.*;
 import static fc.be.app.domain.vote.exception.VoteErrorCode.CANDIDATE_IS_MAX;
-import static fc.be.app.domain.vote.service.dto.request.CandidateAddRequest.*;
+import static fc.be.app.domain.vote.service.dto.request.CandidateAddRequest.CandidateAddInfo;
 
+@Transactional
 @Service
 public class VoteManageService {
 
@@ -97,7 +99,7 @@ public class VoteManageService {
         for (Place place : places) {
             Optional<String> matchedTagline = findMatchTagline(request, place);
 
-            vote.addCandidate(Candidate.of(place, requestMember, vote, matchedTagline.orElse("")));
+            vote.addCandidate(Candidate.createNewVote(place, requestMember, vote, matchedTagline.orElse("")));
         }
 
         // TODO : Sending a new Candidate Add event to all members of the space
@@ -130,5 +132,39 @@ public class VoteManageService {
                 .filter(info -> info.placeId().equals(place.getId()))
                 .map(CandidateAddInfo::tagline)
                 .findFirst();
+    }
+
+    public void changeVoteStatus(Long voteId, Long memberId) {
+        final Member requestMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
+        Vote vote = voteRepository.findById(voteId)
+                .orElseThrow(() -> new VoteException(VoteErrorCode.VOTE_NOT_FOUND));
+
+        final Space space = vote.getSpace();
+
+        validateSpace(space, requestMember);
+        validateVote(vote);
+
+        if (vote.getStatus() == VoteStatus.VOTING) {
+            vote.changeStatus(VoteStatus.DONE);
+        } else {
+            vote.changeStatus(VoteStatus.VOTING);
+        }
+    }
+
+    public void deleteVote(Long voteId, Long memberId) {
+        final Member requestMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
+        Vote vote = voteRepository.findById(voteId)
+                .orElseThrow(() -> new VoteException(VoteErrorCode.VOTE_NOT_FOUND));
+
+        final Space space = vote.getSpace();
+
+        validateSpace(space, requestMember);
+        validateVote(vote);
+
+        voteRepository.delete(vote);
     }
 }

@@ -43,28 +43,34 @@ public class Candidate {
     @Comment("후보지에 대한 한줄평")
     private String tagline;
 
+    private int votedCount;
+
     @Builder
     private Candidate(Long id,
                       List<VotedMember> votedMember,
                       Member owner,
                       Place place,
                       Vote vote,
-                      String tagline) {
+                      String tagline,
+                      int votedCount
+    ) {
         this.id = id;
         this.votedMember = votedMember;
         this.owner = owner;
         this.place = place;
         this.vote = vote;
         this.tagline = tagline;
+        this.votedCount = votedCount;
     }
 
-    public static Candidate of(Place place, Member owner, Vote vote, String tagline) {
+    public static Candidate createNewVote(Place place, Member owner, Vote vote, String tagline) {
         return Candidate.builder()
                 .place(place)
                 .owner(owner)
                 .vote(vote)
                 .tagline(tagline)
                 .votedMember(new ArrayList<>())
+                .votedCount(0)
                 .build();
     }
 
@@ -76,6 +82,14 @@ public class Candidate {
                 .build();
 
         votedMember.add(voteMember);
+    }
+
+    public void increaseVoteCount() {
+        this.votedCount++;
+    }
+
+    public void decreaseVoteCount() {
+        this.votedCount--;
     }
 
     void setVote(Vote vote) {

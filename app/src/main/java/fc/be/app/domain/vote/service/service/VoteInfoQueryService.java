@@ -6,9 +6,12 @@ import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.space.repository.SpaceRepository;
+import fc.be.app.domain.vote.entity.Candidate;
 import fc.be.app.domain.vote.entity.Vote;
+import fc.be.app.domain.vote.entity.VoteResultMember;
 import fc.be.app.domain.vote.exception.VoteException;
 import fc.be.app.domain.vote.repository.VoteRepository;
+import fc.be.app.domain.vote.repository.VoteResultMemberRepository;
 import fc.be.app.domain.vote.service.dto.response.VoteDetailResponse;
 import fc.be.app.domain.vote.service.dto.response.VoteResultResponse;
 import fc.be.app.domain.vote.service.dto.response.VotesResponse;
@@ -17,6 +20,7 @@ import fc.be.app.domain.vote.service.dto.response.vo.MemberProfile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static fc.be.app.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
@@ -24,22 +28,28 @@ import static fc.be.app.domain.space.exception.SpaceErrorCode.NOT_JOINED_MEMBER;
 import static fc.be.app.domain.space.exception.SpaceErrorCode.SPACE_NOT_FOUND;
 import static fc.be.app.domain.vote.exception.VoteErrorCode.VOTE_NOT_FOUND;
 import static fc.be.app.domain.vote.repository.VoteRepositoryCustom.SearchCondition;
-import static fc.be.app.domain.vote.service.dto.response.VotesResponse.*;
+import static fc.be.app.domain.vote.service.dto.response.VoteResultResponse.*;
+import static fc.be.app.domain.vote.service.dto.response.VotesResponse.ViewResultVoteIds;
+import static fc.be.app.domain.vote.service.dto.response.VotesResponse.VotesResponseElement;
 
+@Transactional(readOnly = true)
 @Service
 public class VoteInfoQueryService {
 
     private final VoteRepository voteRepository;
     private final SpaceRepository spaceRepository;
     private final MemberRepository memberRepository;
+    private final VoteResultMemberRepository voteResultMemberRepository;
 
     public VoteInfoQueryService(VoteRepository voteRepository,
                                 SpaceRepository spaceRepository,
-                                MemberRepository memberRepository
+                                MemberRepository memberRepository,
+                                VoteResultMemberRepository voteResultMemberRepository
     ) {
         this.voteRepository = voteRepository;
         this.spaceRepository = spaceRepository;
         this.memberRepository = memberRepository;
+        this.voteResultMemberRepository = voteResultMemberRepository;
     }
 
     @Transactional(readOnly = true)
@@ -56,6 +66,8 @@ public class VoteInfoQueryService {
 
         final List<Vote> votesInSpace = voteRepository.search(searchCondition);
 
+        List<Long> resultIds = voteResultMemberRepository.findVoteIdsByMemberIdAndSpaceId(memberId, searchCondition.getSpaceId());
+
         return new VotesResponse(votesInSpace
                 .stream()
                 .map(vote -> new VotesResponseElement(
@@ -67,10 +79,11 @@ public class VoteInfoQueryService {
                                 .stream()
                                 .map(votedMember -> MemberProfile.of(votedMember.getMember()))
                                 .toList()))
-                .toList());
+                .toList(),
+                new ViewResultVoteIds(resultIds));
     }
 
-    @Transactional(readOnly = true)
+
     public VoteDetailResponse findByVoteId(Long voteId, Long memberId) {
         Vote vote = getByVoteId(voteId);
 
@@ -108,6 +121,8 @@ public class VoteInfoQueryService {
             throw new SpaceException(NOT_JOINED_MEMBER);
         }
 
+        voteResultMemberRepository.save(VoteResultMember.of(memberId, voteId, vote.getSpace().getId()));
+
         return new VoteResultResponse(
                 vote.getId(),
                 vote.getTitle(),
@@ -115,8 +130,13 @@ public class VoteInfoQueryService {
                 MemberProfile.of(vote.getOwner()),
                 vote.getCandidates()
                         .stream()
-                        .map(candidate -> VoteResultResponse.CandidateResultResponse.of(memberId, candidate))
+                        .sorted(sortByVotedCount())
+                        .map(candidate -> CandidateResultResponse.of(memberId, candidate))
                         .toList()
         );
+    }
+
+    private static Comparator<Candidate> sortByVotedCount() {
+        return Comparator.comparingInt(Candidate::getVotedCount).reversed();
     }
 }

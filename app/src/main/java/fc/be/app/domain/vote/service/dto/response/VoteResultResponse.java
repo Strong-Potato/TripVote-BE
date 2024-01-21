@@ -21,7 +21,8 @@ public record VoteResultResponse(
             MemberProfile ownerProfile,
             List<MemberProfile> votedMemberProfiles,
             String tagline,
-            boolean amIVote
+            boolean amIVote,
+            int voteCount
     ) {
         public static CandidateResultResponse of(Long memberId, Candidate candidate) {
             return new CandidateResultResponse(
@@ -33,7 +34,8 @@ public record VoteResultResponse(
                             .toList(),
                     candidate.getTagline(),
                     candidate.getVotedMember().stream()
-                            .anyMatch(votedMember -> votedMember.isMemberVote(memberId)));
+                            .anyMatch(votedMember -> votedMember.isMemberVote(memberId)),
+                    candidate.getVotedCount());
         }
     }
 }
