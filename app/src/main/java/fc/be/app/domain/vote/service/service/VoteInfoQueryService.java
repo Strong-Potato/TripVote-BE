@@ -8,7 +8,6 @@ import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.vote.entity.Candidate;
 import fc.be.app.domain.vote.entity.Vote;
-import fc.be.app.domain.vote.entity.VoteResultMember;
 import fc.be.app.domain.vote.exception.VoteException;
 import fc.be.app.domain.vote.repository.VoteRepository;
 import fc.be.app.domain.vote.repository.VoteResultMemberRepository;
@@ -28,7 +27,7 @@ import static fc.be.app.domain.space.exception.SpaceErrorCode.NOT_JOINED_MEMBER;
 import static fc.be.app.domain.space.exception.SpaceErrorCode.SPACE_NOT_FOUND;
 import static fc.be.app.domain.vote.exception.VoteErrorCode.VOTE_NOT_FOUND;
 import static fc.be.app.domain.vote.repository.VoteRepositoryCustom.SearchCondition;
-import static fc.be.app.domain.vote.service.dto.response.VoteResultResponse.*;
+import static fc.be.app.domain.vote.service.dto.response.VoteResultResponse.CandidateResultResponse;
 import static fc.be.app.domain.vote.service.dto.response.VotesResponse.ViewResultVoteIds;
 import static fc.be.app.domain.vote.service.dto.response.VotesResponse.VotesResponseElement;
 
@@ -40,16 +39,19 @@ public class VoteInfoQueryService {
     private final SpaceRepository spaceRepository;
     private final MemberRepository memberRepository;
     private final VoteResultMemberRepository voteResultMemberRepository;
+    private final VoteManageService voteManageService;
 
     public VoteInfoQueryService(VoteRepository voteRepository,
                                 SpaceRepository spaceRepository,
                                 MemberRepository memberRepository,
-                                VoteResultMemberRepository voteResultMemberRepository
+                                VoteResultMemberRepository voteResultMemberRepository,
+                                VoteManageService voteManageService
     ) {
         this.voteRepository = voteRepository;
         this.spaceRepository = spaceRepository;
         this.memberRepository = memberRepository;
         this.voteResultMemberRepository = voteResultMemberRepository;
+        this.voteManageService = voteManageService;
     }
 
     @Transactional(readOnly = true)
@@ -121,7 +123,7 @@ public class VoteInfoQueryService {
             throw new SpaceException(NOT_JOINED_MEMBER);
         }
 
-        voteResultMemberRepository.save(VoteResultMember.of(memberId, voteId, vote.getSpace().getId()));
+        voteManageService.changeToResultMode(vote.getSpace().getId(), voteId, memberId);
 
         return new VoteResultResponse(
                 vote.getId(),
