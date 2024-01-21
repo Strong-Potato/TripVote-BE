@@ -4,11 +4,13 @@ import fc.be.app.domain.vote.controller.dto.request.CandidateAddApiRequest;
 import fc.be.app.domain.vote.controller.dto.request.VoteCreateApiRequest;
 import fc.be.app.domain.vote.service.dto.request.CandidateAddRequest;
 import fc.be.app.domain.vote.service.dto.request.VoteCreateRequest;
+import fc.be.app.domain.vote.service.dto.request.VotingRequest;
 import fc.be.app.domain.vote.service.dto.response.VoteDetailResponse;
 import fc.be.app.domain.vote.service.dto.response.VoteResultResponse;
 import fc.be.app.domain.vote.service.dto.response.VotesResponse;
 import fc.be.app.domain.vote.service.service.VoteInfoQueryService;
 import fc.be.app.domain.vote.service.service.VoteManageService;
+import fc.be.app.domain.vote.service.service.VotingService;
 import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
@@ -25,13 +27,15 @@ public class VoteControllerImpl implements VoteController {
 
     private final VoteManageService voteManageService;
     private final VoteInfoQueryService voteInfoQueryService;
+    private final VotingService votingService;
 
     public VoteControllerImpl(
             VoteManageService voteManageService,
-            VoteInfoQueryService voteInfoQueryService
+            VoteInfoQueryService voteInfoQueryService, VotingService votingService
     ) {
         this.voteManageService = voteManageService;
         this.voteInfoQueryService = voteInfoQueryService;
+        this.votingService = votingService;
     }
 
     @PostMapping
@@ -98,6 +102,16 @@ public class VoteControllerImpl implements VoteController {
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
         voteManageService.deleteVote(voteId, userPrincipal.id());
+        return ApiResponse.ok();
+    }
+
+    @PostMapping("/{voteId}/candidates/{candidateId}")
+    public ApiResponse<Void> voting(
+            @PathVariable Long voteId,
+            @PathVariable Long candidateId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        votingService.voteOrCancel(new VotingRequest(voteId, userPrincipal.id(), candidateId));
         return ApiResponse.ok();
     }
 }
