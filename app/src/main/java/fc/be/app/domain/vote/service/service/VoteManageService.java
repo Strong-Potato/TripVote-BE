@@ -11,7 +11,6 @@ import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.VoteStatus;
 import fc.be.app.domain.vote.entity.Candidate;
 import fc.be.app.domain.vote.entity.Vote;
-import fc.be.app.domain.vote.entity.VoteResultMember;
 import fc.be.app.domain.vote.exception.VoteErrorCode;
 import fc.be.app.domain.vote.exception.VoteException;
 import fc.be.app.domain.vote.repository.CandidateRepository;
@@ -68,8 +67,8 @@ public class VoteManageService {
         this.voteResultMemberRepository = voteResultMemberRepository;
     }
 
-    @Transactional
     public Long createVote(VoteCreateRequest request) {
+
         final Member requestMember = memberRepository.findById(request.memberId())
                 .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
@@ -207,11 +206,8 @@ public class VoteManageService {
     }
 
     public void changeToResultMode(Long spaceId, Long voteId, Long memberId) {
-        if (voteResultMemberRepository.existsByMemberIdAndVoteId(memberId, voteId)) {
-            return;
-        }
         voteResultMemberRepository
-                .save(VoteResultMember.of(memberId, voteId, spaceId));
+                .saveIfNotExists(memberId, voteId, spaceId);
     }
 
     public void resetResultMode(Long voteId, Long memberId) {
