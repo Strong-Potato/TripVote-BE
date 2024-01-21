@@ -21,7 +21,6 @@ public record ReviewCreateRequest(
         @PastOrPresent LocalDate visitedAt
 ) {
 
-    // todo [Review] Member 관련 Security 확인 되는 대로 dto 수정 하겠음 - 민균
     public Review to(Member member) {
         return Review.builder()
                 .member(member)
