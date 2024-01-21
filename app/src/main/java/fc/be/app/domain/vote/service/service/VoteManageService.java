@@ -3,6 +3,11 @@ package fc.be.app.domain.vote.service.service;
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
+import fc.be.app.domain.notification.domain.event.vo.MemberEventInfo;
+import fc.be.app.domain.notification.domain.event.vo.SpaceEventInfo;
+import fc.be.app.domain.notification.domain.event.vo.VoteEventInfo;
+import fc.be.app.domain.notification.domain.event.vote.VoteEvent;
+import fc.be.app.domain.notification.entity.NotificationType;
 import fc.be.app.domain.place.Place;
 import fc.be.app.domain.place.repository.PlaceRepository;
 import fc.be.app.domain.space.entity.Space;
@@ -19,10 +24,12 @@ import fc.be.app.domain.vote.service.dto.request.VoteCreateRequest;
 import fc.be.app.domain.vote.service.dto.response.VoteDetailResponse;
 import fc.be.app.domain.vote.service.dto.response.vo.CandidateInfo;
 import fc.be.app.domain.vote.service.dto.response.vo.MemberProfile;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,16 +48,18 @@ public class VoteManageService {
     private final SpaceRepository spaceRepository;
     private final MemberRepository memberRepository;
     private final PlaceRepository placeRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public VoteManageService(VoteRepository voteRepository,
                              SpaceRepository spaceRepository,
                              MemberRepository memberRepository,
-                             PlaceRepository placeRepository
+                             PlaceRepository placeRepository, ApplicationEventPublisher eventPublisher
     ) {
         this.voteRepository = voteRepository;
         this.spaceRepository = spaceRepository;
         this.memberRepository = memberRepository;
         this.placeRepository = placeRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -66,7 +75,15 @@ public class VoteManageService {
         Vote savedVote = voteRepository
                 .save(Vote.of(space, request.title(), requestMember));
 
-        // TODO : Sending a new vote creation event to all members of the space
+        // NOTE : EventPublisher을 통한 알림 기능 사용 예시
+        eventPublisher.publishEvent(new VoteEvent(space.getId(),
+                new MemberEventInfo(requestMember.getId(), requestMember.getNickname(), requestMember.getProfile()),
+                new SpaceEventInfo(space.getId(), space.getTitle()),
+                new VoteEventInfo(savedVote.getId(), savedVote.getTitle()),
+                NotificationType.VOTE_CREATED,
+                LocalDateTime.now())
+        );
+
         return savedVote.getId();
     }
 
