@@ -122,6 +122,7 @@ public class VoteControllerImpl implements VoteController {
             @PathVariable Long voteId,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
         voteManageService.resetVote(voteId, userPrincipal.id());
+        return ApiResponse.ok();
     }
   
     @PostMapping("/{voteId}/candidates/{candidateId}")
