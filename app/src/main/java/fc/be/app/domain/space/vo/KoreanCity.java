@@ -1,5 +1,6 @@
 package fc.be.app.domain.space.vo;
 
+import fc.be.app.domain.space.exception.SpaceException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static fc.be.app.domain.space.dto.response.CitiesResponse.CityResponse;
+import static fc.be.app.domain.space.exception.SpaceErrorCode.NO_SUCH_CITY;
 
 @Getter
 @AllArgsConstructor
@@ -40,7 +42,7 @@ public enum KoreanCity {
                 return city.getImageUrl();
             }
         }
-        throw new IllegalArgumentException("No such city: " + cityName);
+        throw new SpaceException(NO_SUCH_CITY);
     }
 
     public static List<CityResponse> getCityList() {
