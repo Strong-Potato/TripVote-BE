@@ -75,4 +75,12 @@ public class Vote {
                 .votedMembers(new ArrayList<>())
                 .build();
     }
+
+    public void changeStatus(VoteStatus voteStatus) {
+        this.status = voteStatus;
+    }
+
+    public boolean isStillVoting() {
+        return this.status == VoteStatus.VOTING;
+    }
 }

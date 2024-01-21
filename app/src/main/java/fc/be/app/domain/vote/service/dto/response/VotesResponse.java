@@ -6,7 +6,8 @@ import fc.be.app.domain.vote.service.dto.response.vo.MemberProfile;
 import java.util.List;
 
 public record VotesResponse(
-        List<VotesResponseElement> voteResponse
+        List<VotesResponseElement> voteResponse,
+        ViewResultVoteIds viewResultVoteIds
 ) {
     public record VotesResponseElement(
             Long voteId,
@@ -16,5 +17,10 @@ public record VotesResponse(
             List<MemberProfile> votedMemberProfiles
     ) {
 
+    }
+
+    public record ViewResultVoteIds(
+            List<Long> voteIds
+    ) {
     }
 }
