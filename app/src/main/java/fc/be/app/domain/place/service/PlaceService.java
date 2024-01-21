@@ -7,10 +7,12 @@ import fc.be.app.domain.place.Place;
 import fc.be.app.domain.place.dto.*;
 import fc.be.app.domain.place.exception.PlaceException;
 import fc.be.app.domain.place.repository.PlaceRepository;
+import fc.be.openapi.algolia.SearchEngineService;
 import fc.be.openapi.google.dto.review.APIRatingResponse;
 import fc.be.openapi.google.service.ReviewAPIService;
 import fc.be.openapi.tourapi.TourAPIService;
 import fc.be.openapi.tourapi.dto.response.bone.PlaceDTO;
+import fc.be.openapi.tourapi.tools.category.CategoryFinder;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +36,7 @@ public class PlaceService {
     private final TourAPIService tourAPIService;
     private final PlaceRepository placeRepository;
     private final ReviewAPIService reviewAPIService;
+    private final SearchEngineService searchEngineService;
 
     private List<PlaceDTO> popularPlaces = Collections.emptyList();
 
@@ -65,6 +68,10 @@ public class PlaceService {
         if (place == null) {
             throw new PlaceException(PLACE_NOT_LOADED);
         }
+
+        String categoryCode = place.getCategory();
+        String categoryName = CategoryFinder.getCategoryByCode(place.getCategory());
+        searchEngineService.saveSearchHistory(categoryCode, categoryName);
 
         return new PlaceInfoGetResponse(place);
     }
@@ -122,4 +129,7 @@ public class PlaceService {
         }
     }
 
+    public PlacePopularKeywordsResponse bringPopularCategories(Integer size) {
+        return PlacePopularKeywordsResponse.from(searchEngineService.bringPopularCategories(size));
+    }
 }

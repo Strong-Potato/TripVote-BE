@@ -11,4 +11,8 @@ dependencies {
     // resttemplate 접속 재시도
     implementation 'org.springframework.retry:spring-retry:+'
     implementation 'org.springframework:spring-aspects:+'
+
+    // algolia 검색엔진
+    implementation 'com.algolia:algoliasearch-core:+'
+    implementation 'com.algolia:algoliasearch-java-net:+'
 }

@@ -1,4 +1,4 @@
-package fc.be.app.domain.member.provider.strategy;
+package fc.be.app.common.authentication.provider.strategy;
 
 @FunctionalInterface
 public interface TokenGenerator {

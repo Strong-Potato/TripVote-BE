@@ -46,7 +46,7 @@ GET http://localhost:8080/places/search?page={{page}}&placeTypeId={{spotTypeId}}
 >> response/search_spot.json
 
 ### keyword 포함
-GET http://localhost:8080/places/search?page={{page}}&keyword=saqdsadasdsadasdsadad
+GET http://localhost:8080/places/search?page={{page}}&categoryCode=A03021200
 
 >> response/search_keyword.json
 
@@ -84,6 +84,12 @@ GET http://localhost:8080/places/nearby?page={{page}}&areaCode={{areaCode}}&sigu
 
 ## 30일간 인기 장소 목록
 ### 모든 장소
-GET http://localhost:8080/places/popular
+GET http://localhost:8080/places/popular?size={{size}}&placeTypeId={{accommodationTypeId}}
 
 >> response/popular.json
+
+## 인기 검색 키워드 목록 조회(algolia)
+###
+GET http://localhost:8080/places/popular/keywords
+
+>> response/popular_keywords.json

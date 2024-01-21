@@ -43,4 +43,8 @@ public enum ContentTypeId {
         return null;
     }
 
+    public static boolean contains(int id) {
+        return BY_ID.containsKey(id);
+    }
+
 }

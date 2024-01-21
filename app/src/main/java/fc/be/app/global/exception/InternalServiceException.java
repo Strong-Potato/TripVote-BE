@@ -19,6 +19,10 @@ import java.util.Map;
  * @see BizException
  */
 public class InternalServiceException extends ErrorResponseException {
+    public InternalServiceException(InternalServiceErrorCode errorCode) {
+        this(errorCode, null);
+    }
+
     public InternalServiceException(InternalServiceErrorCode errorCode, Throwable cause) {
         this(errorCode, null, cause);
     }
