@@ -94,11 +94,11 @@ public class ReviewService {
         double googleRating = googleReviewResponse.rating();
         long googleCount = googleReviewResponse.userRatingCount();
 
-        List<Number> tripVoteResponse = responseToList(reviewRepository.countAndAverageRatingByPlaceId
+        List<Number> tripVoteResponse = responseToList(reviewRepository.findRatingStatisticsByPlaceId
                 (reviewGetRequest.placeId()));
 
-        double tripVoteRating = tripVoteResponse.getFirst().doubleValue();
-        long tripVoteCount = tripVoteResponse.getLast().longValue();
+        double tripVoteRating = (double) tripVoteResponse.getFirst();
+        long tripVoteCount = (long) tripVoteResponse.getLast();
 
         var calResult = calculateReviewAverage(googleRating, googleCount, tripVoteRating, tripVoteCount);
 
@@ -108,11 +108,11 @@ public class ReviewService {
         );
     }
 
-    private List<Number> responseToList(List<Number> response) {
-        if (response.isEmpty()) {
+    private List<Number> responseToList(RatingStatisticsDTO response) {
+        if (response.reviewCount() == 0 || response.reviewCount() == null) {
             return List.of(0.0, 0L);
         }
-        return List.of(response.getFirst().doubleValue(), response.getLast().longValue());
+        return List.of(response.averageRating(), response.reviewCount());
     }
 
     private List<Number> calculateReviewAverage(double rating1, long count1, double rating2, long count2) {
