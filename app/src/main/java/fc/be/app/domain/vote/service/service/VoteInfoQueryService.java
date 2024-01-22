@@ -8,7 +8,6 @@ import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.vote.entity.Candidate;
 import fc.be.app.domain.vote.entity.Vote;
-import fc.be.app.domain.vote.entity.VoteResultMember;
 import fc.be.app.domain.vote.exception.VoteException;
 import fc.be.app.domain.vote.repository.VoteRepository;
 import fc.be.app.domain.vote.repository.VoteResultMemberRepository;
@@ -40,16 +39,19 @@ public class VoteInfoQueryService {
     private final SpaceRepository spaceRepository;
     private final MemberRepository memberRepository;
     private final VoteResultMemberRepository voteResultMemberRepository;
+    private final VoteManageService voteManageService;
 
     public VoteInfoQueryService(VoteRepository voteRepository,
                                 SpaceRepository spaceRepository,
                                 MemberRepository memberRepository,
-                                VoteResultMemberRepository voteResultMemberRepository
+                                VoteResultMemberRepository voteResultMemberRepository,
+                                VoteManageService voteManageService
     ) {
         this.voteRepository = voteRepository;
         this.spaceRepository = spaceRepository;
         this.memberRepository = memberRepository;
         this.voteResultMemberRepository = voteResultMemberRepository;
+        this.voteManageService = voteManageService;
     }
 
     public VotesResponse searchVotes(Long memberId, SearchCondition searchCondition) {
@@ -138,7 +140,7 @@ public class VoteInfoQueryService {
             throw new SpaceException(NOT_JOINED_MEMBER);
         }
 
-        voteResultMemberRepository.save(VoteResultMember.of(memberId, voteId, vote.getSpace().getId()));
+        voteManageService.changeToResultMode(vote.getSpace().getId(), voteId, memberId);
 
         return new VoteResultResponse(
                 vote.getId(),

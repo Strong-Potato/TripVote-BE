@@ -158,7 +158,7 @@ class SpaceServiceTest {
         joinedMemberRepository.save(joinedMember);
 
         TitleUpdateRequest updateRequest = TitleUpdateRequest.builder()
-                .title("서울 여행")
+                .cities(List.of("가평"))
                 .build();
 
         // when
@@ -170,7 +170,7 @@ class SpaceServiceTest {
         );
 
         // then
-        assertThat(spaceResponse.title()).isEqualTo(updateRequest.title());
+        assertThat(spaceResponse.city()).isEqualTo(String.join(",", updateRequest.cities()));
     }
 
     @DisplayName("여행 스페이스의 시작일자와 종료일자에 대한 값을 업데이트를 한다.")

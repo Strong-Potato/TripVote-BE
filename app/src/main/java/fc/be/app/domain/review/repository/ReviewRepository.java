@@ -1,13 +1,12 @@
 package fc.be.app.domain.review.repository;
 
+import fc.be.app.domain.review.dto.RatingStatisticsDTO;
 import fc.be.app.domain.review.entity.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT r FROM Review r join fetch r.member join fetch r.place where r.member.id = :memberId")
@@ -19,6 +18,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Review findByIdAndMemberId(Long reviewId, Long memberId);
 
-    @Query("SELECT count(r), avg(r.rating) FROM Review r WHERE r.place.id = :placeId")
-    List<Number> countAndAverageRatingByPlaceId(@Param("placeId") Integer placeId);
+    @Query("SELECT new fc.be.app.domain.review.dto.RatingStatisticsDTO(avg(r.rating), count(r)) FROM Review r WHERE r.place.id = :placeId")
+    RatingStatisticsDTO findRatingStatisticsByPlaceId(@Param("placeId") Integer placeId);
 }

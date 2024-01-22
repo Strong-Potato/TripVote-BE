@@ -58,7 +58,7 @@ public class GoogleReviewService implements ReviewAPIService {
     private GoogleRatingResponse searchRating(String placeId) {
         return googlePlacesClient.searchRating(
                 apiKey,
-                "rating,userRatingCount",
+                "reviews,rating,userRatingCount",
                 "ko",
                 placeId
         );
