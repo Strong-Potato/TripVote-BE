@@ -16,6 +16,8 @@ public interface JoinedMemberRepository extends JpaRepository<JoinedMember, Long
 
     Optional<JoinedMember> findBySpaceAndMember(Space space, Member member);
 
+    Optional<JoinedMember> findBySpaceAndMemberId(Space space, Long memberId);
+
     @Query("SELECT jm FROM JoinedMember jm " +
             "LEFT JOIN Space sp ON jm.space.id = sp.id " +
             "WHERE jm.leftSpace = false AND jm.member.id = :memberId AND sp.endDate >= :currentDate " +
