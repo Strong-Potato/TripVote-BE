@@ -13,8 +13,12 @@ import fc.be.app.domain.vote.entity.Candidate;
 import fc.be.app.domain.vote.entity.Vote;
 import fc.be.app.domain.vote.exception.VoteErrorCode;
 import fc.be.app.domain.vote.exception.VoteException;
+import fc.be.app.domain.vote.repository.CandidateRepository;
 import fc.be.app.domain.vote.repository.VoteRepository;
+import fc.be.app.domain.vote.repository.VoteResultMemberRepository;
+import fc.be.app.domain.vote.repository.VotedMemberRepository;
 import fc.be.app.domain.vote.service.dto.request.CandidateAddRequest;
+import fc.be.app.domain.vote.service.dto.request.CandidateDeleteRequest;
 import fc.be.app.domain.vote.service.dto.request.VoteCreateRequest;
 import fc.be.app.domain.vote.service.dto.response.VoteDetailResponse;
 import fc.be.app.domain.vote.service.dto.response.vo.CandidateInfo;
@@ -41,20 +45,30 @@ public class VoteManageService {
     private final SpaceRepository spaceRepository;
     private final MemberRepository memberRepository;
     private final PlaceRepository placeRepository;
+    private final CandidateRepository candidateRepository;
+    private final VotedMemberRepository votedMemberRepository;
+    private final VoteResultMemberRepository voteResultMemberRepository;
+
 
     public VoteManageService(VoteRepository voteRepository,
                              SpaceRepository spaceRepository,
                              MemberRepository memberRepository,
-                             PlaceRepository placeRepository
+                             PlaceRepository placeRepository,
+                             CandidateRepository candidateRepository,
+                             VotedMemberRepository votedMemberRepository,
+                             VoteResultMemberRepository voteResultMemberRepository
     ) {
         this.voteRepository = voteRepository;
         this.spaceRepository = spaceRepository;
         this.memberRepository = memberRepository;
         this.placeRepository = placeRepository;
+        this.candidateRepository = candidateRepository;
+        this.votedMemberRepository = votedMemberRepository;
+        this.voteResultMemberRepository = voteResultMemberRepository;
     }
 
-    @Transactional
     public Long createVote(VoteCreateRequest request) {
+
         final Member requestMember = memberRepository.findById(request.memberId())
                 .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
@@ -90,7 +104,10 @@ public class VoteManageService {
         final Space space = vote.getSpace();
 
         validateSpace(space, requestMember);
-        validateVote(vote);
+
+        if (vote.isMax(CANDIDATE_COUNT_THRESHOLD)) {
+            throw new VoteException(CANDIDATE_IS_MAX);
+        }
 
         List<Integer> placeIds = extractPlaceIdsFromRequest(request);
 
@@ -98,7 +115,6 @@ public class VoteManageService {
 
         for (Place place : places) {
             Optional<String> matchedTagline = findMatchTagline(request, place);
-
             vote.addCandidate(Candidate.createNewVote(place, requestMember, vote, matchedTagline.orElse("")));
         }
 
@@ -111,12 +127,6 @@ public class VoteManageService {
                 vote.getCandidates().stream()
                         .map(candidate -> CandidateInfo.of(request.memberId(), candidate))
                         .toList());
-    }
-
-    private static void validateVote(Vote vote) {
-        if (vote.isMax(CANDIDATE_COUNT_THRESHOLD)) {
-            throw new VoteException(CANDIDATE_IS_MAX);
-        }
     }
 
     private List<Integer> extractPlaceIdsFromRequest(CandidateAddRequest request) {
@@ -144,9 +154,8 @@ public class VoteManageService {
         final Space space = vote.getSpace();
 
         validateSpace(space, requestMember);
-        validateVote(vote);
 
-        if (vote.getStatus() == VoteStatus.VOTING) {
+        if (vote.isStillVoting()) {
             vote.changeStatus(VoteStatus.DONE);
         } else {
             vote.changeStatus(VoteStatus.VOTING);
@@ -163,8 +172,46 @@ public class VoteManageService {
         final Space space = vote.getSpace();
 
         validateSpace(space, requestMember);
-        validateVote(vote);
 
         voteRepository.delete(vote);
+    }
+
+    public void deleteCandidates(CandidateDeleteRequest request) {
+        final Member requestMember = memberRepository.findById(request.memberId())
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
+        Vote vote = voteRepository.findById(request.voteId())
+                .orElseThrow(() -> new VoteException(VoteErrorCode.VOTE_NOT_FOUND));
+
+        final Space space = vote.getSpace();
+
+        validateSpace(space, requestMember);
+
+        candidateRepository.deleteAllById(request.candidateIds());
+    }
+
+    public void resetVote(Long voteId, Long memberId) {
+        final Member requestMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
+        Vote vote = voteRepository.findById(voteId)
+                .orElseThrow(() -> new VoteException(VoteErrorCode.VOTE_NOT_FOUND));
+
+        final Space space = vote.getSpace();
+
+        validateSpace(space, requestMember);
+
+        votedMemberRepository.deleteAllByVoteId(voteId);
+        this.resetResultMode(voteId, memberId);
+    }
+
+    public void changeToResultMode(Long spaceId, Long voteId, Long memberId) {
+        voteResultMemberRepository
+                .saveIfNotExists(memberId, voteId, spaceId);
+    }
+
+    public void resetResultMode(Long voteId, Long memberId) {
+        voteResultMemberRepository
+                .deleteByMemberIdAndVoteId(memberId, voteId);
     }
 }

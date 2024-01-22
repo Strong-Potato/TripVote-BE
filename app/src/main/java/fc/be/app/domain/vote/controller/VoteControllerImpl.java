@@ -1,8 +1,10 @@
 package fc.be.app.domain.vote.controller;
 
 import fc.be.app.domain.vote.controller.dto.request.CandidateAddApiRequest;
+import fc.be.app.domain.vote.controller.dto.request.CandidateDeleteApiRequest;
 import fc.be.app.domain.vote.controller.dto.request.VoteCreateApiRequest;
 import fc.be.app.domain.vote.service.dto.request.CandidateAddRequest;
+import fc.be.app.domain.vote.service.dto.request.CandidateDeleteRequest;
 import fc.be.app.domain.vote.service.dto.request.VoteCreateRequest;
 import fc.be.app.domain.vote.service.dto.request.VotingRequest;
 import fc.be.app.domain.vote.service.dto.response.VoteDetailResponse;
@@ -105,6 +107,24 @@ public class VoteControllerImpl implements VoteController {
         return ApiResponse.ok();
     }
 
+    @DeleteMapping("/{voteId}/candidates")
+    public ApiResponse<Void> deleteCandidates(
+            @PathVariable Long voteId,
+            @Valid CandidateDeleteApiRequest request,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        voteManageService.deleteCandidates(new CandidateDeleteRequest(voteId, userPrincipal.id(), request.candidateIds()));
+        return ApiResponse.ok();
+    }
+
+    @PutMapping("/{voteId}/reset")
+    public ApiResponse<Void> resetVote(
+            @PathVariable Long voteId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        voteManageService.resetVote(voteId, userPrincipal.id());
+        return ApiResponse.ok();
+    }
+  
     @PostMapping("/{voteId}/candidates/{candidateId}")
     public ApiResponse<Void> voting(
             @PathVariable Long voteId,

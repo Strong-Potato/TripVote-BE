@@ -10,4 +10,7 @@ public interface VotedMemberRepository extends JpaRepository<VotedMember, Long> 
 
     @Query("select vm from VotedMember vm where vm.member.id = :memberId and vm.candidate.id = :candidateId")
     Optional<VotedMember> findByMemberIdAndCandidateId(Long memberId, Long candidateId);
+
+    @Query("delete from VotedMember vm where vm.vote.id = :voteId")
+    void deleteAllByVoteId(Long voteId);
 }
