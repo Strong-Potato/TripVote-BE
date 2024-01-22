@@ -1,5 +1,7 @@
 package fc.be.app.common.authentication.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import fc.be.app.common.authentication.controller.dto.request.*;
 import fc.be.app.common.authentication.controller.dto.response.CodeResponse;
 import fc.be.app.common.authentication.controller.dto.response.TokenResponse;
@@ -30,7 +32,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -161,9 +165,12 @@ public class AuthController {
         try {
             verifyService.verify(VerifyService.Purpose.JOIN_SPACE, String.valueOf(spaceId), code);
         } catch (AuthException exception) {
-            CookieUtil.addCookieNotHttpOnly(response, "join_space_token", "expired", 60 * 5);
-            CookieUtil.addCookieNotHttpOnlyForLocal(response, "join_space_token", "expired", 60 * 5);
+            Instant expiredInstant = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
+            String expiredEmptyJwt = JWT.create().withExpiresAt(expiredInstant).sign(Algorithm.none());
+            CookieUtil.addCookieNotHttpOnly(response, "join_space_token", expiredEmptyJwt, 60 * 5);
+            CookieUtil.addCookieNotHttpOnlyForLocal(response, "join_space_token", expiredEmptyJwt, 60 * 5);
             response.sendRedirect("https://tripvote.site");
+            return;
         }
         Map<String, String> codeInfo = verifyService.getCodeInfo(VerifyService.Purpose.JOIN_SPACE, code);
         JoinSpaceToken genRequest = JoinSpaceToken.unauthenticated(null, codeInfo.get("issuer"), spaceId);
