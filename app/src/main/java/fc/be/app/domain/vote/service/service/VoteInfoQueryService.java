@@ -28,7 +28,7 @@ import static fc.be.app.domain.space.exception.SpaceErrorCode.NOT_JOINED_MEMBER;
 import static fc.be.app.domain.space.exception.SpaceErrorCode.SPACE_NOT_FOUND;
 import static fc.be.app.domain.vote.exception.VoteErrorCode.VOTE_NOT_FOUND;
 import static fc.be.app.domain.vote.repository.VoteRepositoryCustom.SearchCondition;
-import static fc.be.app.domain.vote.service.dto.response.VoteResultResponse.*;
+import static fc.be.app.domain.vote.service.dto.response.VoteResultResponse.CandidateResultResponse;
 import static fc.be.app.domain.vote.service.dto.response.VotesResponse.ViewResultVoteIds;
 import static fc.be.app.domain.vote.service.dto.response.VotesResponse.VotesResponseElement;
 
@@ -52,7 +52,6 @@ public class VoteInfoQueryService {
         this.voteResultMemberRepository = voteResultMemberRepository;
     }
 
-    @Transactional(readOnly = true)
     public VotesResponse searchVotes(Long memberId, SearchCondition searchCondition) {
         Space space = spaceRepository.findById(searchCondition.getSpaceId())
                 .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
@@ -83,6 +82,24 @@ public class VoteInfoQueryService {
                 new ViewResultVoteIds(resultIds));
     }
 
+    public VotesResponse findMemberVotes(Long memberId) {
+        List<Vote> votesNotMemberVoted = voteRepository.findMemberVotes(memberId);
+
+        return new VotesResponse(votesNotMemberVoted
+                .stream()
+                .map(vote -> new VotesResponseElement(
+                        vote.getId(),
+                        vote.getTitle(),
+                        vote.getStatus(),
+                        MemberProfile.of(vote.getOwner()),
+                        vote.getVotedMembers()
+                                .stream()
+                                .map(votedMember -> MemberProfile.of(votedMember.getMember()))
+                                .toList()))
+                .toList(),
+                ViewResultVoteIds.emptyIds()
+        );
+    }
 
     public VoteDetailResponse findByVoteId(Long voteId, Long memberId) {
         Vote vote = getByVoteId(voteId);

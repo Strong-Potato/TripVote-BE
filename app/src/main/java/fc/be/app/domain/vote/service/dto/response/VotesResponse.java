@@ -3,6 +3,7 @@ package fc.be.app.domain.vote.service.dto.response;
 import fc.be.app.domain.space.vo.VoteStatus;
 import fc.be.app.domain.vote.service.dto.response.vo.MemberProfile;
 
+import java.util.Collections;
 import java.util.List;
 
 public record VotesResponse(
@@ -22,5 +23,9 @@ public record VotesResponse(
     public record ViewResultVoteIds(
             List<Long> voteIds
     ) {
+
+        public static ViewResultVoteIds emptyIds() {
+            return new ViewResultVoteIds(Collections.emptyList());
+        }
     }
 }

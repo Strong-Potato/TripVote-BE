@@ -80,4 +80,9 @@ public interface VoteController {
             @PathVariable Long voteId,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     );
+
+    @GetMapping("/notVoted")
+    ApiResponse<VotesResponse> notVotedList(
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    );
 }

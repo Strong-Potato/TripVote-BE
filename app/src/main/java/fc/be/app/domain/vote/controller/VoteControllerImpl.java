@@ -105,6 +105,11 @@ public class VoteControllerImpl implements VoteController {
         return ApiResponse.ok();
     }
 
+    @GetMapping("/notVoted")
+    public ApiResponse<VotesResponse> notVotedList(UserPrincipal userPrincipal) {
+        return ApiResponse.ok(voteInfoQueryService.findMemberVotes(userPrincipal.id()));
+    }
+
     @PostMapping("/{voteId}/candidates/{candidateId}")
     public ApiResponse<Void> voting(
             @PathVariable Long voteId,
