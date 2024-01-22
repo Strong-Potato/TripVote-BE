@@ -1,4 +1,4 @@
-package fc.be.app.global.mail.service;
+package fc.be.app.global.config.mail.service;
 
 import fc.be.app.global.exception.InternalServiceErrorCode;
 import fc.be.app.global.exception.InternalServiceException;
