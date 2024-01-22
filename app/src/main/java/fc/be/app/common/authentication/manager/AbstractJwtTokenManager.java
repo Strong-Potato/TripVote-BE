@@ -41,8 +41,7 @@ public abstract class AbstractJwtTokenManager implements TokenManager {
     }
 
     protected String determineTokenValue(JwtToken token) {
-        if (token.getTokenValue() == null) {
-            String.class.isAssignableFrom(token.getTokenValue().getClass());
+        if (token.getTokenValue() != null) {
             return token.getTokenValue();
         }
         return "NONE_PROVIDED";
