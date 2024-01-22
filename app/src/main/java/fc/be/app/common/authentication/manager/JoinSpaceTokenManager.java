@@ -17,8 +17,8 @@ import java.time.ZoneId;
 @Component
 public class JoinSpaceTokenManager extends AbstractJwtTokenManager {
     private static final String PURPOSE_KEY = "purpose";
-    private static final String PURPOSE_VALUE = "join-space";
-    private static final String TARGET_SPACE_ID_KEY = "space-id";
+    private static final String PURPOSE_VALUE = "join_space";
+    private static final String TARGET_SPACE_ID_KEY = "space_id";
     private static final Duration EXPIRE_DURATION = Duration.ofHours(2);
 
     private final Algorithm algorithm;
