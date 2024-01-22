@@ -31,7 +31,7 @@ public class DelegatingTokenManager implements TokenManager {
             } catch (AuthException exception) {
                 throw exception;
             } catch (Exception exception) {
-                log.error("critical error occurred while authenticating token");
+                log.error("critical error occurred while generating token {}", exception.getMessage(), exception);
                 throw new InternalServiceException(InternalServiceErrorCode.UN_KNOWN, exception);
             }
         }
@@ -54,7 +54,7 @@ public class DelegatingTokenManager implements TokenManager {
             } catch (AuthException exception) {
                 throw exception;
             } catch (Exception exception) {
-                log.error("critical error occurred while authenticating token");
+                log.error("critical error occurred while authenticating token {}", exception.getMessage(), exception);
                 throw new InternalServiceException(InternalServiceErrorCode.UN_KNOWN, exception);
             }
         }
@@ -74,7 +74,7 @@ public class DelegatingTokenManager implements TokenManager {
             } catch (AuthException exception) {
                 throw exception;
             } catch (Exception exception) {
-                log.error("critical error occurred while removing token");
+                log.error("critical error occurred while removing token {}", exception.getMessage(), exception);
                 throw new InternalServiceException(InternalServiceErrorCode.UN_KNOWN, exception);
             }
         }
