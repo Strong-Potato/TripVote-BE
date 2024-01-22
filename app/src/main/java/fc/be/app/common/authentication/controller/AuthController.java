@@ -141,13 +141,13 @@ public class AuthController {
         return ApiResponse.ok();
     }
 
-    @GetMapping("/join/space/code")
-    public ApiResponse<CodeResponse> joinSpace(@AuthenticationPrincipal UserPrincipal userPrincipal, Long spaceId) {
+    @GetMapping("/join/spaces/{spaceId}/code")
+    public ApiResponse<CodeResponse> joinSpace(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable Long spaceId) {
         Long id = userPrincipal.id();
-        spaceService.getSpaceById(spaceId, id);
-        String verificationCode = verifyService.lockableIssue(VerifyService.Purpose.JOIN_SPACE, String.valueOf(spaceId));
         MemberResponse memberResponse =
                 memberQuery.findById(id).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        spaceService.getSpaceById(spaceId, id);
+        String verificationCode = verifyService.lockableIssue(VerifyService.Purpose.JOIN_SPACE, String.valueOf(spaceId));
         Map<String, String> codeInfo = new HashMap<>();
         codeInfo.put("issuer", memberResponse.nickname());
         codeInfo.put("issuedAt", LocalDateTime.now().toString());
@@ -156,8 +156,8 @@ public class AuthController {
         return ApiResponse.ok(new CodeResponse(verificationCode));
     }
 
-    @GetMapping("/join/space/token")
-    public void joinSpaceToken(@RequestParam Long spaceId, @RequestParam String code, HttpServletResponse response) throws IOException {
+    @GetMapping("/join/spaces/{spaceId}/token")
+    public void joinSpaceToken(@PathVariable Long spaceId, @RequestParam String code, HttpServletResponse response) throws IOException {
         try {
             verifyService.verify(VerifyService.Purpose.JOIN_SPACE, String.valueOf(spaceId), code);
         } catch (AuthException exception) {
@@ -173,7 +173,7 @@ public class AuthController {
         response.sendRedirect("https://tripvote.site");
     }
 
-    @PostMapping("/join/space/{spaceId}")
+    @PostMapping("/join/spaces/{spaceId}")
     public ApiResponse<Void> joinSpace(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable Long spaceId, @CookieValue(name = "join-space-token") String joinSpaceToken) {
         JoinSpaceToken authRequest = JoinSpaceToken.unauthenticated(joinSpaceToken, null, spaceId);
         delegatingTokenManager.authenticate(authRequest);
