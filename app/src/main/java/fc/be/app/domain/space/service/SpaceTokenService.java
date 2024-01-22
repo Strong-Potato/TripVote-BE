@@ -76,6 +76,10 @@ public class SpaceTokenService {
         Space space = spaceRepository.findById(spaceId)
                 .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
 
+        if(space.getEndDate() == null){
+            return false;
+        }
+
         return space.isReadOnly(currentDate);
     }
 }

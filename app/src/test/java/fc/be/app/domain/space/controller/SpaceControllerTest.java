@@ -104,7 +104,7 @@ class SpaceControllerTest {
     void updateSpaceByTitle() throws Exception {
         // given
         TitleUpdateRequest updateRequest = TitleUpdateRequest.builder()
-                .title("서울여행")
+                .cities(List.of("가평"))
                 .build();
 
         // when then

@@ -14,6 +14,8 @@ public record SpaceResponse(
         String title,
         LocalDate startDate,
         LocalDate endDate,
+        String city,
+        String thumbnail,
         List<MemberInfo> members
 ) {
     public static SpaceResponse of(Space space) {
@@ -34,6 +36,8 @@ public record SpaceResponse(
                         .title(space.getTitle())
                         .startDate(space.getStartDate())
                         .endDate(space.getEndDate())
+                        .city(space.getCity() != null ? String.join(",", space.getCity()) : null)
+                        .thumbnail(space.getCityThumbnail())
                         .members(memberInfos)
                         .build();
     }
