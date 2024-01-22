@@ -174,7 +174,7 @@ public class AuthController {
     }
 
     @PostMapping("/join/spaces/{spaceId}")
-    public ApiResponse<Void> joinSpace(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable Long spaceId, @CookieValue(name = "join-space-token") String joinSpaceToken) {
+    public ApiResponse<Void> joinSpace(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable Long spaceId, @CookieValue(name = "join_space_token") String joinSpaceToken) {
         JoinSpaceToken authRequest = JoinSpaceToken.unauthenticated(joinSpaceToken, null, spaceId);
         delegatingTokenManager.authenticate(authRequest);
         spaceService.joinMember(spaceId, userPrincipal.id());
