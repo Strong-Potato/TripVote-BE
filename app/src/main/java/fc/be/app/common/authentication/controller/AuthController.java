@@ -161,15 +161,15 @@ public class AuthController {
         try {
             verifyService.verify(VerifyService.Purpose.JOIN_SPACE, String.valueOf(spaceId), code);
         } catch (AuthException exception) {
-            CookieUtil.addCookie(response, "join-space-token", "expired", 60 * 5);
-            CookieUtil.addCookieForLocal(response, "join-space-token", "expired", 60 * 5);
+            CookieUtil.addCookieNotHttpOnly(response, "join_space_token", "expired", 60 * 5);
+            CookieUtil.addCookieNotHttpOnlyForLocal(response, "join_space_token", "expired", 60 * 5);
             response.sendRedirect("https://tripvote.site");
         }
         Map<String, Object> codeInfo = verifyService.getCodeInfo(VerifyService.Purpose.JOIN_SPACE, code);
         JoinSpaceToken genRequest = JoinSpaceToken.unauthenticated(null, (String) codeInfo.get("issuer"), spaceId);
         Token generatedToken = delegatingTokenManager.generate(genRequest);
-        CookieUtil.addCookie(response, "join-space-token", generatedToken.getTokenValue(), 60 * 60 * 2);
-        CookieUtil.addCookieForLocal(response, "join-space-token", generatedToken.getTokenValue(), 60 * 60 * 2);
+        CookieUtil.addCookieNotHttpOnly(response, "join_space_token", generatedToken.getTokenValue(), 60 * 60 * 2);
+        CookieUtil.addCookieNotHttpOnlyForLocal(response, "join_space_token", generatedToken.getTokenValue(), 60 * 60 * 2);
         response.sendRedirect("https://tripvote.site");
     }
 
