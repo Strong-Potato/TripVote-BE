@@ -165,8 +165,8 @@ public class AuthController {
             CookieUtil.addCookieNotHttpOnlyForLocal(response, "join_space_token", "expired", 60 * 5);
             response.sendRedirect("https://tripvote.site");
         }
-        Map<String, Object> codeInfo = verifyService.getCodeInfo(VerifyService.Purpose.JOIN_SPACE, code);
-        JoinSpaceToken genRequest = JoinSpaceToken.unauthenticated(null, (String) codeInfo.get("issuer"), spaceId);
+        Map<String, String> codeInfo = verifyService.getCodeInfo(VerifyService.Purpose.JOIN_SPACE, code);
+        JoinSpaceToken genRequest = JoinSpaceToken.unauthenticated(null, codeInfo.get("issuer"), spaceId);
         Token generatedToken = delegatingTokenManager.generate(genRequest);
         CookieUtil.addCookieNotHttpOnly(response, "join_space_token", generatedToken.getTokenValue(), 60 * 60 * 2);
         CookieUtil.addCookieNotHttpOnlyForLocal(response, "join_space_token", generatedToken.getTokenValue(), 60 * 60 * 2);

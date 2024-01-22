@@ -27,7 +27,7 @@ public interface VerifyService {
 
     void setCodeInfo(Purpose purpose, String code, Map<String, String> codeInfo);
 
-    Map<String, Object> getCodeInfo(Purpose purpose, String code);
+    Map<String, String> getCodeInfo(Purpose purpose, String code);
 
     enum Purpose {
         EMAIL(6, Duration.ofSeconds(300)), JOIN_SPACE(6, Duration.ofDays(7));

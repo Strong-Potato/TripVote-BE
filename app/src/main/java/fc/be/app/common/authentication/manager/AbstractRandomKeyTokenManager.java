@@ -37,7 +37,7 @@ public abstract class AbstractRandomKeyTokenManager implements TokenManager {
     }
 
     protected void authenticationChecks(RandomKeyToken token, Object target) throws AuthException {
-        String value = redisClient.getStringValue(token.getPrefix(), token.getTokenValue());
+        String value = redisClient.getValue(token.getPrefix(), token.getTokenValue());
         if (value == null) {
             throw new AuthException(AuthErrorCode.TOKEN_EXPIRED);
         }
