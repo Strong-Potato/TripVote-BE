@@ -141,7 +141,7 @@ public class AuthController {
         return ApiResponse.ok();
     }
 
-    @GetMapping("/join/spaces/{spaceId}/code")
+    @PostMapping("/join/spaces/{spaceId}/code")
     public ApiResponse<CodeResponse> joinSpace(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable Long spaceId) {
         Long id = userPrincipal.id();
         MemberResponse memberResponse =
