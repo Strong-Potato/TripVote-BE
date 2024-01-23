@@ -41,6 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity handleException(AuthenticationException ex, WebRequest request) {
         HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
         String errorMessage = "Authentication Failed";
+        Integer responseCode = null;
         if (ex instanceof OAuth2AuthenticationException exception) {
             log.warn("[OAUTH_AUTHENTICATION_EXCEPTION] OAUTH_AUTHENTICATION FAILED : {}", exception.getMessage(), exception.getCause());
             errorMessage = exception.getMessage();
@@ -49,10 +50,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             switch (exception) {
                 case UsernameNotFoundException usernameNotFoundException -> {
                     httpStatus = HttpStatus.OK;
+                    responseCode = 401;
                     errorMessage = "회원가입되지 않은 이메일입니다.";
                 }
                 case BadCredentialsException badCredentialsException -> {
                     httpStatus = HttpStatus.OK;
+                    responseCode = 401;
                     errorMessage = "이메일 또는 비밀번호를 확인해주세요.";
                 }
                 case InsufficientAuthenticationException insufficientAuthenticationException -> {
@@ -64,6 +67,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         }
         ProblemDetail problemDetail = createProblemDetail(ex, httpStatus, errorMessage, null, null, request);
         problemDetail.setType(type);
+        problemDetail.setProperty("responseCode", responseCode);
         return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), httpStatus, request);
     }
 
