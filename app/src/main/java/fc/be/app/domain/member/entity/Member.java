@@ -41,16 +41,17 @@ public class Member extends BaseTimeEntity {
 
     @Comment("활성화 상태")
     @Enumerated(EnumType.STRING)
-    private MemberStatus status = MemberStatus.ACTIVATED;
+    private MemberStatus status;
 
     @Builder
-    private Member(String email, String password, String nickname, String profile, AuthProvider provider, String providedId) {
+    private Member(String email, String password, String nickname, String profile, AuthProvider provider, String providedId, MemberStatus status) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.provider = provider;
         this.providedId = providedId;
         this.profile = profile;
+        this.status = status;
     }
 
     public void changePassword(String password) {
