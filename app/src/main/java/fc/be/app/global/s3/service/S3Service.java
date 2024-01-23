@@ -21,7 +21,7 @@ import static fc.be.app.global.s3.service.CreatePreSignedUrlUseCase.PreSignedRes
 @Service
 public class S3Service implements CreatePreSignedUrlUseCase {
 
-    private static final long S3_PRESIGNED_TOKEN_EXPIRATION = 3 * 60 * 1000;
+    private static final long S3_PRESIGNED_TOKEN_EXPIRATION = 30 * 60 * 1000;
 
     private final AmazonS3 amazonS3;
 
@@ -57,7 +57,7 @@ public class S3Service implements CreatePreSignedUrlUseCase {
 
         generatePresignedUrlRequest.addRequestParameter(
                 Headers.S3_CANNED_ACL,
-                CannedAccessControlList.PublicRead.toString());
+                CannedAccessControlList.PublicReadWrite.toString());
         return generatePresignedUrlRequest;
     }
 

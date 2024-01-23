@@ -8,8 +8,11 @@ import fc.be.app.domain.member.exception.MemberErrorCode;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.member.vo.AuthProvider;
+import fc.be.app.domain.space.dto.response.SpaceResponse;
 import fc.be.app.domain.space.repository.JoinedMemberRepository;
 import fc.be.app.global.util.JwtService;
+import fc.be.app.domain.space.service.SpaceService;
+import fc.be.app.domain.space.service.SpaceTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,8 @@ public class MemberCommandHandler implements MemberCommand {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final JoinedMemberRepository joinedMemberRepository;
+    private final SpaceService spaceService;
+    private final SpaceTokenService spaceTokenService;
 
     @Override
     public void register(MemberRegisterRequest request) {
@@ -43,7 +48,9 @@ public class MemberCommandHandler implements MemberCommand {
                 .provider(AuthProvider.NONE)
                 .providedId("none")
                 .build();
-        memberRepository.save(newMember);
+        Member savedMember = memberRepository.save(newMember);
+        SpaceResponse createdSpace = spaceService.createSpace(savedMember.getId());
+        spaceTokenService.saveVisitedSpace(savedMember.getId(), createdSpace.id(), createdSpace.endDate());
     }
 
     @Override
@@ -60,7 +67,9 @@ public class MemberCommandHandler implements MemberCommand {
                 .provider(request.provider())
                 .providedId(request.providedId())
                 .build();
-        memberRepository.save(newProviderMember);
+        Member savedProviderMember = memberRepository.save(newProviderMember);
+        SpaceResponse createdSpace = spaceService.createSpace(savedProviderMember.getId());
+        spaceTokenService.saveVisitedSpace(savedProviderMember.getId(), createdSpace.id(), createdSpace.endDate());
     }
 
     @Override

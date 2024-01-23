@@ -3,6 +3,9 @@ package fc.be.app.domain.member.service;
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.member.vo.AuthProvider;
+import fc.be.app.domain.space.dto.response.SpaceResponse;
+import fc.be.app.domain.space.service.SpaceService;
+import fc.be.app.domain.space.service.SpaceTokenService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -27,6 +30,10 @@ class MemberCommandHandlerTest {
     private MemberRepository memberRepository;
     @Mock
     private PasswordEncoder passwordEncoder;
+    @Mock
+    private SpaceService spaceService;
+    @Mock
+    private SpaceTokenService spaceTokenService;
 
     @Nested
     @DisplayName("자체 회원가입을 수행한 유저를")
@@ -43,8 +50,27 @@ class MemberCommandHandlerTest {
                     .providedId("none")
                     .profile("test_profile_url")
                     .build();
+            Member savedMember = Member.builder()
+                    .id(1L)
+                    .email("test@test.com")
+                    .password("password")
+                    .nickname("nickname")
+                    .provider(AuthProvider.NONE)
+                    .providedId("none")
+                    .profile("test_profile_url")
+                    .build();
+            SpaceResponse testSpaceResponse = SpaceResponse.builder()
+                    .id(1L)
+                    .title("test_space_title")
+                    .startDate(null)
+                    .endDate(null)
+                    .city(null)
+                    .thumbnail(null)
+                    .build();
             given(memberRepository.existsByProviderAndEmail(AuthProvider.NONE, "test@test.com")).willReturn(false);
+            given(memberRepository.save(any(Member.class))).willReturn(savedMember);
             given(passwordEncoder.encode("password")).willReturn(BCrypt.hashpw("password", BCrypt.gensalt()));
+            given(spaceService.createSpace(anyLong())).willReturn(testSpaceResponse);
 
             // when
             MemberCommand.MemberRegisterRequest memberRegisterRequest =
@@ -53,6 +79,7 @@ class MemberCommandHandlerTest {
 
             // then
             verify(memberRepository, atLeastOnce()).save(member);
+            verify(spaceTokenService, atLeastOnce()).saveVisitedSpace(savedMember.getId(), testSpaceResponse.id(), testSpaceResponse.endDate());
         }
 
         @Test
@@ -93,7 +120,27 @@ class MemberCommandHandlerTest {
                     .providedId("kakao_provier_id")
                     .profile("kakao_profile_url")
                     .build();
+            Member savedMember = Member.builder()
+                    .id(1L)
+                    .email("test@test.com")
+                    .password("password")
+                    .nickname("nickname")
+                    .provider(AuthProvider.NONE)
+                    .providedId("none")
+                    .profile("test_profile_url")
+                    .build();
+            SpaceResponse testSpaceResponse = SpaceResponse.builder()
+                    .id(1L)
+                    .title("test_space_title")
+                    .startDate(null)
+                    .endDate(null)
+                    .city(null)
+                    .thumbnail(null)
+                    .build();
             given(memberRepository.existsByProviderAndEmail(AuthProvider.KAKAO, "test@test.com")).willReturn(false);
+            given(memberRepository.save(any(Member.class))).willReturn(savedMember);
+            given(passwordEncoder.encode(anyString())).willReturn(BCrypt.hashpw("password", BCrypt.gensalt()));
+            given(spaceService.createSpace(anyLong())).willReturn(testSpaceResponse);
 
             // when
             MemberCommand.ProviderMemberRegisterRequest providerMemberRegisterRequest =
@@ -102,6 +149,7 @@ class MemberCommandHandlerTest {
 
             // then
             verify(memberRepository, atLeastOnce()).save(member);
+            verify(spaceTokenService, atLeastOnce()).saveVisitedSpace(savedMember.getId(), testSpaceResponse.id(), testSpaceResponse.endDate());
         }
 
         @Test
