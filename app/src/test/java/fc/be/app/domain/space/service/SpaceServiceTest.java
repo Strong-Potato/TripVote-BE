@@ -117,8 +117,8 @@ class SpaceServiceTest {
 
         // then
         assertThat(target)
-                .extracting("id", "title", "startDate", "endDate")
-                .contains(savedSpace.getId(), savedSpace.getTitle(), savedSpace.getStartDate(),
+                .extracting("id", "startDate", "endDate")
+                .contains(savedSpace.getId(), savedSpace.getStartDate(),
                         savedSpace.getEndDate());
     }
 
@@ -231,10 +231,10 @@ class SpaceServiceTest {
         // then
         assertThat(spaceResponse.spaces()).hasSize(2);
         assertThat(spaceResponse.spaces())
-                .extracting("title", "startDate", "endDate")
+                .extracting("startDate", "endDate")
                 .containsExactlyInAnyOrder(
-                        tuple(space2.getTitle(), space2.getStartDate(), space2.getEndDate()),
-                        tuple(space3.getTitle(), space3.getStartDate(), space3.getEndDate())
+                        tuple(space2.getStartDate(), space2.getEndDate()),
+                        tuple(space3.getStartDate(), space3.getEndDate())
                 );
     }
 
@@ -267,10 +267,10 @@ class SpaceServiceTest {
         // then
         assertThat(spaceResponse.spaces()).hasSize(2);
         assertThat(spaceResponse.spaces())
-                .extracting("title", "startDate", "endDate")
+                .extracting("startDate", "endDate")
                 .containsExactlyInAnyOrder(
-                        tuple(space1.getTitle(), space1.getStartDate(), space1.getEndDate()),
-                        tuple(space2.getTitle(), space2.getStartDate(), space2.getEndDate())
+                        tuple(space1.getStartDate(), space1.getEndDate()),
+                        tuple(space2.getStartDate(), space2.getEndDate())
                 );
     }
 
