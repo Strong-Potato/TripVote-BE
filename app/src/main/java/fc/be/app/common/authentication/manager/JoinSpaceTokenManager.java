@@ -10,15 +10,16 @@ import fc.be.app.common.authentication.model.Token;
 import fc.be.app.global.config.security.properties.TokenProperties;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Component
 public class JoinSpaceTokenManager extends AbstractJwtTokenManager {
     private static final String PURPOSE_KEY = "purpose";
-    private static final String PURPOSE_VALUE = "join-space";
-    private static final String TARGET_SPACE_ID_KEY = "space-id";
-
+    private static final String PURPOSE_VALUE = "join_space";
+    private static final String TARGET_SPACE_ID_KEY = "space_id";
+    private static final Duration EXPIRE_DURATION = Duration.ofHours(2);
 
     private final Algorithm algorithm;
 
@@ -37,7 +38,7 @@ public class JoinSpaceTokenManager extends AbstractJwtTokenManager {
                 .withClaim(PURPOSE_KEY, PURPOSE_VALUE)
                 .withClaim(TARGET_SPACE_ID_KEY, targetSpaceId)
                 .withIssuedAt(now.atZone(ZoneId.systemDefault()).toInstant())
-//                .withExpiresAt(now.atZone(ZoneId.systemDefault()).plusSeconds(expireSecond).toInstant())
+                .withExpiresAt(now.atZone(ZoneId.systemDefault()).plus(EXPIRE_DURATION).toInstant())
                 .sign(algorithm);
         return JoinSpaceToken.unauthenticated(jwtTokenValue, issuer, targetSpaceId);
     }
@@ -62,7 +63,7 @@ public class JoinSpaceTokenManager extends AbstractJwtTokenManager {
 
     private JWTVerifier generateVerifier(String issuer, Long targetSpaceId) {
         return JWT.require(algorithm)
-                .withIssuer(issuer)
+//                .withIssuer(issuer)
                 .withClaim(PURPOSE_KEY, PURPOSE_VALUE)
                 .withClaim(TARGET_SPACE_ID_KEY, targetSpaceId)
                 .build();

@@ -18,6 +18,10 @@ public interface MemberQuery {
 
     boolean exists(@Valid ProviderMemberRequest request);
 
+    boolean verify(Long id, String password);
+
+    boolean verify(String email, String password);
+
     record MemberRequest(
             @Email
             String email

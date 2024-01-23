@@ -67,7 +67,7 @@ public class SpaceRepositoryCustomImpl implements SpaceRepositoryCustom {
         if (!SpaceType.UPCOMING.equals(type)) {
             return null;
         }
-        return space.endDate.goe(endDate);
+        return space.endDate.goe(endDate).or(space.endDate.isNull());
     }
 
     private BooleanExpression ltPastEndDate(LocalDate endDate, SpaceType type) {

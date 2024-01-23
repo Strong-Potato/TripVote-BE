@@ -267,4 +267,17 @@ public class SpaceService {
 
         return CitiesResponse.of(cityList);
     }
+
+    @Transactional
+    public void joinMember(Long spaceId, Long memberId) {
+        Space space = spaceRepository.findById(spaceId)
+                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+
+        JoinedMember joinedMember = joinedMemberRepository.findBySpaceAndMemberId(space, memberId)
+                .orElseGet(() -> {
+                    Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+                    return JoinedMember.create(space, member);
+                });
+        joinedMember.updateLeftSpace(false);
+    }
 }
