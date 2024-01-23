@@ -24,14 +24,12 @@ import fc.be.app.domain.wish.dto.WishGetResponse;
 import fc.be.app.domain.wish.service.WishService;
 import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.http.ApiResponse;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.time.LocalDate;
 
 @RestController
@@ -90,7 +88,7 @@ public class MemberController {
     }
 
     @DeleteMapping
-    public ApiResponse<Void> signOut(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody DeleteMemberRequest request, @CookieValue(name = "access-token", required = false) String accessToken, HttpServletResponse response) throws IOException {
+    public ApiResponse<Void> signOut(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody(required = false) DeleteMemberRequest request, @CookieValue(name = "access-token", required = false) String accessToken) {
         if (userPrincipal.authProvider() != AuthProvider.NONE) {
             ProviderMemberDeactivateRequest deactivateRequest = new ProviderMemberDeactivateRequest(userPrincipal.id(), accessToken);
             try {
