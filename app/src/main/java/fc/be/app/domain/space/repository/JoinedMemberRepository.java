@@ -21,7 +21,7 @@ public interface JoinedMemberRepository extends JpaRepository<JoinedMember, Long
 
     @Query("SELECT jm FROM JoinedMember jm " +
             "LEFT JOIN Space sp ON jm.space.id = sp.id " +
-            "WHERE jm.leftSpace = false AND jm.member.id = :memberId AND sp.endDate >= :currentDate " +
+            "WHERE jm.leftSpace = false AND jm.member.id = :memberId AND (sp.endDate >= :currentDate OR sp.endDate is null )" +
             "ORDER BY jm.createdDate DESC")
     Page<JoinedMember> findActiveJoinedMemberBySpace(
             @Param("memberId") Long memberId,
