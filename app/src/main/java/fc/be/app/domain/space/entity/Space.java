@@ -4,12 +4,9 @@ import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.space.vo.KoreanCity;
 import fc.be.app.domain.vote.entity.Vote;
-import fc.be.app.global.util.DelimiterConverter;
+import fc.be.app.global.util.ListImagesConverter;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDate;
@@ -39,7 +36,7 @@ public class Space {
     @Comment("종료일")
     private LocalDate endDate;
 
-    @Convert(converter = DelimiterConverter.class)
+    @Convert(converter = ListImagesConverter.class)
     @Comment("선택된도시리스트")
     private List<String> city;
 
@@ -50,6 +47,7 @@ public class Space {
     private List<Vote> voteSpaces;
 
     @OneToMany(mappedBy = "space")
+    @OrderBy("createdDate, id")
     private List<JoinedMember> joinedMembers = new ArrayList<>();
 
     @Builder
@@ -59,14 +57,12 @@ public class Space {
         this.endDate = endDate;
     }
 
-    public static Space create(String nickname) {
-        return Space.builder()
-                .title(nickname + "의 여행")
-                .build();
+    public static Space create() {
+        return Space.builder().build();
     }
 
-    public void updateByTitle(String title) {
-        this.title = title;
+    public void addJoinedMember(JoinedMember joinedMember) {
+        this.joinedMembers.add(joinedMember);
     }
 
     public void updateByCity(List<String> cities) {
@@ -127,12 +123,37 @@ public class Space {
                 .anyMatch(joinedMember -> !joinedMember.isLeftSpace() && joinedMember.getMember().equals(member));
     }
 
+    public String getCityToString() {
+        if (this.city == null || this.city.isEmpty()) {
+            return null;
+        }
+
+        return String.join(",", this.getCity());
+    }
+
     public String getCityThumbnail() {
         if (this.city == null || this.city.isEmpty()) {
             return null;
         }
 
         return KoreanCity.getByCityName(this.city.get(0));
+    }
+
+
+    public String getSpaceTitle() {
+        if (this.joinedMembers == null || this.joinedMembers.isEmpty()) {
+            return null;
+        }
+
+        List<JoinedMember> joinedMemberList = this.joinedMembers.stream()
+                .filter(joinedMember -> !joinedMember.isLeftSpace())
+                .toList();
+
+        if (joinedMemberList.size() == 1) {
+            return String.format("%s의 여행", joinedMemberList.get(0).getMember().getNickname());
+        }
+
+        return String.format("%s 외 %d명의 여행", joinedMemberList.get(0).getMember().getNickname(), joinedMemberList.size() - 1);
     }
 
 }

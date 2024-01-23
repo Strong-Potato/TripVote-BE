@@ -22,7 +22,12 @@ public record SpaceResponse(
 
         List<MemberInfo> memberInfos = new ArrayList<>();
 
-        for (JoinedMember joinedMember : space.getJoinedMembers()) {
+        List<JoinedMember> joinedMembers = space.getJoinedMembers()
+                .stream()
+                .filter(joinedMember -> !joinedMember.isLeftSpace())
+                .toList();
+
+        for (JoinedMember joinedMember : joinedMembers) {
             memberInfos.add(MemberInfo.builder()
                     .id(joinedMember.getMember().getId())
                     .nickname(joinedMember.getMember().getNickname())
@@ -33,10 +38,10 @@ public record SpaceResponse(
         return
                 SpaceResponse.builder()
                         .id(space.getId())
-                        .title(space.getTitle())
+                        .title(space.getSpaceTitle())
                         .startDate(space.getStartDate())
                         .endDate(space.getEndDate())
-                        .city(space.getCity() != null ? String.join(",", space.getCity()) : null)
+                        .city(space.getCityToString())
                         .thumbnail(space.getCityThumbnail())
                         .members(memberInfos)
                         .build();

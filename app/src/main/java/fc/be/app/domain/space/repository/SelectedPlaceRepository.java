@@ -15,5 +15,5 @@ public interface SelectedPlaceRepository extends JpaRepository<SelectedPlace, Lo
 
     @Modifying
     @Query("DELETE FROM SelectedPlace sp WHERE sp.journey.id IN :journeyIds")
-    void deleteByJourneyIds(@Param("journeyIds") List<Long> journeyIds);
+    Integer deleteByJourneyIds(@Param("journeyIds") List<Long> journeyIds);
 }

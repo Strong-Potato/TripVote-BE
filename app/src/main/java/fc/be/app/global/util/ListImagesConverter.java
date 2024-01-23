@@ -18,6 +18,6 @@ public class ListImagesConverter implements AttributeConverter<List<String>, Str
 
     @Override
     public List<String> convertToEntityAttribute(String joined) {
-        return joined != null ? Arrays.stream(joined.split(SPLIT_CHAR)).toList() : Collections.emptyList();
+        return joined != null && !joined.isEmpty() ? Arrays.stream(joined.split(SPLIT_CHAR)).toList() : Collections.emptyList();
     }
 }

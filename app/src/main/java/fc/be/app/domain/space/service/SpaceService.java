@@ -60,10 +60,12 @@ public class SpaceService {
             throw new SpaceException(SPACE_MAX_COUNT_OVER);
         }
 
-        Space savedSpace = spaceRepository.save(Space.create(member.getNickname()));
+        Space savedSpace = spaceRepository.save(Space.create());
 
         JoinedMember joinedMember = JoinedMember.create(savedSpace, member);
         joinedMemberRepository.save(joinedMember);
+
+        savedSpace.addJoinedMember(joinedMember);
 
         return SpaceResponse.of(savedSpace);
     }
@@ -149,8 +151,8 @@ public class SpaceService {
         final Member requestMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
-        JoinedMember joinedMember = joinedMemberRepository.findBySpaceAndMember(space,
-                requestMember).orElseThrow(() -> new SpaceException(NOT_JOINED_MEMBER));
+        JoinedMember joinedMember = joinedMemberRepository.findBySpaceAndMemberAndLeftSpace(space,
+                requestMember, false).orElseThrow(() -> new SpaceException(NOT_JOINED_MEMBER));
 
         joinedMember.updateLeftSpace(true);
     }
@@ -216,6 +218,25 @@ public class SpaceService {
         return JourneysResponse.from(journeys);
     }
 
+    public CitiesResponse getCities() {
+        List<CitiesResponse.CityResponse> cityList = KoreanCity.getCityList();
+
+        return CitiesResponse.of(cityList);
+    }
+
+    @Transactional
+    public void joinMember(Long spaceId, Long memberId) {
+        Space space = spaceRepository.findById(spaceId)
+                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+
+        JoinedMember joinedMember = joinedMemberRepository.findBySpaceAndMemberId(space, memberId)
+                .orElseGet(() -> {
+                    Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+                    return JoinedMember.create(space, member);
+                });
+        joinedMember.updateLeftSpace(false);
+    }
+
     private void addJourneys(DateUpdateRequest updateRequest, Space space, int daysDiff) {
         List<Journey> journeys = space.findByAddedJourneys(updateRequest.endDate(), daysDiff);
         journeyRepository.saveAll(journeys);
@@ -260,24 +281,5 @@ public class SpaceService {
         if (!space.isBelong(requestMember)) {
             throw new SpaceException(NOT_JOINED_MEMBER);
         }
-    }
-
-    public CitiesResponse getCities() {
-        List<CitiesResponse.CityResponse> cityList = KoreanCity.getCityList();
-
-        return CitiesResponse.of(cityList);
-    }
-
-    @Transactional
-    public void joinMember(Long spaceId, Long memberId) {
-        Space space = spaceRepository.findById(spaceId)
-                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
-
-        JoinedMember joinedMember = joinedMemberRepository.findBySpaceAndMemberId(space, memberId)
-                .orElseGet(() -> {
-                    Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
-                    return JoinedMember.create(space, member);
-                });
-        joinedMember.updateLeftSpace(false);
     }
 }
