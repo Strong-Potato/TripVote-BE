@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 class SpaceTest {
 
-    @DisplayName("Space 엔티티의 title, date 값이 변경되는것을 체크한다.")
+    @DisplayName("Space 엔티티의 date 값이 변경되는것을 체크한다.")
     @Test
     void updateByTitleAndDates() {
         // given
@@ -18,11 +18,9 @@ class SpaceTest {
             .build();
 
         // when
-        space.updateByTitle("여행");
         space.updateByDates(LocalDate.of(2024, 1, 3), LocalDate.of(2024, 1, 8));
 
         // then
-        assertThat(space.getTitle()).isEqualTo("여행");
         assertThat(space.getStartDate()).isEqualTo(LocalDate.of(2024, 1, 3));
         assertThat(space.getEndDate()).isEqualTo(LocalDate.of(2024, 1, 8));
     }

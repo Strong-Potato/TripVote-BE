@@ -14,9 +14,9 @@ import java.util.Optional;
 
 public interface JoinedMemberRepository extends JpaRepository<JoinedMember, Long> {
 
-    Optional<JoinedMember> findBySpaceAndMember(Space space, Member member);
-
     Optional<JoinedMember> findBySpaceAndMemberId(Space space, Long memberId);
+
+    Optional<JoinedMember> findBySpaceAndMemberAndLeftSpace(Space space, Member member, Boolean leftSpace);
 
     @Query("SELECT jm FROM JoinedMember jm " +
             "LEFT JOIN Space sp ON jm.space.id = sp.id " +

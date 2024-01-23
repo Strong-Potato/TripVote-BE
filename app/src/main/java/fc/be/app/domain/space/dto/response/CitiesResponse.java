@@ -1,6 +1,5 @@
 package fc.be.app.domain.space.dto.response;
 
-import fc.be.app.domain.space.entity.Journey;
 import lombok.Builder;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public record CitiesResponse(
     public record CityResponse(
             String cityName,
             String imageUrl
-    ){
+    ) {
 
     }
 
