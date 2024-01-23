@@ -87,7 +87,7 @@ public class MemberController {
         return ApiResponse.ok();
     }
 
-    @DeleteMapping
+    @PostMapping("/sign-out")
     public ApiResponse<Void> signOut(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody(required = false) DeleteMemberRequest request, @CookieValue(name = "access-token", required = false) String accessToken) {
         if (userPrincipal.authProvider() != AuthProvider.NONE) {
             ProviderMemberDeactivateRequest deactivateRequest = new ProviderMemberDeactivateRequest(userPrincipal.id(), accessToken);
