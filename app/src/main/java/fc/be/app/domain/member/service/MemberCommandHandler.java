@@ -8,6 +8,7 @@ import fc.be.app.domain.member.exception.MemberErrorCode;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.member.vo.AuthProvider;
+import fc.be.app.domain.space.repository.JoinedMemberRepository;
 import fc.be.app.global.util.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +27,7 @@ public class MemberCommandHandler implements MemberCommand {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final JoinedMemberRepository joinedMemberRepository;
 
     @Override
     public void register(MemberRegisterRequest request) {
@@ -98,6 +100,7 @@ public class MemberCommandHandler implements MemberCommand {
             throw new AuthException(AuthErrorCode.INCORRECT_PASSWORD);
         }
         targetMember.deactivate();
+        joinedMemberRepository.updateAllByMemberId(id, false);
     }
 
     @Override
@@ -112,5 +115,6 @@ public class MemberCommandHandler implements MemberCommand {
         Member targetMember = memberRepository.findById(id)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         targetMember.deactivate();
+        joinedMemberRepository.updateAllByMemberId(id, false);
     }
 }
