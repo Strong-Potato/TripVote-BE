@@ -10,6 +10,7 @@ import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.member.vo.AuthProvider;
 import fc.be.app.domain.space.repository.JoinedMemberRepository;
 import fc.be.app.global.util.JwtService;
+import fc.be.app.domain.space.service.SpaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class MemberCommandHandler implements MemberCommand {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final JoinedMemberRepository joinedMemberRepository;
+    private final SpaceService spaceService;
 
     @Override
     public void register(MemberRegisterRequest request) {
@@ -43,7 +45,8 @@ public class MemberCommandHandler implements MemberCommand {
                 .provider(AuthProvider.NONE)
                 .providedId("none")
                 .build();
-        memberRepository.save(newMember);
+        Member savedMember = memberRepository.save(newMember);
+        spaceService.createSpace(savedMember.getId());
     }
 
     @Override
@@ -60,7 +63,8 @@ public class MemberCommandHandler implements MemberCommand {
                 .provider(request.provider())
                 .providedId(request.providedId())
                 .build();
-        memberRepository.save(newProviderMember);
+        Member savedProviderMember = memberRepository.save(newProviderMember);
+        spaceService.createSpace(savedProviderMember.getId());
     }
 
     @Override
