@@ -1,4 +1,4 @@
-package fc.be.app.domain.member.dto.request;
+package fc.be.app.domain.member.controller.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

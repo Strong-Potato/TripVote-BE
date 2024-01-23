@@ -6,6 +6,7 @@ import fc.be.app.domain.space.entity.Space;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -27,4 +28,8 @@ public interface JoinedMemberRepository extends JpaRepository<JoinedMember, Long
             @Param("currentDate") LocalDate currentDate,
             Pageable pageable
     );
+
+    @Modifying
+    @Query("UPDATE JoinedMember j SET j.leftSpace = :leftSpace WHERE j.member.id = :memberId")
+    int updateAllByMemberId(@Param("memberId") Long memberId, @Param("leftSpace") boolean leftSpace);
 }
