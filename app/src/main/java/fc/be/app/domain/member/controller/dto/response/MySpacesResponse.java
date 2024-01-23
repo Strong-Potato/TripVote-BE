@@ -1,4 +1,4 @@
-package fc.be.app.domain.member.dto.response;
+package fc.be.app.domain.member.controller.dto.response;
 
 import fc.be.app.domain.space.dto.response.SpaceResponse;
 import fc.be.app.domain.space.dto.response.SpacesResponse;

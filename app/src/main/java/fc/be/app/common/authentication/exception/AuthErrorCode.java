@@ -12,7 +12,8 @@ public enum AuthErrorCode {
     TOKEN_EXPIRED(204, "TOKEN_EXPIRED", "만료된 토큰입니다. 다시 인증해주세요."),
     INCORRECT_TOKEN(205, "INCORRECT_TOKEN", "잘못된 토큰입니다."),
     INCORRECT_PASSWORD(206, "INCORRECT_PASSWORD", "잘못된 비밀번호 입니다."),
-    SAME_PASSWORD(207, "SAME_PASSWORD", "새로운 비밀번호를 입력하세요.");
+    SAME_PASSWORD(207, "SAME_PASSWORD", "새로운 비밀번호를 입력하세요."),
+    LOGIN_REQUIRED(208, "LOGIN_REQUIRED", "로그인이 필요합니다.");
 
     private final int responseCode;
     private final String title;

@@ -1,6 +1,7 @@
 package fc.be.app.domain.member.entity;
 
 import fc.be.app.domain.member.vo.AuthProvider;
+import fc.be.app.domain.member.vo.MemberStatus;
 import fc.be.app.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,6 +39,10 @@ public class Member extends BaseTimeEntity {
     @Comment("회원정보 제공자가 제공하는 id")
     private String providedId;
 
+    @Comment("활성화 상태")
+    @Enumerated(EnumType.STRING)
+    private MemberStatus status = MemberStatus.ACTIVATED;
+
     @Builder
     private Member(String email, String password, String nickname, String profile, AuthProvider provider, String providedId) {
         this.email = email;
@@ -55,5 +60,9 @@ public class Member extends BaseTimeEntity {
     public void changeInfo(String newNickname, String newProfile) {
         this.nickname = newNickname;
         this.profile = newProfile;
+    }
+
+    public void deactivate() {
+        this.status = MemberStatus.DEACTIVATED;
     }
 }

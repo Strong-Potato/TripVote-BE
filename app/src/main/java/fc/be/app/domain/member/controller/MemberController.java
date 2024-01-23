@@ -1,15 +1,20 @@
 package fc.be.app.domain.member.controller;
 
-import fc.be.app.domain.member.dto.request.UpdateMemberRequest;
-import fc.be.app.domain.member.dto.response.MyInfoResponse;
-import fc.be.app.domain.member.dto.response.MyPlacesResponse;
-import fc.be.app.domain.member.dto.response.MyReviewsResponse;
-import fc.be.app.domain.member.dto.response.MySpacesResponse;
+import fc.be.app.common.authentication.exception.AuthException;
+import fc.be.app.domain.member.controller.dto.request.DeleteMemberRequest;
+import fc.be.app.domain.member.controller.dto.request.UpdateMemberRequest;
+import fc.be.app.domain.member.controller.dto.response.MyInfoResponse;
+import fc.be.app.domain.member.controller.dto.response.MyPlacesResponse;
+import fc.be.app.domain.member.controller.dto.response.MyReviewsResponse;
+import fc.be.app.domain.member.controller.dto.response.MySpacesResponse;
 import fc.be.app.domain.member.exception.MemberErrorCode;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.service.MemberCommand;
+import fc.be.app.domain.member.service.MemberCommand.MemberDeactivateRequest;
+import fc.be.app.domain.member.service.MemberCommand.ProviderMemberDeactivateRequest;
 import fc.be.app.domain.member.service.MemberQuery;
 import fc.be.app.domain.member.service.MemberQuery.MemberResponse;
+import fc.be.app.domain.member.vo.AuthProvider;
 import fc.be.app.domain.review.dto.response.ReviewsResponse;
 import fc.be.app.domain.review.service.ReviewService;
 import fc.be.app.domain.space.dto.response.SpacesResponse;
@@ -19,12 +24,14 @@ import fc.be.app.domain.wish.dto.WishGetResponse;
 import fc.be.app.domain.wish.service.WishService;
 import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.http.ApiResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 @RestController
@@ -79,6 +86,22 @@ public class MemberController {
         String newNickname = request.nickname();
         String newProfile = request.profile();
         memberCommand.modifyUserInfo(id, newNickname, newProfile);
+        return ApiResponse.ok();
+    }
+
+    @DeleteMapping
+    public ApiResponse<Void> signOut(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody DeleteMemberRequest request, @CookieValue(name = "access-token", required = false) String accessToken, HttpServletResponse response) throws IOException {
+        if (userPrincipal.authProvider() != AuthProvider.NONE) {
+            ProviderMemberDeactivateRequest deactivateRequest = new ProviderMemberDeactivateRequest(userPrincipal.id(), accessToken);
+            try {
+                memberCommand.deactivate(deactivateRequest);
+            } catch (AuthException exception) {
+                throw exception;
+            }
+            return ApiResponse.ok();
+        }
+        MemberDeactivateRequest deactivateRequest = new MemberDeactivateRequest(userPrincipal.id(), request.password());
+        memberCommand.deactivate(deactivateRequest);
         return ApiResponse.ok();
     }
 }
