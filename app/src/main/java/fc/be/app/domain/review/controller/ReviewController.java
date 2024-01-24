@@ -38,24 +38,18 @@ public class ReviewController {
 
     @GetMapping("/rating")
     public ApiResponse<ReviewRatingResponse> getRatingAndReviewCount(
-            @RequestParam Integer placeId,
-            @RequestParam Integer contentTypeId,
-            @RequestParam String placeTitle
-
+            @ModelAttribute ReviewGetRequest reviewGetRequest
     ) {
-        return ApiResponse.ok(reviewService.bringReviewRatingAndCount(
-                new ReviewGetRequest(placeId, contentTypeId, placeTitle)));
+        return ApiResponse.ok(reviewService.bringReviewRatingAndCount(reviewGetRequest));
     }
 
     @GetMapping
     public ApiResponse<ReviewGetResponse> getPlaceReviews(
-            @RequestParam Integer placeId,
-            @RequestParam Integer contentTypeId,
-            @RequestParam String placeTitle,
+            @ModelAttribute ReviewGetRequest reviewGetRequest,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        return ApiResponse.ok(reviewService.bringReviewInfo(new ReviewGetRequest(placeId, contentTypeId, placeTitle),
+        return ApiResponse.ok(reviewService.bringReviewInfo(reviewGetRequest,
                 PageRequest.of(page, size, Sort.by("visitedAt").descending())));
     }
 }
