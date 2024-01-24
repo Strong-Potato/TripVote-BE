@@ -1,6 +1,7 @@
 package fc.be.app.domain.space.service;
 
 import fc.be.app.domain.space.dto.response.SpaceIdResponse;
+import fc.be.app.domain.space.dto.response.SpaceResponse;
 import fc.be.app.domain.space.entity.JoinedMember;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.exception.SpaceException;
@@ -27,7 +28,10 @@ public class SpaceTokenService {
     private final JoinedMemberRepository joinedMemberRepository;
 
     public void saveVisitedSpace(Long memberId, Long spaceId, LocalDate endDate) {
-        if (endDate != null && isReadOnly(spaceId, LocalDate.now())) {
+        Space space = spaceRepository.findById(spaceId)
+                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+
+        if (isSpaceReadOnly(space)) {
             return;
         }
 
@@ -45,17 +49,25 @@ public class SpaceTokenService {
         }
     }
 
-    public SpaceIdResponse getRecentSpace(Long memberId) {
+    public SpaceResponse getRecentSpace(Long memberId) {
         String key = "recent_space_member:" + memberId;
 
         SpaceToken spaceToken = redisTemplateWithSpace.opsForValue().get(key);
 
-        if (spaceToken == null || isReadOnly(spaceToken.spaceId(), LocalDate.now())) {
+        if (spaceToken == null || !isValidSpace(spaceToken.spaceId())) {
             JoinedMember joinedMember = findRecentJoinedMember(memberId, LocalDate.now());
-            return SpaceIdResponse.of(joinedMember.getSpace().getId());
+            return SpaceResponse.of(joinedMember.getSpace());
         }
 
-        return SpaceIdResponse.of(spaceToken.spaceId());
+        Space space = spaceRepository.findById(spaceToken.spaceId())
+                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+
+        if (isSpaceReadOnly(space)) {
+            JoinedMember joinedMember = findRecentJoinedMember(memberId, LocalDate.now());
+            return SpaceResponse.of(joinedMember.getSpace());
+        }
+
+        return SpaceResponse.of(space);
     }
 
     private JoinedMember findRecentJoinedMember(Long memberId, LocalDate currentDate) {
@@ -72,14 +84,11 @@ public class SpaceTokenService {
         return activeJoinedMemberBySpace.getContent().get(0);
     }
 
-    private boolean isReadOnly(Long spaceId, LocalDate currentDate) {
-        Space space = spaceRepository.findById(spaceId)
-                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+    private boolean isValidSpace(Long spaceId) {
+        return spaceId != null && spaceRepository.existsById(spaceId);
+    }
 
-        if(space.getEndDate() == null){
-            return false;
-        }
-
-        return space.isReadOnly(currentDate);
+    private boolean isSpaceReadOnly(Space space) {
+        return space.getEndDate() != null && space.isReadOnly(LocalDate.now());
     }
 }

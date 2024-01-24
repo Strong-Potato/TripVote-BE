@@ -166,8 +166,7 @@ public class SpaceService {
 
         validateJoinedMember(space, requestMember);
 
-        List<Journey> journeys = journeyRepository.findAllBySpaceOrderByDateAsc(
-                space);
+        List<Journey> journeys = journeyRepository.findAllBySpaceOrderByDateAsc(space);
 
         return JourneysResponse.from(journeys);
     }
@@ -186,6 +185,7 @@ public class SpaceService {
                 .orElseThrow(() -> new SpaceException(JOURNEY_NOT_FOUND));
 
         List<SelectedPlace> selectedPlaces = insertSelectedPlace(request, journey);
+
         journey.addSelectedPlace(selectedPlaces);
 
         return JourneyResponse.from(journey);
@@ -252,6 +252,10 @@ public class SpaceService {
 
     private List<SelectedPlace> insertSelectedPlace(SelectedPlaceRequest selectedPlaceRequest, Journey journey) {
         int lastOrder = journey.getPlace().size();
+
+        if (lastOrder + selectedPlaceRequest.selectedPlaces().size() > 30) {
+            throw new SpaceException(SELECTED_PLACES_COUNT_OVER);
+        }
 
         List<SelectedPlace> selectedPlaces = new ArrayList<>();
 
