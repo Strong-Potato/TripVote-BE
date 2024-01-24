@@ -18,6 +18,7 @@ public record AreaBasedSync1Request(
         url.append(addContentTypeIdIfValid(contentTypeId));
         url.append(addArrangeIfValid(arrange));
         url.append(addCategoryIfValid(categoryCode));
+        url.append(addShowFlag());
 
         return url;
     }
