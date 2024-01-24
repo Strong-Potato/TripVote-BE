@@ -56,7 +56,7 @@ public class VoteControllerImpl implements VoteController {
     @PostMapping("/{voteId}/candidates")
     public ApiResponse<VoteDetailResponse> addCandidate(
             @PathVariable Long voteId,
-            CandidateAddApiRequest request,
+            @Valid @RequestBody CandidateAddApiRequest request,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
         return ApiResponse.ok(voteManageService.addCandidate(
