@@ -31,7 +31,7 @@ public interface VoteController {
     )
     @PostMapping
     ApiResponse<String> createNewVote(
-            @Valid VoteCreateApiRequest request,
+            @Valid @RequestBody VoteCreateApiRequest request,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     );
 
@@ -46,7 +46,7 @@ public interface VoteController {
     @PostMapping("/{voteId}/candidates")
     ApiResponse<VoteDetailResponse> addCandidate(
             @PathVariable Long voteId,
-            CandidateAddApiRequest request,
+            @Valid @RequestBody CandidateAddApiRequest request,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     );
 
