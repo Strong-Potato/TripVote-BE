@@ -162,4 +162,16 @@ public interface VoteController {
             @PathVariable Long voteId,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     );
+
+
+    @Operation(
+            operationId = "show vote not voting",
+            summary = "아직 참여하지 않은 투표 목록을 보여준다.",
+            description = "본인이 속한 스페이스 내 아직 참여하지 않은 투표 목록을 보여주는 API 입니다.",
+            security = {
+                    @SecurityRequirement(name = "ACCESS_TOKEN", scopes = {"write:votes"})
+            }
+    )
+    @GetMapping("/notVoted")
+    ApiResponse<VotesResponse> notVotedList(@AuthenticationPrincipal UserPrincipal userPrincipal);
 }

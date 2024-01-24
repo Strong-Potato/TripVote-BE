@@ -43,7 +43,7 @@ public class VoteControllerImpl implements VoteController {
 
     @PostMapping
     public ApiResponse<String> createNewVote(
-            @Valid VoteCreateApiRequest request,
+            @Valid @RequestBody VoteCreateApiRequest request,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
         return ApiResponse.created(VOTE_API_PREFIX + voteManageService.createVote(
