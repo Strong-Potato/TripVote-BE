@@ -108,7 +108,7 @@ public class VoteControllerImpl implements VoteController {
     }
 
     @GetMapping("/notVoted")
-    public ApiResponse<VotesResponse> notVotedList(UserPrincipal userPrincipal) {
+    public ApiResponse<VotesResponse> notVotedList(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return ApiResponse.ok(voteInfoQueryService.findMemberVotes(userPrincipal.id()));
     }
 
