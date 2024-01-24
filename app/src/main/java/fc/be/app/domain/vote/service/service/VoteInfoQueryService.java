@@ -19,6 +19,7 @@ import fc.be.app.domain.vote.service.dto.response.vo.MemberProfile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
@@ -89,6 +90,7 @@ public class VoteInfoQueryService {
 
         return new VotesResponse(votesNotMemberVoted
                 .stream()
+                .filter(vote -> vote.getSpace().isClosed(LocalDate.now()))
                 .map(vote -> new VotesResponseElement(
                         vote.getId(),
                         vote.getTitle(),

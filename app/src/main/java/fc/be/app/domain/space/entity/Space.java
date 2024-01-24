@@ -156,4 +156,8 @@ public class Space {
         return String.format("%s 외 %d명의 여행", joinedMemberList.get(0).getMember().getNickname(), joinedMemberList.size() - 1);
     }
 
+    public boolean isClosed(LocalDate localDate) {
+        return this.endDate.isBefore(localDate);
+    }
+
 }
