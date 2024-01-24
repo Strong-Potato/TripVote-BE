@@ -11,14 +11,14 @@ public record VoteResultResponse(
         Long id,
         String title,
         VoteStatus voteStatus,
-        MemberProfile ownerProfile,
+        MemberProfile createdBy,
         List<CandidateResultResponse> candidatesResponses
 ) {
 
     public record CandidateResultResponse(
             Long id,
             PlaceInfo placeInfo,
-            MemberProfile ownerProfile,
+            MemberProfile createdBy,
             List<MemberProfile> votedMemberProfiles,
             String tagline,
             boolean amIVote,
