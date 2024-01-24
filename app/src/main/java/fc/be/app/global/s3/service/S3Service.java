@@ -36,8 +36,9 @@ public class S3Service implements CreatePreSignedUrlUseCase {
         List<PreSignedElement> elements = new ArrayList<>();
 
         for (String imageName : imageNames) {
-            final String encodedFileName = createEncodedFileName();
-            GeneratePresignedUrlRequest generatePresignedUrlRequest = createGeneratePresignedUrlRequest(encodedFileName);
+            String fileExtension = extractFileExtension(imageName);
+            final String savedFileName = createEncodedFileName() + fileExtension;
+            GeneratePresignedUrlRequest generatePresignedUrlRequest = createGeneratePresignedUrlRequest(savedFileName);
             String preSignedUrl = amazonS3.generatePresignedUrl(generatePresignedUrlRequest).toString();
             elements.add(new PreSignedElement(imageName, preSignedUrl));
         }
@@ -45,13 +46,18 @@ public class S3Service implements CreatePreSignedUrlUseCase {
         return new PreSignedResponses(elements);
     }
 
+    private String extractFileExtension(String imageName) {
+        int extensionStartIndex = imageName.lastIndexOf(".");
+        return imageName.substring(extensionStartIndex);
+    }
+
     private static String createEncodedFileName() {
         String uuid = UUID.randomUUID().toString();
         return uuid + "_" + LocalDateTime.now();
     }
 
-    private GeneratePresignedUrlRequest createGeneratePresignedUrlRequest(String encodedFileName) {
-        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, encodedFileName)
+    private GeneratePresignedUrlRequest createGeneratePresignedUrlRequest(String fileName) {
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, fileName)
                 .withMethod(HttpMethod.PUT)
                 .withExpiration(getPreSignedUrlExpiration());
 
