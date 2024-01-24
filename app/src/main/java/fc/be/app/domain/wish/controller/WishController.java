@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/wishes")
@@ -24,9 +22,8 @@ public class WishController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody WishAddRequest wishAddRequest
     ) {
-        Long memberId = Optional.of(userPrincipal.id()).orElse(0L);
         return ApiResponse.ok(
-                wishService.addWish(memberId, wishAddRequest)
+                wishService.addWish(userPrincipal.id(), wishAddRequest)
         );
     }
 
@@ -35,9 +32,8 @@ public class WishController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Integer placeId
     ) {
-        Long memberId = Optional.of(userPrincipal.id()).orElse(0L);
         return ApiResponse.ok(
-                wishService.isWished(memberId, placeId)
+                wishService.isWished(userPrincipal.id(), placeId)
         );
     }
 
@@ -46,9 +42,8 @@ public class WishController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Integer placeId
     ) {
-        Long memberId = Optional.of(userPrincipal.id()).orElse(0L);
         return ApiResponse.ok(
-                wishService.deleteWish(memberId, placeId)
+                wishService.deleteWish(userPrincipal.id(), placeId)
         );
     }
 }

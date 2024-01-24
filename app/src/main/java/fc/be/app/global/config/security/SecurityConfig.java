@@ -81,7 +81,7 @@ public class SecurityConfig {
                         .successHandlerLogin(loginAuthenticationSuccessHandler)
                         .failureHandlerLogin(new LoginAuthenticationFailureHandler(handlerExceptionResolver)))
                 .anonymous(anonymous -> anonymous
-                        .principal(new UserPrincipal(null, "anonymous", AuthProvider.NONE)));
+                        .principal(new UserPrincipal(0L, "anonymous", AuthProvider.NONE)));
 
         // 세션 유지 필터
         httpSecurity
