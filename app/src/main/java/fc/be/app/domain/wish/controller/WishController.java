@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/wishes")
@@ -18,9 +20,13 @@ public class WishController {
     private final WishService wishService;
 
     @PostMapping
-    public ApiResponse<WishAddResponse> addWish(@Valid @RequestBody WishAddRequest wishAddRequest) {
+    public ApiResponse<WishAddResponse> addWish(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @Valid @RequestBody WishAddRequest wishAddRequest
+    ) {
+        Long memberId = Optional.of(userPrincipal.id()).orElse(0L);
         return ApiResponse.ok(
-                wishService.addWish(wishAddRequest)
+                wishService.addWish(memberId, wishAddRequest)
         );
     }
 
@@ -29,15 +35,18 @@ public class WishController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Integer placeId
     ) {
-        Long memberId = userPrincipal.id();
+        Long memberId = Optional.of(userPrincipal.id()).orElse(0L);
         return ApiResponse.ok(
                 wishService.isWished(memberId, placeId)
         );
     }
 
     @DeleteMapping("{placeId}")
-    public ApiResponse<Boolean> deleteWish(@PathVariable Integer placeId) {
-        Long memberId = 1L;
+    public ApiResponse<Boolean> deleteWish(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Integer placeId
+    ) {
+        Long memberId = Optional.of(userPrincipal.id()).orElse(0L);
         return ApiResponse.ok(
                 wishService.deleteWish(memberId, placeId)
         );
