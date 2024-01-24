@@ -6,6 +6,7 @@ public record PlaceInfo(
         Integer placeId,
         String placeName,
         String category,
+        int areaCode,
         String placeImageUrl,
         LatLng latLng
 ) {
@@ -13,8 +14,9 @@ public record PlaceInfo(
     public static PlaceInfo of(Place place) {
         return new PlaceInfo(
                 place.getId(),
-                place.getThumbnail(),
+                place.getTitle(),
                 place.getCategory(),
+                place.getLocation().getAreaCode(),
                 place.getThumbnail(),
                 new LatLng(
                         place.getLocation().getLatitude(),
