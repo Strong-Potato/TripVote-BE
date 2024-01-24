@@ -52,4 +52,8 @@ public interface TourAPIRequest {
         return "&cat" + CATEGORY_MAP.getOrDefault(categoryCode.length(), "1=") + categoryCode;
     }
 
+    default String addShowFlag() {
+        return "&showflag=" + "1";
+    }
+
 }
