@@ -45,7 +45,7 @@ public class JwtService {
                 });
         claim.put(tokenProperties.getAccessTokenAuthenticationProperty(), authenticationMap);
         Map<String, String[]> arrayClaim = new HashMap<>();
-        SimpleGrantedAuthority userAuthority = new SimpleGrantedAuthority("USER");
+        SimpleGrantedAuthority userAuthority = new SimpleGrantedAuthority("ROLE_USER");
         String[] _authorities = new String[]{userAuthority.getAuthority()};
         arrayClaim.put(tokenProperties.getAccessTokenAuthoritiesProperty(), _authorities);
         return generateToken(subject, claim, arrayClaim, Long.parseLong(tokenProperties.getAccessTokenExpireTime()));

@@ -92,7 +92,7 @@ public class SecurityConfig {
         // 인가 필터
         httpSecurity
                 .authorizeHttpRequests(authRequest -> authRequest
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/members/**").hasRole("USER")
                         .anyRequest().permitAll());
 
         // 예외 처리 필터
