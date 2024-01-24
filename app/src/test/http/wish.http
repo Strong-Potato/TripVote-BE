@@ -4,7 +4,6 @@ POST http://localhost:8080/wishes
 Content-Type: application/json
 
 {
-  "memberId": {{memberId}},
   "placeId": {{accommodationId}},
   "contentTypeId": {{accommodationTypeId}}
 }
