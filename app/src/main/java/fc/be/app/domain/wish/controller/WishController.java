@@ -18,9 +18,12 @@ public class WishController {
     private final WishService wishService;
 
     @PostMapping
-    public ApiResponse<WishAddResponse> addWish(@Valid @RequestBody WishAddRequest wishAddRequest) {
+    public ApiResponse<WishAddResponse> addWish(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @Valid @RequestBody WishAddRequest wishAddRequest
+    ) {
         return ApiResponse.ok(
-                wishService.addWish(wishAddRequest)
+                wishService.addWish(userPrincipal.id(), wishAddRequest)
         );
     }
 
@@ -29,17 +32,18 @@ public class WishController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Integer placeId
     ) {
-        Long memberId = userPrincipal.id();
         return ApiResponse.ok(
-                wishService.isWished(memberId, placeId)
+                wishService.isWished(userPrincipal.id(), placeId)
         );
     }
 
     @DeleteMapping("{placeId}")
-    public ApiResponse<Boolean> deleteWish(@PathVariable Integer placeId) {
-        Long memberId = 1L;
+    public ApiResponse<Boolean> deleteWish(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Integer placeId
+    ) {
         return ApiResponse.ok(
-                wishService.deleteWish(memberId, placeId)
+                wishService.deleteWish(userPrincipal.id(), placeId)
         );
     }
 }
