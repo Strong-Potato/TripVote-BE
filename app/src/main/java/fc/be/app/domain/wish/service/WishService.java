@@ -23,14 +23,14 @@ public class WishService {
     private final PlaceService placeService;
 
     @Transactional
-    public WishAddResponse addWish(WishAddRequest wishAddRequest) {
+    public WishAddResponse addWish(Long memberId, WishAddRequest wishAddRequest) {
         int placeId = wishAddRequest.placeId();
         int contentTypeId = wishAddRequest.contentTypeId();
 
         Place place = placeService.saveOrUpdatePlace(placeId, contentTypeId);
 
         Wish wish = Wish.builder()
-                .memberId(wishAddRequest.memberId())
+                .memberId(memberId)
                 .place(place)
                 .build();
 
