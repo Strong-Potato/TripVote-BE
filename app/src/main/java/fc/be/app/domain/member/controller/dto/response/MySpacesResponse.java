@@ -21,6 +21,9 @@ public record MySpacesResponse(
             String title,
             LocalDate startDate,
             LocalDate endDate,
+            String city,
+            String thumbnail,
+            List<SpaceResponse.MemberInfo> members,
             Long dueDate
     ) {
         public static MySpace from(SpaceResponse spaceResponse) {
@@ -29,6 +32,9 @@ public record MySpacesResponse(
                     spaceResponse.title(),
                     spaceResponse.startDate(),
                     spaceResponse.endDate(),
+                    spaceResponse.city(),
+                    spaceResponse.thumbnail(),
+                    spaceResponse.members(),
                     spaceResponse.startDate() != null ?
                             ChronoUnit.DAYS.between(LocalDate.now(), spaceResponse.startDate()) : null
             );
