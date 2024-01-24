@@ -3,6 +3,7 @@ package fc.be.app.domain.vote.controller;
 import fc.be.app.domain.vote.controller.dto.request.CandidateAddApiRequest;
 import fc.be.app.domain.vote.controller.dto.request.CandidateDeleteApiRequest;
 import fc.be.app.domain.vote.controller.dto.request.VoteCreateApiRequest;
+import fc.be.app.domain.vote.controller.dto.request.VotingApiRequest;
 import fc.be.app.domain.vote.service.dto.response.VoteDetailResponse;
 import fc.be.app.domain.vote.service.dto.response.VoteResultResponse;
 import fc.be.app.domain.vote.service.dto.response.VotesResponse;
@@ -116,6 +117,20 @@ public interface VoteController {
     @DeleteMapping("/{voteId}")
     ApiResponse<Void> deleteVote(
             @PathVariable Long voteId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    );
+
+    @Operation(
+            operationId = "voting",
+            summary = "투표를 진행하는 API",
+            description = "투표를 진행하는 API입니다. 투표를 취소할때도 동일한 URL로 요청합니다.",
+            security = {
+                    @SecurityRequirement(name = "ACCESS_TOKEN", scopes = {"write:votes"})
+            }
+    )
+    @PostMapping("/voting")
+    ApiResponse<Void> voting(
+            @RequestBody @Valid VotingApiRequest request,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     );
 
