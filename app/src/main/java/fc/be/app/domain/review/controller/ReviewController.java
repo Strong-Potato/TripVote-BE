@@ -38,14 +38,14 @@ public class ReviewController {
 
     @GetMapping("/rating")
     public ApiResponse<ReviewRatingResponse> getRatingAndReviewCount(
-            @Valid @RequestBody ReviewGetRequest reviewGetRequest
+            @ModelAttribute ReviewGetRequest reviewGetRequest
     ) {
         return ApiResponse.ok(reviewService.bringReviewRatingAndCount(reviewGetRequest));
     }
 
     @GetMapping
     public ApiResponse<ReviewGetResponse> getPlaceReviews(
-            @Valid @RequestBody ReviewGetRequest reviewGetRequest,
+            @ModelAttribute ReviewGetRequest reviewGetRequest,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
