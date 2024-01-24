@@ -54,7 +54,6 @@ public class VoteInfoQueryService {
         this.voteManageService = voteManageService;
     }
 
-    @Transactional(readOnly = true)
     public VotesResponse searchVotes(Long memberId, SearchCondition searchCondition) {
         Space space = spaceRepository.findById(searchCondition.getSpaceId())
                 .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
@@ -85,6 +84,24 @@ public class VoteInfoQueryService {
                 new ViewResultVoteIds(resultIds));
     }
 
+    public VotesResponse findMemberVotes(Long memberId) {
+        List<Vote> votesNotMemberVoted = voteRepository.findMemberVotes(memberId);
+
+        return new VotesResponse(votesNotMemberVoted
+                .stream()
+                .map(vote -> new VotesResponseElement(
+                        vote.getId(),
+                        vote.getTitle(),
+                        vote.getStatus(),
+                        MemberProfile.of(vote.getOwner()),
+                        vote.getVotedMembers()
+                                .stream()
+                                .map(votedMember -> MemberProfile.of(votedMember.getMember()))
+                                .toList()))
+                .toList(),
+                ViewResultVoteIds.emptyIds()
+        );
+    }
 
     public VoteDetailResponse findByVoteId(Long voteId, Long memberId) {
         Vote vote = getByVoteId(voteId);

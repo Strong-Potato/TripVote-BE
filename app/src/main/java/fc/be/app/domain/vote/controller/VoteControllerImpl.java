@@ -107,6 +107,11 @@ public class VoteControllerImpl implements VoteController {
         return ApiResponse.ok();
     }
 
+    @GetMapping("/notVoted")
+    public ApiResponse<VotesResponse> notVotedList(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return ApiResponse.ok(voteInfoQueryService.findMemberVotes(userPrincipal.id()));
+    }
+
     @DeleteMapping("/{voteId}/candidates")
     public ApiResponse<Void> deleteCandidates(
             @PathVariable Long voteId,
@@ -124,7 +129,7 @@ public class VoteControllerImpl implements VoteController {
         voteManageService.resetVote(voteId, userPrincipal.id());
         return ApiResponse.ok();
     }
-  
+
     @PostMapping("/{voteId}/candidates/{candidateId}")
     public ApiResponse<Void> voting(
             @PathVariable Long voteId,
