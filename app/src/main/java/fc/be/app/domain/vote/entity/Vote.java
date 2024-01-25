@@ -22,7 +22,7 @@ public class Vote {
     @Comment("투표 id")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "space_id")
     @Comment("여행스페이스 식별자")
     private Space space;
@@ -73,6 +73,7 @@ public class Vote {
                 .owner(owner)
                 .candidates(new ArrayList<>())
                 .votedMembers(new ArrayList<>())
+                .status(VoteStatus.VOTING)
                 .build();
     }
 
@@ -82,5 +83,9 @@ public class Vote {
 
     public boolean isStillVoting() {
         return this.status == VoteStatus.VOTING;
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
     }
 }
