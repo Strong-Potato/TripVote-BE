@@ -5,6 +5,7 @@ import fc.be.app.domain.space.entity.Space;
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public record SpaceResponse(
         LocalDate endDate,
         String city,
         String thumbnail,
+        Long dueDate,
         List<MemberInfo> members
 ) {
     public static SpaceResponse of(Space space) {
@@ -43,6 +45,8 @@ public record SpaceResponse(
                         .endDate(space.getEndDate())
                         .city(space.getCityToString())
                         .thumbnail(space.getCityThumbnail())
+                        .dueDate(space.getStartDate() != null ?
+                                ChronoUnit.DAYS.between(LocalDate.now(), space.getStartDate()) : null)
                         .members(memberInfos)
                         .build();
     }

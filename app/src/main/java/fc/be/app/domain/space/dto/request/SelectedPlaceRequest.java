@@ -10,8 +10,11 @@ public record SelectedPlaceRequest(
         @Positive
         @NotNull
         Long journeyId,
+        /*
+        place entity id 값
+         */
         @NotEmpty
-        List<Integer> selectedPlaces
+        List<Integer> placeIds
 ) {
 
 }

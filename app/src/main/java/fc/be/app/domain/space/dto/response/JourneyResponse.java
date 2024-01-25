@@ -10,7 +10,7 @@ import java.util.List;
 
 @Builder
 public record JourneyResponse(
-        Long id,
+        Long journeyId,
         LocalDate date,
         List<SelectedPlaceResponse> places
 ) {
@@ -20,7 +20,7 @@ public record JourneyResponse(
 
         for (SelectedPlace place : journey.getPlace()) {
             Item item = Item.builder()
-                    .id(place.getPlace().getId())
+                    .placeId(place.getPlace().getId())
                     .category(place.getPlace().getCategory())
                     .thumbnail(place.getPlace().getThumbnail())
                     .title(place.getPlace().getTitle())
@@ -32,7 +32,7 @@ public record JourneyResponse(
 
             selectedPlaceResponses.add(
                     SelectedPlaceResponse.builder()
-                            .id(place.getId())
+                            .selectedId(place.getId())
                             .Order(place.getOrders())
                             .place(item)
                             .build()
@@ -41,7 +41,7 @@ public record JourneyResponse(
 
 
         return JourneyResponse.builder()
-                .id(journey.getId())
+                .journeyId(journey.getId())
                 .date(journey.getDate())
                 .places(selectedPlaceResponses)
                 .build();
@@ -50,7 +50,7 @@ public record JourneyResponse(
 
     @Builder
     private record SelectedPlaceResponse(
-            Long id,
+            Long selectedId,
             Integer Order,
             Item place
     ) {
@@ -58,7 +58,7 @@ public record JourneyResponse(
 
     @Builder
     private record Item(
-            Integer id, String title,
+            Integer placeId, String title,
             String thumbnail, String address,
             String addressDetail, Double latitude,
             Double longitude, String category
