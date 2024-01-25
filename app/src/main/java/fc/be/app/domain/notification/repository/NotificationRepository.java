@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface NotificationRepository extends JpaRepository<NotificationEntity, Long> {
 
-    @Query("select n from NotificationEntity n where n.receiverId = :receiverId")
+    @Query("select n from NotificationEntity n where n.receiverId = :receiverId order by n.createdAt desc ")
     List<NotificationEntity> findAllByReceiverId(Long receiverId);
 
     Optional<NotificationEntity> findNotificationByIdAndReceiverId(Long id, Long receiverId);
