@@ -28,6 +28,7 @@ import fc.be.app.global.util.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -86,6 +87,7 @@ public class AuthController {
     }
 
     @PostMapping("/modify/password/check")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<TokenResponse> checkPassword(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody CheckPasswordRequest request) {
         Long targetId = userPrincipal.id();
         String currentPassword = request.password();
@@ -99,6 +101,7 @@ public class AuthController {
     }
 
     @PostMapping("/modify/password")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> changePassword(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody ModifyPasswordRequest request) {
         Long targetId = userPrincipal.id();
         String tokenValue = request.token();
@@ -146,6 +149,7 @@ public class AuthController {
     }
 
     @PostMapping("/join/spaces/{spaceId}/code")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<CodeResponse> joinSpace(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable Long spaceId) {
         Long id = userPrincipal.id();
         MemberResponse memberResponse =
@@ -181,6 +185,7 @@ public class AuthController {
     }
 
     @PostMapping("/join/spaces/{spaceId}")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> joinSpace(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable Long spaceId, @CookieValue(name = "join_space_token") String joinSpaceToken) {
         JoinSpaceToken authRequest = JoinSpaceToken.unauthenticated(joinSpaceToken, null, spaceId);
         delegatingTokenManager.authenticate(authRequest);
