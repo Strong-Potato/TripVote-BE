@@ -76,6 +76,8 @@ public class VoteManageService {
                              VoteResultMemberRepository voteResultMemberRepository
                              PlaceRepository placeRepository,
                              ApplicationEventPublisher eventPublisher
+                             VoteResultMemberRepository voteResultMemberRepository,
+                             ApplicationEventPublisher eventPublisher
     ) {
         this.voteRepository = voteRepository;
         this.spaceRepository = spaceRepository;
