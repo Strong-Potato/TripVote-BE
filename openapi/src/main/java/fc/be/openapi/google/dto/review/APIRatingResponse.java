@@ -8,6 +8,10 @@ public record APIRatingResponse(
 ) {
 
     public static APIRatingResponse convertToRatingResponse(GoogleRatingResponse googleRatingResponse) {
+        if(googleRatingResponse == null){
+            return new APIRatingResponse(0.0, 0);
+        }
+
         return new APIRatingResponse(
                 googleRatingResponse.rating(),
                 googleRatingResponse.reviews().size()
