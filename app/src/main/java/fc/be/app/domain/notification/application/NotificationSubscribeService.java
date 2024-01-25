@@ -53,7 +53,7 @@ public class NotificationSubscribeService {
         Space space = spaceRepository.findById(request.topicId())
                 .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
 
-        if (space.isBelong(member)) {
+        if (!space.isBelong(member)) {
             throw new SpaceException(NOT_JOINED_MEMBER);
         }
 
