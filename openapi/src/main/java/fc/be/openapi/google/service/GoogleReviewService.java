@@ -33,7 +33,11 @@ public class GoogleReviewService implements ReviewAPIService {
 
     @Override
     public APIRatingResponse bringRatingCount(String textQuery, Integer contentTypeId) {
-        String placeId = bringPlaceId(textQuery).places().getFirst().id();
+        var searchPlace = bringPlaceId(textQuery);
+        if(searchPlace.places().isEmpty()){
+            return new APIRatingResponse(0.0, 0);
+        }
+        String placeId = searchPlace.places().getFirst().id();
         var response = searchRating(placeId);
         return APIRatingResponse.convertToRatingResponse(response);
     }
