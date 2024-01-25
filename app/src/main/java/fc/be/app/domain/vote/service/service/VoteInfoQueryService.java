@@ -121,7 +121,7 @@ public class VoteInfoQueryService {
         return new VoteDetailResponse(
                 vote.getId(),
                 vote.getTitle(),
-                vote.getStatus(),
+                vote.getStatus().getDescription(),
                 MemberProfile.of(vote.getOwner()),
                 vote.getCandidates()
                         .stream()
@@ -135,6 +135,7 @@ public class VoteInfoQueryService {
                 .orElseThrow(() -> new VoteException(VOTE_NOT_FOUND));
     }
 
+    @Transactional
     public VoteResultResponse findResultByVoteId(Long voteId, Long memberId) {
         Vote vote = getByVoteId(voteId);
 
@@ -150,7 +151,7 @@ public class VoteInfoQueryService {
         return new VoteResultResponse(
                 vote.getId(),
                 vote.getTitle(),
-                vote.getStatus(),
+                vote.getStatus().getDescription(),
                 MemberProfile.of(vote.getOwner()),
                 vote.getCandidates()
                         .stream()

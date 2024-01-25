@@ -157,7 +157,7 @@ public class Space {
     }
 
     public boolean isClosed(LocalDate localDate) {
-        return this.endDate.isBefore(localDate);
+        return this.endDate != null && this.endDate.isBefore(localDate);
     }
 
 }

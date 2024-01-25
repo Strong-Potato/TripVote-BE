@@ -5,6 +5,7 @@ import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.place.Place;
 import fc.be.app.domain.place.repository.PlaceRepository;
+import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.space.repository.SpaceRepository;
@@ -13,6 +14,7 @@ import fc.be.app.domain.vote.controller.dto.request.VoteUpdateApiRequest;
 import fc.be.app.domain.vote.controller.dto.response.VoteUpdateApiResponse;
 import fc.be.app.domain.vote.entity.Candidate;
 import fc.be.app.domain.vote.entity.Vote;
+import fc.be.app.domain.vote.entity.VoteResultMember;
 import fc.be.app.domain.vote.exception.VoteErrorCode;
 import fc.be.app.domain.vote.exception.VoteException;
 import fc.be.app.domain.vote.repository.CandidateRepository;
@@ -46,6 +48,7 @@ public class VoteManageService {
     private final VoteRepository voteRepository;
     private final SpaceRepository spaceRepository;
     private final MemberRepository memberRepository;
+    private final PlaceService placeService;
     private final PlaceRepository placeRepository;
     private final CandidateRepository candidateRepository;
     private final VotedMemberRepository votedMemberRepository;
@@ -54,7 +57,7 @@ public class VoteManageService {
 
     public VoteManageService(VoteRepository voteRepository,
                              SpaceRepository spaceRepository,
-                             MemberRepository memberRepository,
+                             MemberRepository memberRepository, PlaceService placeService,
                              PlaceRepository placeRepository,
                              CandidateRepository candidateRepository,
                              VotedMemberRepository votedMemberRepository,
@@ -63,6 +66,7 @@ public class VoteManageService {
         this.voteRepository = voteRepository;
         this.spaceRepository = spaceRepository;
         this.memberRepository = memberRepository;
+        this.placeService = placeService;
         this.placeRepository = placeRepository;
         this.candidateRepository = candidateRepository;
         this.votedMemberRepository = votedMemberRepository;
@@ -112,7 +116,7 @@ public class VoteManageService {
         }
 
         List<Integer> placeIds = extractPlaceIdsFromRequest(request);
-
+        // TODO: Can't find unsaved place from repository, must be found from placeService
         List<Place> places = placeRepository.findAllById(placeIds);
 
         for (Place place : places) {
@@ -124,7 +128,7 @@ public class VoteManageService {
         return new VoteDetailResponse(
                 vote.getId(),
                 vote.getTitle(),
-                vote.getStatus(),
+                vote.getStatus().getDescription(),
                 MemberProfile.of(vote.getOwner()),
                 vote.getCandidates().stream()
                         .map(candidate -> CandidateInfo.of(request.memberId(), candidate))
@@ -208,8 +212,8 @@ public class VoteManageService {
     }
 
     public void changeToResultMode(Long spaceId, Long voteId, Long memberId) {
-        voteResultMemberRepository
-                .saveIfNotExists(memberId, voteId, spaceId);
+        voteResultMemberRepository.findByMemberIdAndVoteId(memberId, voteId)
+                .orElseGet(() -> voteResultMemberRepository.save(VoteResultMember.of(memberId, voteId, spaceId)));
     }
 
     public void resetResultMode(Long voteId, Long memberId) {
