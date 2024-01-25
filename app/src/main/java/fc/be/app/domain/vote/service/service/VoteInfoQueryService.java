@@ -16,6 +16,7 @@ import fc.be.app.domain.vote.service.dto.response.VoteResultResponse;
 import fc.be.app.domain.vote.service.dto.response.VotesResponse;
 import fc.be.app.domain.vote.service.dto.response.vo.CandidateInfo;
 import fc.be.app.domain.vote.service.dto.response.vo.MemberProfile;
+import fc.be.app.domain.vote.service.dto.response.vo.SpaceInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,12 +76,13 @@ public class VoteInfoQueryService {
                 .map(vote -> new VotesResponseElement(
                         vote.getId(),
                         vote.getTitle(),
-                        vote.getStatus(),
+                        vote.getStatus().getDescription(),
                         MemberProfile.of(vote.getOwner()),
                         vote.getVotedMembers()
                                 .stream()
                                 .map(votedMember -> MemberProfile.of(votedMember.getMember()))
-                                .toList()))
+                                .toList(),
+                        SpaceInfo.of(vote.getSpace())))
                 .toList(),
                 new ViewResultVoteIds(resultIds));
     }
@@ -94,12 +96,13 @@ public class VoteInfoQueryService {
                 .map(vote -> new VotesResponseElement(
                         vote.getId(),
                         vote.getTitle(),
-                        vote.getStatus(),
+                        vote.getStatus().getDescription(),
                         MemberProfile.of(vote.getOwner()),
                         vote.getVotedMembers()
                                 .stream()
                                 .map(votedMember -> MemberProfile.of(votedMember.getMember()))
-                                .toList()))
+                                .toList(),
+                        SpaceInfo.of(vote.getSpace())))
                 .toList(),
                 ViewResultVoteIds.emptyIds()
         );
