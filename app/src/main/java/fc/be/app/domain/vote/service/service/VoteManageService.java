@@ -9,6 +9,8 @@ import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.VoteStatus;
+import fc.be.app.domain.vote.controller.dto.request.VoteUpdateApiRequest;
+import fc.be.app.domain.vote.controller.dto.response.VoteUpdateApiResponse;
 import fc.be.app.domain.vote.entity.Candidate;
 import fc.be.app.domain.vote.entity.Vote;
 import fc.be.app.domain.vote.exception.VoteErrorCode;
@@ -213,5 +215,19 @@ public class VoteManageService {
     public void resetResultMode(Long voteId, Long memberId) {
         voteResultMemberRepository
                 .deleteByMemberIdAndVoteId(memberId, voteId);
+    }
+
+    public VoteUpdateApiResponse updateVoteTitle(Long voteId, Long memberId, VoteUpdateApiRequest request) {
+        var vote = voteRepository.findById(voteId)
+                .orElseThrow(() -> new VoteException(VoteErrorCode.VOTE_NOT_FOUND));
+
+        final Member requestMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
+        Space space = vote.getSpace();
+        validateSpace(space, requestMember);
+        vote.updateTitle(request.title());
+
+        return VoteUpdateApiResponse.of(vote);
     }
 }
