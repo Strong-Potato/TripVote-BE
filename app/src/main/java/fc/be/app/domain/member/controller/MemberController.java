@@ -27,6 +27,7 @@ import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +44,7 @@ public class MemberController {
     private final WishService wishService;
 
     @GetMapping("/my-info")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<MyInfoResponse> myInfo(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         Long id = userPrincipal.id();
         MemberResponse memberResponse = memberQuery.findById(id)
@@ -51,6 +53,7 @@ public class MemberController {
     }
 
     @GetMapping("/my-spaces/outdated")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<MySpacesResponse> mySpacesOutdated(@AuthenticationPrincipal UserPrincipal userPrincipal, Pageable pageable) {
         Long id = userPrincipal.id();
         SpacesResponse spacesResponse = spaceService.findByEndDateAndMember(LocalDate.now(), id, SpaceType.PAST, pageable);
@@ -58,6 +61,7 @@ public class MemberController {
     }
 
     @GetMapping("/my-spaces/upcoming")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<MySpacesResponse> mySpacesUpcoming(@AuthenticationPrincipal UserPrincipal userPrincipal, Pageable pageable) {
         Long id = userPrincipal.id();
         SpacesResponse mySpacesResponse = spaceService.findByEndDateAndMember(LocalDate.now(), id, SpaceType.UPCOMING, pageable);
@@ -65,6 +69,7 @@ public class MemberController {
     }
 
     @GetMapping("/my-reviews")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<MyReviewsResponse> myReviews(@AuthenticationPrincipal UserPrincipal userPrincipal, Pageable pageable) {
         Long id = userPrincipal.id();
         ReviewsResponse reviewsResponse = reviewService.getMemberReviews(id, pageable);
@@ -72,6 +77,7 @@ public class MemberController {
     }
 
     @GetMapping("/my-places")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<MyPlacesResponse> myPlaces(@AuthenticationPrincipal UserPrincipal userPrincipal, Pageable pageable) {
         Long id = userPrincipal.id();
         WishGetResponse wishesResponse = wishService.getWishes(id, pageable);
@@ -79,6 +85,7 @@ public class MemberController {
     }
 
     @PutMapping("/my-info")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> changeProfileAndNickname(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody UpdateMemberRequest request) {
         Long id = userPrincipal.id();
         String newNickname = request.nickname();
@@ -88,6 +95,7 @@ public class MemberController {
     }
 
     @PostMapping("/sign-out")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> signOut(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody(required = false) DeleteMemberRequest request, @CookieValue(name = "access-token", required = false) String accessToken) {
         if (userPrincipal.authProvider() != AuthProvider.NONE) {
             ProviderMemberDeactivateRequest deactivateRequest = new ProviderMemberDeactivateRequest(userPrincipal.id(), accessToken);

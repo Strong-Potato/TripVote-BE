@@ -14,6 +14,7 @@ import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.config.security.provider.LoginAuthenticationProvider;
 import fc.be.app.global.config.security.service.CustomOAuth2UserService;
 import fc.be.app.global.config.security.service.CustomOidcUserService;
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
@@ -37,6 +39,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -92,7 +95,7 @@ public class SecurityConfig {
         // 인가 필터
         httpSecurity
                 .authorizeHttpRequests(authRequest -> authRequest
-                        .requestMatchers("/members/**").hasRole("USER")
+                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .anyRequest().permitAll());
 
         // 예외 처리 필터

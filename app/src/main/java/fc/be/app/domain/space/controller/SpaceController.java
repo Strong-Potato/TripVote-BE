@@ -15,6 +15,7 @@ import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,16 +31,19 @@ public class SpaceController {
     private final SpaceTokenService spaceTokenService;
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<SpaceResponse> createSpace(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return ApiResponse.created(spaceService.createSpace(userPrincipal.id()));
     }
 
     @GetMapping("/{spaceId}")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<SpaceResponse> getSpaceById(@PathVariable Long spaceId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         return ApiResponse.ok(spaceService.getSpaceById(spaceId, userPrincipal.id()));
     }
 
     @PutMapping("/{spaceId}/title")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<SpaceResponse> updateSpaceByTitle(
             @PathVariable Long spaceId,
             @AuthenticationPrincipal UserPrincipal userPrincipal,
@@ -50,6 +54,7 @@ public class SpaceController {
     }
 
     @PutMapping("/{spaceId}/dates")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<SpaceResponse> updateSpaceByDates(
             @PathVariable Long spaceId,
             @AuthenticationPrincipal UserPrincipal userPrincipal,
@@ -60,6 +65,7 @@ public class SpaceController {
     }
 
     @PutMapping("/{spaceId}/exit")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> exitSpace(
             @PathVariable Long spaceId,
             @AuthenticationPrincipal UserPrincipal userPrincipal
@@ -69,11 +75,13 @@ public class SpaceController {
     }
 
     @GetMapping("/{spaceId}/journey")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<JourneysResponse> getJourneyForSpace(@PathVariable Long spaceId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         return ApiResponse.ok(spaceService.getJourneyForSpace(spaceId, userPrincipal.id()));
     }
 
     @PostMapping("/{spaceId}/places")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<JourneyResponse> selectedPlacesForSpace(
             @PathVariable Long spaceId,
             @AuthenticationPrincipal UserPrincipal userPrincipal,
@@ -83,6 +91,7 @@ public class SpaceController {
     }
 
     @PutMapping("/{spaceId}/places")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<JourneysResponse> updatePlacesForSpace(
             @PathVariable Long spaceId,
             @AuthenticationPrincipal UserPrincipal userPrincipal,
@@ -92,6 +101,7 @@ public class SpaceController {
     }
 
     @GetMapping("/recent")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<SpaceResponse> recentSpace(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return ApiResponse.ok(spaceTokenService.getRecentSpace(userPrincipal.id()));
     }

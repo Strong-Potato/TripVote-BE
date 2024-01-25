@@ -7,6 +7,7 @@ import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ public class WishController {
     private final WishService wishService;
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<WishAddResponse> addWish(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody WishAddRequest wishAddRequest
@@ -28,6 +30,7 @@ public class WishController {
     }
 
     @GetMapping("/{placeId}")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Boolean> isWished(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Integer placeId
@@ -38,6 +41,7 @@ public class WishController {
     }
 
     @DeleteMapping("{placeId}")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Boolean> deleteWish(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Integer placeId

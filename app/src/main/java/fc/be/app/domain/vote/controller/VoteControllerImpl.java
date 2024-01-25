@@ -17,6 +17,7 @@ import fc.be.app.domain.vote.service.service.VotingService;
 import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,7 @@ public class VoteControllerImpl implements VoteController {
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<String> createNewVote(
             @Valid @RequestBody VoteCreateApiRequest request,
             @AuthenticationPrincipal UserPrincipal userPrincipal
@@ -54,6 +56,7 @@ public class VoteControllerImpl implements VoteController {
     }
 
     @PostMapping("/{voteId}/candidates")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<VoteDetailResponse> addCandidate(
             @PathVariable Long voteId,
             @Valid @RequestBody CandidateAddApiRequest request,
@@ -67,6 +70,7 @@ public class VoteControllerImpl implements VoteController {
     }
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<VotesResponse> findVotesInSpace(
             @ModelAttribute SearchCondition searchCondition,
             @AuthenticationPrincipal UserPrincipal userPrincipal
@@ -75,6 +79,7 @@ public class VoteControllerImpl implements VoteController {
     }
 
     @GetMapping("/{voteId}")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<VoteDetailResponse> findVote(
             @PathVariable Long voteId,
             @AuthenticationPrincipal UserPrincipal userPrincipal
@@ -83,6 +88,7 @@ public class VoteControllerImpl implements VoteController {
     }
 
     @GetMapping("/{voteId}/result")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<VoteResultResponse> findVoteResult(
             @PathVariable Long voteId,
             @AuthenticationPrincipal UserPrincipal userPrincipal
@@ -91,6 +97,7 @@ public class VoteControllerImpl implements VoteController {
     }
 
     @PutMapping("/{voteId}/voteStatus")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> changeVoteStatus(
             @PathVariable Long voteId,
             @AuthenticationPrincipal UserPrincipal userPrincipal
@@ -100,6 +107,7 @@ public class VoteControllerImpl implements VoteController {
     }
 
     @DeleteMapping("/{voteId}/voteStatus")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> deleteVote(
             @PathVariable Long voteId,
             @AuthenticationPrincipal UserPrincipal userPrincipal
@@ -114,6 +122,7 @@ public class VoteControllerImpl implements VoteController {
     }
 
     @DeleteMapping("/{voteId}/candidates")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> deleteCandidates(
             @PathVariable Long voteId,
             @Valid CandidateDeleteApiRequest request,
@@ -124,6 +133,7 @@ public class VoteControllerImpl implements VoteController {
     }
 
     @PutMapping("/{voteId}/reset")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> resetVote(
             @PathVariable Long voteId,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -132,6 +142,7 @@ public class VoteControllerImpl implements VoteController {
     }
 
     @PostMapping("/voting")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> voting(
             @RequestBody @Valid VotingApiRequest request,
             @AuthenticationPrincipal UserPrincipal userPrincipal
