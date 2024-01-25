@@ -114,7 +114,7 @@ public class Space {
     }
 
     public boolean isReadOnly(LocalDate requestDate) {
-        return requestDate.isAfter(this.endDate);
+        return this.endDate != null && requestDate.isAfter(this.endDate);
     }
 
     public boolean isBelong(Member member) {
