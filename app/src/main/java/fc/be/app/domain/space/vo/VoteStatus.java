@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum VoteStatus {
-    VOTING("투표중"),
-    DONE("투표완료");
+    VOTING("진행 중"),
+    DONE("결정완료");
 
     private final String description;
 }

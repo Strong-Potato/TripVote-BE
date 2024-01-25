@@ -32,7 +32,7 @@ public class VoteRepositoryCustomImpl implements VoteRepositoryCustom {
     private BooleanBuilder booleanBuilderProvider(SearchCondition searchCondition) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         if (searchCondition.getSpaceId() != null) {
-            booleanBuilder.and(vote.id.eq(searchCondition.getSpaceId()));
+            booleanBuilder.and(vote.space.id.eq(searchCondition.getSpaceId()));
         }
 
         if (searchCondition.getVoteStatusOption() != VoteStatusOption.ALL) {

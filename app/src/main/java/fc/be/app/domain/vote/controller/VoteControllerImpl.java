@@ -1,9 +1,7 @@
 package fc.be.app.domain.vote.controller;
 
-import fc.be.app.domain.vote.controller.dto.request.CandidateAddApiRequest;
-import fc.be.app.domain.vote.controller.dto.request.CandidateDeleteApiRequest;
-import fc.be.app.domain.vote.controller.dto.request.VoteCreateApiRequest;
-import fc.be.app.domain.vote.controller.dto.request.VotingApiRequest;
+import fc.be.app.domain.vote.controller.dto.request.*;
+import fc.be.app.domain.vote.controller.dto.response.VoteUpdateApiResponse;
 import fc.be.app.domain.vote.service.dto.request.CandidateAddRequest;
 import fc.be.app.domain.vote.service.dto.request.CandidateDeleteRequest;
 import fc.be.app.domain.vote.service.dto.request.VoteCreateRequest;
@@ -139,4 +137,14 @@ public class VoteControllerImpl implements VoteController {
         votingService.voteOrCancel(new VotingRequest(request.voteId(), userPrincipal.id(), request.candidateId()));
         return ApiResponse.ok();
     }
+
+    @PatchMapping("/{voteId}")
+    public ApiResponse<VoteUpdateApiResponse> updateVoteTitle(
+            @PathVariable Long voteId,
+            @RequestBody @Valid VoteUpdateApiRequest request,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        return ApiResponse.ok(voteManageService.updateVoteTitle(voteId, userPrincipal.id(), request));
+    }
+
 }
