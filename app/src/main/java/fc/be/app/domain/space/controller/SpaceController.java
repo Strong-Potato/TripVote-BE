@@ -1,9 +1,6 @@
 package fc.be.app.domain.space.controller;
 
-import fc.be.app.domain.space.dto.request.DateUpdateRequest;
-import fc.be.app.domain.space.dto.request.SelectedPlaceRequest;
-import fc.be.app.domain.space.dto.request.SelectedPlacesRequest;
-import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
+import fc.be.app.domain.space.dto.request.*;
 import fc.be.app.domain.space.dto.response.CitiesResponse;
 import fc.be.app.domain.space.dto.response.JourneyResponse;
 import fc.be.app.domain.space.dto.response.JourneysResponse;
@@ -99,5 +96,15 @@ public class SpaceController {
     @GetMapping("/city")
     public ApiResponse<CitiesResponse> getCities() {
         return ApiResponse.ok(spaceService.getCities());
+    }
+
+    @DeleteMapping("/{spaceId}/places")
+    public ApiResponse<Void> deleteSelectedPlace(
+            @PathVariable Long spaceId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestBody DeletedPlacesRequest request
+    ) {
+        spaceService.deleteBySelectedPlace(spaceId, userPrincipal.id(), request, LocalDate.now());
+        return ApiResponse.ok();
     }
 }

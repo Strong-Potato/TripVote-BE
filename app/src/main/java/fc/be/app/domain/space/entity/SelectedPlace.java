@@ -46,4 +46,8 @@ public class SelectedPlace {
                 .orders(orders)
                 .build();
     }
+
+    public void setOrder(int order){
+        this.orders = order;
+    }
 }
