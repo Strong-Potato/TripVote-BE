@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(spaceInterceptor)
-                .addPathPatterns("/spaces/{spaceId}");
+                .addPathPatterns("/spaces/{spaceId}", "/spaces/recent");
     }
 
 }
