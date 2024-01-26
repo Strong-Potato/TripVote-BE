@@ -3,9 +3,7 @@ package fc.be.app.domain.notification.controller;
 import fc.be.app.domain.notification.application.NotificationCommandService;
 import fc.be.app.domain.notification.application.NotificationQueryService;
 import fc.be.app.domain.notification.application.NotificationSubscribeService;
-import fc.be.app.domain.notification.application.dto.request.SubscribeRequest;
 import fc.be.app.domain.notification.application.dto.response.NotificationsResponse;
-import fc.be.app.domain.notification.controller.dto.SubScribeApiRequest;
 import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.http.ApiResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,14 +36,17 @@ public class NotificationController {
 
     @PostMapping("/subscribe")
     public ApiResponse<Void> subscribe(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody SubScribeApiRequest subScribeApiRequest
+            @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        notificationSubscribeService.subscribe(
-                new SubscribeRequest(
-                        subScribeApiRequest.isGlobal(),
-                        subScribeApiRequest.spaceId(),
-                        userPrincipal.id()));
+        notificationSubscribeService.subscribe(userPrincipal.id());
+        return ApiResponse.ok();
+    }
+
+    @PostMapping("/unsubscribe")
+    public ApiResponse<Void> unsubscribe(
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        notificationSubscribeService.unsubscribe(userPrincipal.id());
         return ApiResponse.ok();
     }
 

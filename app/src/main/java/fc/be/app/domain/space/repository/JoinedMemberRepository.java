@@ -36,4 +36,7 @@ public interface JoinedMemberRepository extends JpaRepository<JoinedMember, Long
 
     @Query("select jm.member.id FROM JoinedMember jm WHERE jm.space.id = :spaceId")
     List<Long> findMemberIdsBySpaceId(Long spaceId);
+
+    @Query("select jm.space.id FROM JoinedMember jm WHERE jm.member.id = :memberId")
+    List<Long> findSpaceIdsByMemberId(Long memberId);
 }

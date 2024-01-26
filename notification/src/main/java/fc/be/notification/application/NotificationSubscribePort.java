@@ -1,6 +1,9 @@
 package fc.be.notification.application;
 
+import java.util.List;
+
 public interface NotificationSubscribePort {
 
-    void subscribeToTopic(Long topicId, String userToken);
+    void subscribeToTopics(List<Long> topicIds, String userToken);
+    void unsubscribeToTopic(List<Long> topicIds, String userToken);
 }
