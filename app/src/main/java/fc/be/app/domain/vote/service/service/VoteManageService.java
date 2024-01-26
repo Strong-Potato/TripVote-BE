@@ -31,8 +31,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static fc.be.app.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
 import static fc.be.app.domain.space.exception.SpaceErrorCode.*;
@@ -115,9 +118,13 @@ public class VoteManageService {
             throw new VoteException(CANDIDATE_IS_MAX);
         }
 
-        List<Integer> placeIds = extractPlaceIdsFromRequest(request);
-        // TODO: Can't find unsaved place from repository, must be found from placeService
-        List<Place> places = placeRepository.findAllById(placeIds);
+        Map<Integer, Integer> placesMap = extractPlaceMapFromRequest(request);
+
+        List<Place> places = new ArrayList<>();
+
+        for (var placeMap : placesMap.entrySet()) {
+            places.add(placeService.saveOrUpdatePlace(placeMap.getKey(), placeMap.getValue()));
+        }
 
         for (Place place : places) {
             Optional<String> matchedTagline = findMatchTagline(request, place);
@@ -135,11 +142,10 @@ public class VoteManageService {
                         .toList());
     }
 
-    private List<Integer> extractPlaceIdsFromRequest(CandidateAddRequest request) {
+    private Map<Integer, Integer> extractPlaceMapFromRequest(CandidateAddRequest request) {
         return request.candidateAddInfo()
                 .stream()
-                .map(CandidateAddInfo::placeId)
-                .toList();
+                .collect(Collectors.toMap(CandidateAddInfo::placeId, CandidateAddInfo::placeTypeId));
     }
 
     private Optional<String> findMatchTagline(CandidateAddRequest request, Place place) {
