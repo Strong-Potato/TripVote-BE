@@ -44,6 +44,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static fc.be.app.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
+import static fc.be.app.domain.notification.entity.NotificationType.*;
 import static fc.be.app.domain.space.exception.SpaceErrorCode.*;
 import static fc.be.app.domain.vote.exception.VoteErrorCode.CANDIDATE_IS_MAX;
 import static fc.be.app.domain.vote.service.dto.request.CandidateAddRequest.CandidateAddInfo;
@@ -86,15 +87,8 @@ public class VoteManageService {
         Vote savedVote = voteRepository
                 .save(Vote.of(space, request.title(), requestMember));
 
-        // NOTE : EventPublisher을 통한 알림 기능 사용 예시
-        eventPublisher.publishEvent(new VoteEvent(space.getId(),
-                new MemberEventInfo(requestMember.getId(), requestMember.getNickname(), requestMember.getProfile()),
-                new SpaceEventInfo(space.getId(), space.getTitle()),
-                new VoteEventInfo(savedVote.getId(), savedVote.getTitle()),
-                NotificationType.VOTE_CREATED,
-                LocalDateTime.now())
-        );
 
+        publishVoteEvent(space, requestMember, savedVote, VOTE_CREATED);
         return savedVote.getId();
     }
 
@@ -136,7 +130,8 @@ public class VoteManageService {
             vote.addCandidate(Candidate.createNewVote(place, requestMember, vote, matchedTagline.orElse("")));
         }
 
-        // TODO : Sending a new Candidate Add event to all members of the space
+        publishVoteEvent(space, requestMember, vote, CANDIDATE_ADDED);
+
         return new VoteDetailResponse(
                 vote.getId(),
                 vote.getTitle(),
@@ -248,5 +243,15 @@ public class VoteManageService {
         vote.updateTitle(request.title());
 
         return VoteUpdateApiResponse.of(vote);
+    }
+
+    private void publishVoteEvent(Space space, Member requestMember, Vote vote, NotificationType type) {
+        eventPublisher.publishEvent(new VoteEvent(space.getId(),
+                new MemberEventInfo(requestMember.getId(), requestMember.getNickname(), requestMember.getProfile()),
+                new SpaceEventInfo(space.getId(), space.getTitle()),
+                new VoteEventInfo(vote.getId(), vote.getTitle()),
+                type,
+                LocalDateTime.now())
+        );
     }
 }
