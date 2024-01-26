@@ -21,10 +21,10 @@ public class FcmSubscribeService implements NotificationSubscribePort {
     }
 
     @Override
-    public void subscribeToTopics(List<Long> topicIds, String userToken) {
+    public void subscribeToTopics(List<String> topicIds, String userToken) {
         try {
-            for (Long topicId : topicIds) {
-                fcm.subscribeToTopicAsync(Collections.singletonList(userToken), topicId.toString());
+            for (String topicId : topicIds) {
+                fcm.subscribeToTopicAsync(Collections.singletonList(userToken), topicId);
             }
             log.debug("Subscribed to topic: " + topicIds);
         } catch (Exception e) {
@@ -33,10 +33,10 @@ public class FcmSubscribeService implements NotificationSubscribePort {
     }
 
     @Override
-    public void unsubscribeToTopic(List<Long> topicIds, String userToken) {
+    public void unsubscribeToTopic(List<String> topicIds, String userToken) {
         try {
-            for (Long topicId : topicIds) {
-                fcm.unsubscribeFromTopicAsync(Collections.singletonList(userToken), topicId.toString());
+            for (String topicId : topicIds) {
+                fcm.unsubscribeFromTopicAsync(Collections.singletonList(userToken), topicId);
             }
             log.debug("Unsubscribed to topic: " + topicIds);
         } catch (Exception e) {

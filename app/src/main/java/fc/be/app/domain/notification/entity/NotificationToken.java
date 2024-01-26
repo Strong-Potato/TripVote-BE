@@ -1,11 +1,14 @@
 package fc.be.app.domain.notification.entity;
 
+import fc.be.app.global.util.ListImagesConverter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -22,6 +25,10 @@ public class NotificationToken {
 
     @Column(nullable = false, unique = true)
     private Long memberId;
+
+    @Convert(converter = ListImagesConverter.class)
+    @Comment("해당 토큰이 구독 중인 토픽")
+    private List<String> subscribedTopicIds;
 
     @Builder
     private NotificationToken(Long id, final String token, final Long memberId) {
