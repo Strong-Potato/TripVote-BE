@@ -174,6 +174,8 @@ public class VoteManageService {
 
         if (vote.isStillVoting()) {
             vote.changeStatus(VoteStatus.DONE);
+
+            publishVoteEvent(space, requestMember, vote, VOTE_DONE);
         } else {
             vote.changeStatus(VoteStatus.VOTING);
         }
@@ -191,6 +193,8 @@ public class VoteManageService {
         validateSpace(space, requestMember);
 
         voteRepository.delete(vote);
+
+        publishVoteEvent(space, requestMember, vote, VOTE_DELETED);
     }
 
     public void deleteCandidates(CandidateDeleteRequest request) {
