@@ -6,6 +6,7 @@ import fc.be.app.domain.notification.application.NotificationSubscribeService;
 import fc.be.app.domain.notification.application.dto.response.NotificationsResponse;
 import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.http.ApiResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class NotificationController {
     }
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<NotificationsResponse> getAllMemberNotifications(
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
@@ -35,6 +37,7 @@ public class NotificationController {
     }
 
     @PostMapping("/subscribe")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> subscribe(
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
@@ -43,6 +46,7 @@ public class NotificationController {
     }
 
     @PostMapping("/unsubscribe")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> unsubscribe(
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
@@ -51,6 +55,7 @@ public class NotificationController {
     }
 
     @PatchMapping("/{notification-id}/read")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> read(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable("notification-id") final Long notificationId
