@@ -1,6 +1,5 @@
 package fc.be.app.domain.vote.service.dto.response;
 
-import fc.be.app.domain.space.vo.VoteStatus;
 import fc.be.app.domain.vote.entity.Candidate;
 import fc.be.app.domain.vote.service.dto.response.vo.MemberProfile;
 import fc.be.app.domain.vote.service.dto.response.vo.PlaceInfo;
@@ -10,7 +9,7 @@ import java.util.List;
 public record VoteResultResponse(
         Long id,
         String title,
-        VoteStatus voteStatus,
+        String voteStatus,
         MemberProfile createdBy,
         List<CandidateResultResponse> candidatesResponses
 ) {

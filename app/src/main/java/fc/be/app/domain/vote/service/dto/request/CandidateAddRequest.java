@@ -9,6 +9,7 @@ public record CandidateAddRequest(
 ) {
     public record CandidateAddInfo(
             Integer placeId,
+            Integer placeTypeId,
             String tagline
     ) {
 

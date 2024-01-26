@@ -39,7 +39,7 @@ public class Vote {
     @Comment("투표를 만든 사람")
     private Member owner;
 
-    @OneToMany(mappedBy = "vote")
+    @OneToMany(mappedBy = "vote", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @Comment("후보지")
     private List<Candidate> candidates;
 

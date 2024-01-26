@@ -31,6 +31,7 @@ public class VoteResultMember {
         this.id = id;
         this.memberId = memberId;
         this.voteId = voteId;
+        this.spaceId = spaceId;
     }
 
     public static VoteResultMember of(Long memberId, Long voteId, Long spaceId) {

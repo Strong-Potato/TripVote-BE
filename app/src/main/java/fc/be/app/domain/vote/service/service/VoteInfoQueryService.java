@@ -6,6 +6,7 @@ import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.space.repository.SpaceRepository;
+import fc.be.app.domain.space.vo.VoteStatus;
 import fc.be.app.domain.vote.entity.Candidate;
 import fc.be.app.domain.vote.entity.Vote;
 import fc.be.app.domain.vote.exception.VoteException;
@@ -88,11 +89,11 @@ public class VoteInfoQueryService {
     }
 
     public VotesResponse findMemberVotes(Long memberId) {
-        List<Vote> votesNotMemberVoted = voteRepository.findMemberVotes(memberId);
+        List<Vote> votesNotMemberVoted = voteRepository.findVotesNotVotedByMember(memberId);
 
         return new VotesResponse(votesNotMemberVoted
                 .stream()
-                .filter(vote -> vote.getSpace().isClosed(LocalDate.now()))
+                .filter(vote -> !vote.getSpace().isClosed(LocalDate.now()) && vote.getStatus()!= VoteStatus.DONE)
                 .map(vote -> new VotesResponseElement(
                         vote.getId(),
                         vote.getTitle(),
@@ -121,7 +122,7 @@ public class VoteInfoQueryService {
         return new VoteDetailResponse(
                 vote.getId(),
                 vote.getTitle(),
-                vote.getStatus(),
+                vote.getStatus().getDescription(),
                 MemberProfile.of(vote.getOwner()),
                 vote.getCandidates()
                         .stream()
@@ -135,6 +136,7 @@ public class VoteInfoQueryService {
                 .orElseThrow(() -> new VoteException(VOTE_NOT_FOUND));
     }
 
+    @Transactional
     public VoteResultResponse findResultByVoteId(Long voteId, Long memberId) {
         Vote vote = getByVoteId(voteId);
 
@@ -150,7 +152,7 @@ public class VoteInfoQueryService {
         return new VoteResultResponse(
                 vote.getId(),
                 vote.getTitle(),
-                vote.getStatus(),
+                vote.getStatus().getDescription(),
                 MemberProfile.of(vote.getOwner()),
                 vote.getCandidates()
                         .stream()
