@@ -88,11 +88,11 @@ public class VoteInfoQueryService {
     }
 
     public VotesResponse findMemberVotes(Long memberId) {
-        List<Vote> votesNotMemberVoted = voteRepository.findMemberVotes(memberId);
+        List<Vote> votesNotMemberVoted = voteRepository.findVotesNotVotedByMember(memberId);
 
         return new VotesResponse(votesNotMemberVoted
                 .stream()
-                .filter(vote -> vote.getSpace().isClosed(LocalDate.now()))
+                .filter(vote -> !vote.getSpace().isClosed(LocalDate.now()))
                 .map(vote -> new VotesResponseElement(
                         vote.getId(),
                         vote.getTitle(),
