@@ -109,10 +109,11 @@ public class SpaceController {
     }
 
     @DeleteMapping("/{spaceId}/places")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> deleteSelectedPlace(
             @PathVariable Long spaceId,
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody DeletedPlacesRequest request
+            @Valid @RequestBody DeletedPlacesRequest request
     ) {
         spaceService.deleteBySelectedPlace(spaceId, userPrincipal.id(), request, LocalDate.now());
         return ApiResponse.ok();
