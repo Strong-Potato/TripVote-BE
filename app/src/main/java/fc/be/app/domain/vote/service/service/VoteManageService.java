@@ -9,7 +9,6 @@ import fc.be.app.domain.notification.domain.event.vo.VoteEventInfo;
 import fc.be.app.domain.notification.domain.event.vote.VoteEvent;
 import fc.be.app.domain.notification.entity.NotificationType;
 import fc.be.app.domain.place.Place;
-import fc.be.app.domain.place.repository.PlaceRepository;
 import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.exception.SpaceException;
@@ -37,8 +36,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -59,31 +58,16 @@ public class VoteManageService {
     private final SpaceRepository spaceRepository;
     private final MemberRepository memberRepository;
     private final PlaceService placeService;
-    private final PlaceRepository placeRepository;
     private final CandidateRepository candidateRepository;
     private final VotedMemberRepository votedMemberRepository;
     private final VoteResultMemberRepository voteResultMemberRepository;
-
     private final ApplicationEventPublisher eventPublisher;
 
-    public VoteManageService(VoteRepository voteRepository,
-                             SpaceRepository spaceRepository,
-                             MemberRepository memberRepository,
-                             PlaceService placeService,
-                             PlaceRepository placeRepository,
-                             CandidateRepository candidateRepository,
-                             VotedMemberRepository votedMemberRepository,
-                             VoteResultMemberRepository voteResultMemberRepository
-                             PlaceRepository placeRepository,
-                             ApplicationEventPublisher eventPublisher
-                             VoteResultMemberRepository voteResultMemberRepository,
-                             ApplicationEventPublisher eventPublisher
-    ) {
+    public VoteManageService(VoteRepository voteRepository, SpaceRepository spaceRepository, MemberRepository memberRepository, PlaceService placeService, CandidateRepository candidateRepository, VotedMemberRepository votedMemberRepository, VoteResultMemberRepository voteResultMemberRepository, ApplicationEventPublisher eventPublisher) {
         this.voteRepository = voteRepository;
         this.spaceRepository = spaceRepository;
         this.memberRepository = memberRepository;
         this.placeService = placeService;
-        this.placeRepository = placeRepository;
         this.candidateRepository = candidateRepository;
         this.votedMemberRepository = votedMemberRepository;
         this.voteResultMemberRepository = voteResultMemberRepository;
