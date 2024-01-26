@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface JoinedMemberRepository extends JpaRepository<JoinedMember, Long> {
@@ -32,4 +33,10 @@ public interface JoinedMemberRepository extends JpaRepository<JoinedMember, Long
     @Modifying
     @Query("UPDATE JoinedMember j SET j.leftSpace = :leftSpace WHERE j.member.id = :memberId")
     int updateAllByMemberId(@Param("memberId") Long memberId, @Param("leftSpace") boolean leftSpace);
+
+    @Query("select jm.member.id FROM JoinedMember jm WHERE jm.space.id = :spaceId")
+    List<Long> findMemberIdsBySpaceId(Long spaceId);
+
+    @Query("select jm.space.id FROM JoinedMember jm WHERE jm.member.id = :memberId")
+    List<Long> findSpaceIdsByMemberId(Long memberId);
 }

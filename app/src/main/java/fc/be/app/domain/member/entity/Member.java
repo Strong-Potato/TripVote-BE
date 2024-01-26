@@ -43,6 +43,9 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
+    @Comment("알림설정 상태")
+    private boolean subscription;
+
     @Builder
     private Member(Long id, String email, String password, String nickname, String profile, AuthProvider provider, String providedId, MemberStatus status) {
         this.id = id;
@@ -62,6 +65,10 @@ public class Member extends BaseTimeEntity {
     public void changeInfo(String newNickname, String newProfile) {
         this.nickname = newNickname;
         this.profile = newProfile;
+    }
+
+    public void setSubscription(boolean subscription) {
+        this.subscription = subscription;
     }
 
     public void deactivate() {

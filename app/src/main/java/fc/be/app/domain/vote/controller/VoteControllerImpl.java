@@ -123,7 +123,7 @@ public class VoteControllerImpl implements VoteController {
     @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> deleteCandidates(
             @PathVariable Long voteId,
-            @Valid CandidateDeleteApiRequest request,
+            @Valid @RequestBody CandidateDeleteApiRequest request,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
         voteManageService.deleteCandidates(new CandidateDeleteRequest(voteId, userPrincipal.id(), request.candidateIds()));

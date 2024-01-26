@@ -58,7 +58,7 @@ public class VotingService {
             throw new SpaceException(NOT_JOINED_MEMBER);
         }
 
-        if (!space.isReadOnly(LocalDate.now())) {
+        if (space.isReadOnly(LocalDate.now())) {
             throw new SpaceException(SPACE_IS_READ_ONLY);
         }
 

@@ -3,8 +3,12 @@ package fc.be.app.domain.vote.service.service;
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
+import fc.be.app.domain.notification.domain.event.vo.MemberEventInfo;
+import fc.be.app.domain.notification.domain.event.vo.SpaceEventInfo;
+import fc.be.app.domain.notification.domain.event.vo.VoteEventInfo;
+import fc.be.app.domain.notification.domain.event.vote.VoteEvent;
+import fc.be.app.domain.notification.entity.NotificationType;
 import fc.be.app.domain.place.Place;
-import fc.be.app.domain.place.repository.PlaceRepository;
 import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.exception.SpaceException;
@@ -27,10 +31,12 @@ import fc.be.app.domain.vote.service.dto.request.VoteCreateRequest;
 import fc.be.app.domain.vote.service.dto.response.VoteDetailResponse;
 import fc.be.app.domain.vote.service.dto.response.vo.CandidateInfo;
 import fc.be.app.domain.vote.service.dto.response.vo.MemberProfile;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +44,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static fc.be.app.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
+import static fc.be.app.domain.notification.entity.NotificationType.*;
 import static fc.be.app.domain.space.exception.SpaceErrorCode.*;
 import static fc.be.app.domain.vote.exception.VoteErrorCode.CANDIDATE_IS_MAX;
 import static fc.be.app.domain.vote.service.dto.request.CandidateAddRequest.CandidateAddInfo;
@@ -52,32 +59,23 @@ public class VoteManageService {
     private final SpaceRepository spaceRepository;
     private final MemberRepository memberRepository;
     private final PlaceService placeService;
-    private final PlaceRepository placeRepository;
     private final CandidateRepository candidateRepository;
     private final VotedMemberRepository votedMemberRepository;
     private final VoteResultMemberRepository voteResultMemberRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-
-    public VoteManageService(VoteRepository voteRepository,
-                             SpaceRepository spaceRepository,
-                             MemberRepository memberRepository, PlaceService placeService,
-                             PlaceRepository placeRepository,
-                             CandidateRepository candidateRepository,
-                             VotedMemberRepository votedMemberRepository,
-                             VoteResultMemberRepository voteResultMemberRepository
-    ) {
+    public VoteManageService(VoteRepository voteRepository, SpaceRepository spaceRepository, MemberRepository memberRepository, PlaceService placeService, CandidateRepository candidateRepository, VotedMemberRepository votedMemberRepository, VoteResultMemberRepository voteResultMemberRepository, ApplicationEventPublisher eventPublisher) {
         this.voteRepository = voteRepository;
         this.spaceRepository = spaceRepository;
         this.memberRepository = memberRepository;
         this.placeService = placeService;
-        this.placeRepository = placeRepository;
         this.candidateRepository = candidateRepository;
         this.votedMemberRepository = votedMemberRepository;
         this.voteResultMemberRepository = voteResultMemberRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     public Long createVote(VoteCreateRequest request) {
-
         final Member requestMember = memberRepository.findById(request.memberId())
                 .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
@@ -89,7 +87,8 @@ public class VoteManageService {
         Vote savedVote = voteRepository
                 .save(Vote.of(space, request.title(), requestMember));
 
-        // TODO : Sending a new vote creation event to all members of the space
+
+        publishVoteEvent(space, requestMember, savedVote, VOTE_CREATED);
         return savedVote.getId();
     }
 
@@ -131,7 +130,8 @@ public class VoteManageService {
             vote.addCandidate(Candidate.createNewVote(place, requestMember, vote, matchedTagline.orElse("")));
         }
 
-        // TODO : Sending a new Candidate Add event to all members of the space
+        publishVoteEvent(space, requestMember, vote, CANDIDATE_ADDED);
+
         return new VoteDetailResponse(
                 vote.getId(),
                 vote.getTitle(),
@@ -169,6 +169,8 @@ public class VoteManageService {
 
         if (vote.isStillVoting()) {
             vote.changeStatus(VoteStatus.DONE);
+
+            publishVoteEvent(space, requestMember, vote, VOTE_DONE);
         } else {
             vote.changeStatus(VoteStatus.VOTING);
         }
@@ -186,6 +188,8 @@ public class VoteManageService {
         validateSpace(space, requestMember);
 
         voteRepository.delete(vote);
+
+        publishVoteEvent(space, requestMember, vote, VOTE_DELETED);
     }
 
     public void deleteCandidates(CandidateDeleteRequest request) {
@@ -239,5 +243,15 @@ public class VoteManageService {
         vote.updateTitle(request.title());
 
         return VoteUpdateApiResponse.of(vote);
+    }
+
+    private void publishVoteEvent(Space space, Member requestMember, Vote vote, NotificationType type) {
+        eventPublisher.publishEvent(new VoteEvent(space.getId(),
+                new MemberEventInfo(requestMember.getId(), requestMember.getNickname(), requestMember.getProfile()),
+                new SpaceEventInfo(space.getId(), space.getTitle()),
+                new VoteEventInfo(vote.getId(), vote.getTitle()),
+                type,
+                LocalDateTime.now())
+        );
     }
 }
