@@ -2,6 +2,7 @@ package fc.be.app.domain.space.dto.response;
 
 import fc.be.app.domain.space.entity.Journey;
 import fc.be.app.domain.space.entity.SelectedPlace;
+import fc.be.openapi.tourapi.tools.category.CategoryFinder;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -21,7 +22,8 @@ public record JourneyResponse(
         for (SelectedPlace place : journey.getPlace()) {
             Item item = Item.builder()
                     .placeId(place.getPlace().getId())
-                    .category(place.getPlace().getCategory())
+                    .contentTypeId(place.getPlace().getContentTypeId().getId())
+                    .category(CategoryFinder.getCategoryByCode(place.getPlace().getCategory()))
                     .thumbnail(place.getPlace().getThumbnail())
                     .title(place.getPlace().getTitle())
                     .address(place.getPlace().getLocation().getAddress())
@@ -58,12 +60,12 @@ public record JourneyResponse(
 
     @Builder
     private record Item(
-            Integer placeId, String title,
-            String thumbnail, String address,
-            String addressDetail, Double latitude,
-            Double longitude, String category
+            Integer placeId, Integer contentTypeId,
+            String title, String thumbnail,
+            String address, String addressDetail,
+            Double latitude, Double longitude,
+            String category
     ) {
     }
-
 
 }

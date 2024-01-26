@@ -1,6 +1,5 @@
 package fc.be.app.domain.space.service;
 
-import fc.be.app.domain.space.dto.response.SpaceIdResponse;
 import fc.be.app.domain.space.dto.response.SpaceResponse;
 import fc.be.app.domain.space.entity.JoinedMember;
 import fc.be.app.domain.space.entity.Space;
@@ -44,8 +43,8 @@ public class SpaceTokenService {
         if (endDate == null) {
             redisTemplateWithSpace.opsForValue().set(key, spaceToken);
         } else {
-            Duration timeout = Duration.between(LocalDateTime.now(), endDate.atTime(23, 59, 59));
-            redisTemplateWithSpace.opsForValue().set(key, spaceToken, timeout.toMinutes());
+            Duration timeout = Duration.between(LocalDateTime.now(), endDate.atTime(23,59));
+            redisTemplateWithSpace.opsForValue().set(key, spaceToken, timeout);
         }
     }
 

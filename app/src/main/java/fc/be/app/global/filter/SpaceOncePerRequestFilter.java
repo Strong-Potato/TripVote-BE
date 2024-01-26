@@ -19,6 +19,7 @@ public class SpaceOncePerRequestFilter extends OncePerRequestFilter {
 
     public SpaceOncePerRequestFilter() {
         whiteListPatterns.add(Pattern.compile("/spaces/\\d+"));
+        whiteListPatterns.add(Pattern.compile("/spaces/recent"));
     }
 
     @Override
