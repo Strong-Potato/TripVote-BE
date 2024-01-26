@@ -6,10 +6,7 @@ import fc.be.app.domain.member.repository.MemberRepository;
 import fc.be.app.domain.place.Place;
 import fc.be.app.domain.place.exception.PlaceException;
 import fc.be.app.domain.place.repository.PlaceRepository;
-import fc.be.app.domain.space.dto.request.DateUpdateRequest;
-import fc.be.app.domain.space.dto.request.SelectedPlaceRequest;
-import fc.be.app.domain.space.dto.request.SelectedPlacesRequest;
-import fc.be.app.domain.space.dto.request.TitleUpdateRequest;
+import fc.be.app.domain.space.dto.request.*;
 import fc.be.app.domain.space.dto.response.*;
 import fc.be.app.domain.space.entity.JoinedMember;
 import fc.be.app.domain.space.entity.Journey;
@@ -36,6 +33,7 @@ import java.util.List;
 
 import static fc.be.app.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
 import static fc.be.app.domain.place.exception.PlaceErrorCode.PLACE_NOT_LOADED;
+import static fc.be.app.domain.space.dto.request.DeletedPlacesRequest.DeletedPlace;
 import static fc.be.app.domain.space.exception.SpaceErrorCode.*;
 
 @Transactional(readOnly = true)
@@ -56,7 +54,7 @@ public class SpaceService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
-        if (spaceRepository.countSpaceByJoinedMembers(member) >= 15) {
+        if (spaceRepository.countSpaceByJoinedMembers(member, LocalDate.now()) >= 15) {
             throw new SpaceException(SPACE_MAX_COUNT_OVER);
         }
 
@@ -237,6 +235,33 @@ public class SpaceService {
         joinedMember.updateLeftSpace(false);
     }
 
+    @Transactional
+    public void deleteBySelectedPlace(Long spaceId, Long memberId, DeletedPlacesRequest request, LocalDate currentDate) {
+        final Space space = spaceRepository.findById(spaceId)
+                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+
+        final Member requestMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
+        validateSpace(space, requestMember, currentDate);
+
+        List<Long> journeyIds = new ArrayList<>();
+
+        for (DeletedPlace dp : request.places()) {
+            journeyIds.add(dp.journeyId());
+            selectedPlaceRepository.deleteByIdIn(dp.selectedIds());
+        }
+
+        List<Journey> journeys = journeyRepository.findAllByIdIn(journeyIds);
+
+        for (Journey jo : journeys) {
+            int order = 1;
+            for (SelectedPlace sp : jo.getPlace()) {
+                sp.setOrder(order++);
+            }
+        }
+    }
+
     private void addJourneys(DateUpdateRequest updateRequest, Space space, int daysDiff) {
         List<Journey> journeys = space.findByAddedJourneys(updateRequest.endDate(), daysDiff);
         journeyRepository.saveAll(journeys);
@@ -253,13 +278,13 @@ public class SpaceService {
     private List<SelectedPlace> insertSelectedPlace(SelectedPlaceRequest selectedPlaceRequest, Journey journey) {
         int lastOrder = journey.getPlace().size();
 
-        if (lastOrder + selectedPlaceRequest.selectedPlaces().size() > 30) {
+        if (lastOrder + selectedPlaceRequest.placeIds().size() > 30) {
             throw new SpaceException(SELECTED_PLACES_COUNT_OVER);
         }
 
         List<SelectedPlace> selectedPlaces = new ArrayList<>();
 
-        for (Integer id : selectedPlaceRequest.selectedPlaces()) {
+        for (Integer id : selectedPlaceRequest.placeIds()) {
             lastOrder++;
             Place place = placeRepository.findById(id)
                     .orElseThrow(() -> new PlaceException(PLACE_NOT_LOADED));
