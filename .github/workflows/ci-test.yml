@@ -24,7 +24,7 @@ jobs:
           submodules: true
 
       - name: Vault에 있는 설정 파일을 프로젝트로 복사
-        run: cp ./vault/app/* ./app/src/main/resources && cp ./vault/openapi/* ./openapi/src/main/resources
+        run: cp ./vault/app/* ./app/src/main/resources && cp ./vault/openapi/* ./openapi/src/main/resources && cp ./vault/notification/* ./notification/src/main/resources
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
