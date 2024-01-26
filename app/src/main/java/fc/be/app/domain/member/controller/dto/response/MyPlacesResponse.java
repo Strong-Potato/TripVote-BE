@@ -16,6 +16,7 @@ public record MyPlacesResponse(
 ) {
     public record MyPlace(
             Long id,
+            Integer contentTypeId,
             PlaceInfo location,
             String category,
             String title,
@@ -24,6 +25,7 @@ public record MyPlacesResponse(
         public static MyPlace from(WishGetResponse.Item item) {
             return new MyPlace(
                     item.place().id().longValue(),
+                    item.place().contentTypeId(),
                     PlaceInfo.from(item.place().location()),
                     item.place().category(),
                     item.place().title(),
