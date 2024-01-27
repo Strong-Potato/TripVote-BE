@@ -25,7 +25,7 @@ public class DetailCommonMapper implements TourAPIMapper<PlaceDTO, DetailCommon1
                         .phone(item.tel())
                         .areaCode(Integer.parseInt(item.areacode()))
                         .sigunguCode(Integer.parseInt(item.sigungucode()))
-                        .zipCode(Integer.parseInt(item.zipcode()))
+                        .zipCode(item.zipcode())
                         .latitude(Double.parseDouble(item.mapy()))
                         .longitude(Double.parseDouble(item.mapx()))
                         .build())

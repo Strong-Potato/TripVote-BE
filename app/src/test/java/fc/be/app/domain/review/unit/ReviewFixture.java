@@ -38,7 +38,7 @@ public interface ReviewFixture {
                         .phone("")
                         .areaCode(1)
                         .sigunguCode(18)
-                        .zipCode(5838)
+                        .zipCode("5838")
                         .latitude(37.4776672007)
                         .longitude(127.1249768726)
                         .build())

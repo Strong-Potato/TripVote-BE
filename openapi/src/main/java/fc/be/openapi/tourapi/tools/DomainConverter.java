@@ -70,6 +70,10 @@ public class DomainConverter {
         List<PlaceDTO> result = new ArrayList<>();
 
         for (var item : items) {
+            if (checkIdentifierCodesInvalid(item.contentid(), item.contenttypeid(), item.areacode(), item.sigungucode())) {
+                continue;
+            }
+
             int itemContentTypeId = contentTypeId == 0 ? Integer.parseInt(item.contenttypeid()) : contentTypeId;
             var itemClass = convertPlaceToChildDomain(itemContentTypeId);
             result.add(generateAndCastItem(item, areaBasedSyncMapper::generate, itemClass));
@@ -106,6 +110,10 @@ public class DomainConverter {
         List<PlaceDTO> result = new ArrayList<>();
 
         for (var item : items) {
+            if (checkIdentifierCodesInvalid(item.contentid(), item.contenttypeid(), item.areacode(), item.sigungucode())) {
+                continue;
+            }
+
             int itemContentTypeId = contentTypeId == 0 ? Integer.parseInt(item.contenttypeid()) : contentTypeId;
             if (ContentTypeId.contains(itemContentTypeId)) {
                 var itemClass = convertPlaceToChildDomain(itemContentTypeId);
@@ -129,5 +137,14 @@ public class DomainConverter {
         }
     }
 
+    private boolean checkIdentifierCodesInvalid(String... values) {
+        for (var value : values) {
+            if (value == null || value.isBlank()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 }

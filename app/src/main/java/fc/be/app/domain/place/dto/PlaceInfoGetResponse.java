@@ -37,7 +37,7 @@ public record PlaceInfoGetResponse(PlaceDTO place) {
             AccommodationDTO.class, Accommodation.class,
             FacilityDTO.class, Facility.class,
             FestivalDTO.class, Festival.class,
-            LeportsDTO.class, Festival.class,
+            LeportsDTO.class, Leports.class,
             RestaurantDTO.class, Restaurant.class,
             ShopDTO.class, Shop.class,
             SpotDTO.class, Spot.class

@@ -39,7 +39,7 @@ public record MyPlacesResponse(
                 String phone,
                 Integer areaCode,
                 Integer sigunguCode,
-                Integer zipCode,
+                String zipCode,
                 Double latitude,
                 Double longitude
         ) {
