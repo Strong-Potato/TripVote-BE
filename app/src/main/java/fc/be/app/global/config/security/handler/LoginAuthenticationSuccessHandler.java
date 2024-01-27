@@ -56,6 +56,9 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
         CookieUtil.addCookie(response, tokenProperties.getRefreshTokenName(), refreshToken, Integer.parseInt(tokenProperties.getRefreshTokenCookieExpireTime()));
         CookieUtil.addCookieForLocal(response, tokenProperties.getRefreshTokenName(), refreshToken, Integer.parseInt(tokenProperties.getRefreshTokenCookieExpireTime()));
 
+        CookieUtil.addSessionCookie(response, "isLogin", "true");
+        CookieUtil.addSessionCookieForLocal(response, "isLogin", "true");
+
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
