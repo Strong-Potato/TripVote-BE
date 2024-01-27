@@ -17,7 +17,7 @@ public record APIReviewResponse(
                     review.authorAttribution().photoUri(),
                     review.rating(),
                     review.publishTime(),
-                    review.originalText().text(),
+                    (review.originalText() == null) ? "" : review.originalText().text(),
                     true,
                     List.of()
             );
