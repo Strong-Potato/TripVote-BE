@@ -42,6 +42,16 @@ public class CookieUtil {
         response.addCookie(cookie);
     }
 
+    public static void addSessionCookie(HttpServletResponse response, String name, String value) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setPath("/");
+        cookie.setDomain("tripvote.site");
+        cookie.setHttpOnly(false);
+        cookie.setSecure(true);
+        cookie.setAttribute("SameSite", "Lax");
+        response.addCookie(cookie);
+    }
+
     // TODO: Remove before product
     public static void addCookieForLocal(HttpServletResponse response, String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
@@ -60,6 +70,15 @@ public class CookieUtil {
         cookie.setSecure(true);
         cookie.setAttribute("SameSite", "Lax");
         cookie.setMaxAge(maxAge);
+        response.addCookie(cookie);
+    }
+
+    public static void addSessionCookieForLocal(HttpServletResponse response, String name, String value) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setPath("/");
+        cookie.setHttpOnly(false);
+        cookie.setSecure(true);
+        cookie.setAttribute("SameSite", "Lax");
         response.addCookie(cookie);
     }
 

@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface VoteRepository extends JpaRepository<Vote, Long>, VoteRepositoryCustom {
 
-    @Query("select v from Vote v where v.id not in (select vrm.voteId from VoteResultMember vrm where vrm.memberId = :memberId)")
+    @Query("select v from Vote v where v.space in (select jm.space from JoinedMember jm where jm.member.id=:memberId) and v.id not in (select vrm.voteId from VoteResultMember vrm where vrm.memberId = :memberId)")
     List<Vote> findVotesNotVotedByMember(Long memberId);
 }

@@ -79,6 +79,9 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         CookieUtil.addCookie(response, tokenProperties.getRefreshTokenName(), refreshToken, Integer.parseInt(tokenProperties.getRefreshTokenCookieExpireTime()));
         CookieUtil.addCookieForLocal(response, tokenProperties.getRefreshTokenName(), refreshToken, Integer.parseInt(tokenProperties.getRefreshTokenCookieExpireTime()));
 
+        CookieUtil.addSessionCookie(response, "isLogin", "true");
+        CookieUtil.addSessionCookieForLocal(response, "isLogin", "true");
+
         response.sendRedirect("https://tripvote.site");
     }
 }

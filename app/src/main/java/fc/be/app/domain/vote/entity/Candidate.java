@@ -22,7 +22,7 @@ public class Candidate {
     @Comment("후보지 id")
     private Long id;
 
-    @OneToMany(mappedBy = "candidate")
+    @OneToMany(mappedBy = "candidate", cascade = {CascadeType.ALL})
     @Comment("후보에 투표한 회원 id(FK)")
     private List<VotedMember> votedMember;
 

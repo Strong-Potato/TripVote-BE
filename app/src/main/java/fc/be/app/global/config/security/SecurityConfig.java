@@ -54,7 +54,7 @@ public class SecurityConfig {
 
     private static final String LOGIN_PROC_URL = "/login";
     private static final String FRONT_ROOT_URL = "https://tripvote.site";
-    private static final String[] TOKEN_COOKIE_KEY = {"access-token", "refresh-token"};
+    private static final String[] TOKEN_COOKIE_KEY = {"access-token", "refresh-token", "isLogin"};
 
     @Autowired
     public void authenticationManagerConfigure(AuthenticationManagerBuilder auth) {
