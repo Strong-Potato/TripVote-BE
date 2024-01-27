@@ -25,6 +25,7 @@ public class VoteRepositoryCustomImpl implements VoteRepositoryCustom {
         return jpaQueryFactory
                 .select(vote)
                 .from(vote)
+                .leftJoin(vote.votedMembers)
                 .where(booleanBuilderProvider(searchCondition))
                 .fetch();
     }

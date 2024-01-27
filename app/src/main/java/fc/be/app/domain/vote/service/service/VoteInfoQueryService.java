@@ -82,6 +82,7 @@ public class VoteInfoQueryService {
                         vote.getVotedMembers()
                                 .stream()
                                 .map(votedMember -> MemberProfile.of(votedMember.getMember()))
+                                .distinct()
                                 .toList(),
                         SpaceInfo.of(vote.getSpace())))
                 .toList(),
