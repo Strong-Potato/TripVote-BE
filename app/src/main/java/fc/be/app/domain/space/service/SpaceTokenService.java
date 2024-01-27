@@ -53,7 +53,7 @@ public class SpaceTokenService {
 
         SpaceToken spaceToken = redisTemplateWithSpace.opsForValue().get(key);
 
-        if (spaceToken == null || !isValidSpace(spaceToken.spaceId())) {
+        if (spaceToken == null || !isValidSpace(spaceToken.spaceId(), memberId)) {
             JoinedMember joinedMember = findRecentJoinedMember(memberId, LocalDate.now());
             return SpaceResponse.of(joinedMember.getSpace());
         }
@@ -83,8 +83,8 @@ public class SpaceTokenService {
         return activeJoinedMemberBySpace.getContent().get(0);
     }
 
-    private boolean isValidSpace(Long spaceId) {
-        return spaceId != null && spaceRepository.existsById(spaceId);
+    private boolean isValidSpace(Long spaceId, Long memberId) {
+        return spaceId != null && !joinedMemberRepository.findJoinedMemberByMemberAndSpace(memberId, spaceId).isEmpty();
     }
 
     private boolean isSpaceReadOnly(Space space) {

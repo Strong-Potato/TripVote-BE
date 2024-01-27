@@ -5,6 +5,6 @@ public record SpaceEventInfo(
         String spaceTitle,
         String oldTitle,
         String oldDates,
-        String changDate
+        String changeDate
 ) {
 }
