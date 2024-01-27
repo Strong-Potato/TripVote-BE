@@ -246,9 +246,9 @@ public class SpaceService {
                     return JoinedMember.create(space, member);
                 });
 
-        publishSpaceEvent(space, joinedMember.getMember(), NotificationType.MEMBER_INVITED);
-
         joinedMember.updateLeftSpace(false);
+
+        publishSpaceEvent(space, joinedMember.getMember(), NotificationType.MEMBER_INVITED);
     }
 
     @Transactional
