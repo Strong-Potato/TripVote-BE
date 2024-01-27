@@ -3,6 +3,10 @@ package fc.be.app.domain.space.service;
 import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
+import fc.be.app.domain.notification.domain.event.space.SpaceEvent;
+import fc.be.app.domain.notification.domain.event.vo.MemberEventInfo;
+import fc.be.app.domain.notification.domain.event.vo.SpaceEventInfo;
+import fc.be.app.domain.notification.entity.NotificationType;
 import fc.be.app.domain.place.Place;
 import fc.be.app.domain.place.exception.PlaceException;
 import fc.be.app.domain.place.repository.PlaceRepository;
@@ -21,12 +25,14 @@ import fc.be.app.domain.space.vo.KoreanCity;
 import fc.be.app.domain.space.vo.SpaceType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +54,7 @@ public class SpaceService {
     private final JourneyRepository journeyRepository;
     private final PlaceRepository placeRepository;
     private final SelectedPlaceRepository selectedPlaceRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public SpaceResponse createSpace(Long memberId) {
@@ -90,6 +97,8 @@ public class SpaceService {
 
         validateSpace(space, requestMember, currentDate);
 
+        publishSpaceEvent(space, requestMember, NotificationType.SPACE_LOCATION_CHANGED, String.join(",", updateRequest.cities()) + " 여행", "");
+
         space.updateByCity(updateRequest.cities());
         return SpaceResponse.of(space);
     }
@@ -103,6 +112,8 @@ public class SpaceService {
                 .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
 
         validateSpace(space, requestMember, currentDate);
+        String changeDates = updateRequest.startDate().toString() + " - " + updateRequest.endDate().toString();
+        publishSpaceEvent(space, requestMember, NotificationType.SPACE_SCHEDULE_CHANGED, null, changeDates);
 
         if (space.getJourneys().isEmpty()) {
             List<Journey> journeys = Journey.createJourneys(updateRequest.startDate(),
@@ -151,6 +162,8 @@ public class SpaceService {
 
         JoinedMember joinedMember = joinedMemberRepository.findBySpaceAndMemberAndLeftSpace(space,
                 requestMember, false).orElseThrow(() -> new SpaceException(NOT_JOINED_MEMBER));
+
+        publishSpaceEvent(space, requestMember, NotificationType.MEMBER_EXIT);
 
         joinedMember.updateLeftSpace(true);
     }
@@ -232,7 +245,10 @@ public class SpaceService {
                     Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
                     return JoinedMember.create(space, member);
                 });
+
         joinedMember.updateLeftSpace(false);
+
+        publishSpaceEvent(space, joinedMember.getMember(), NotificationType.MEMBER_INVITED);
     }
 
     @Transactional
@@ -310,5 +326,33 @@ public class SpaceService {
         if (!space.isBelong(requestMember)) {
             throw new SpaceException(NOT_JOINED_MEMBER);
         }
+    }
+
+    private void publishSpaceEvent(Space space, Member requestMember, NotificationType type, String changeTitle, String changeDates) {
+        String title = (space.getCityToString() != null) ? space.getCityToString() + " 여행" : null;
+        String oldDates = (space.getStartDate() != null) ? space.getStartDate().toString() + " - " + space.getEndDate().toString() : null;
+
+        if (changeTitle == null) {
+            changeTitle = title;
+        }
+        eventPublisher.publishEvent(
+                new SpaceEvent(
+                        space.getId(),
+                        new MemberEventInfo(requestMember.getId(), requestMember.getNickname(), requestMember.getProfile()),
+                        new SpaceEventInfo(space.getId(), changeTitle, title, oldDates, changeDates),
+                        type,
+                        LocalDateTime.now())
+        );
+    }
+
+    private void publishSpaceEvent(Space space, Member requestMember, NotificationType type) {
+        String title = (space.getCityToString() != null) ? space.getCityToString() + " 여행" : null;
+
+        eventPublisher.publishEvent(new SpaceEvent(space.getId(),
+                new MemberEventInfo(requestMember.getId(), requestMember.getNickname(), requestMember.getProfile()),
+                new SpaceEventInfo(space.getId(), title, null, null, null),
+                type,
+                LocalDateTime.now())
+        );
     }
 }

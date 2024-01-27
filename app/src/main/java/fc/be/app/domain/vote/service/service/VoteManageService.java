@@ -246,9 +246,11 @@ public class VoteManageService {
     }
 
     private void publishVoteEvent(Space space, Member requestMember, Vote vote, NotificationType type) {
+        String title = (space.getCityToString() != null) ? space.getCityToString() + " 여행" : null;
+
         eventPublisher.publishEvent(new VoteEvent(space.getId(),
                 new MemberEventInfo(requestMember.getId(), requestMember.getNickname(), requestMember.getProfile()),
-                new SpaceEventInfo(space.getId(), space.getTitle()),
+                new SpaceEventInfo(space.getId(), title, null, null, null),
                 new VoteEventInfo(vote.getId(), vote.getTitle()),
                 type,
                 LocalDateTime.now())
