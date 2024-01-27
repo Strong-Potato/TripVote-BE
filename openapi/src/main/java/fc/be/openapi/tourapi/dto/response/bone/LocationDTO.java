@@ -15,7 +15,7 @@ public class LocationDTO {
     private String phone;
     private Integer areaCode;
     private Integer sigunguCode;
-    private Integer zipCode;
+    private String zipCode;
     private Double latitude;
     private Double longitude;
 }

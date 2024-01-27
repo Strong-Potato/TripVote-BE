@@ -26,7 +26,7 @@ public class Location {
     private Integer sigunguCode;
 
     @Comment("우편번호")
-    private Integer zipCode;
+    private String zipCode;
 
     @Comment("위도")
     private Double latitude;
@@ -35,7 +35,7 @@ public class Location {
     private Double longitude;
 
     @Builder
-    public Location(String address, String addressDetail, String phone, Integer areaCode, Integer sigunguCode, Integer zipCode, Double latitude, Double longitude) {
+    public Location(String address, String addressDetail, String phone, Integer areaCode, Integer sigunguCode, String zipCode, Double latitude, Double longitude) {
         this.address = address;
         this.addressDetail = addressDetail;
         this.phone = phone;
