@@ -13,8 +13,8 @@ public record APIRatingResponse(
         }
 
         return new APIRatingResponse(
-                googleRatingResponse.rating(),
-                googleRatingResponse.reviews().size()
+                (googleRatingResponse.rating() == null) ? 0.0 : googleRatingResponse.rating(),
+                (googleRatingResponse.reviews() == null)? 0 : googleRatingResponse.reviews().size()
         );
     }
 }
