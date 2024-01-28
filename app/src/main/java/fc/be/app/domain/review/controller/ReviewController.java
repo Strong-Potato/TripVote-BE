@@ -7,6 +7,7 @@ import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -53,7 +54,7 @@ public class ReviewController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        return ApiResponse.ok(reviewService.bringReviewInfo(reviewGetRequest,
-                PageRequest.of(page, size, Sort.by("visitedAt").descending())));
+        Pageable pageRequest = PageRequest.of(page, size, Sort.by("visitedAt").descending());
+        return ApiResponse.ok(reviewService.bringReviewInfo(reviewGetRequest,pageRequest));
     }
 }

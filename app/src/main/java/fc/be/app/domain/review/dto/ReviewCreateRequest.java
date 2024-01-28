@@ -21,10 +21,10 @@ public record ReviewCreateRequest(
         @PastOrPresent LocalDate visitedAt
 ) {
 
-    public Review to(Member member) {
+    public Review to(Member member, Place place) {
         return Review.builder()
                 .member(member)
-                .place(Place.builder().id(placeId).build())
+                .place(place)
                 .visitedAt(visitedAt)
                 .rating(rating)
                 .content(content)
