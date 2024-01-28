@@ -4,6 +4,7 @@ import fc.be.app.domain.member.entity.Member;
 import fc.be.app.domain.member.exception.MemberErrorCode;
 import fc.be.app.domain.member.exception.MemberException;
 import fc.be.app.domain.member.repository.MemberRepository;
+import fc.be.app.domain.place.Place;
 import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.domain.review.dto.*;
 import fc.be.app.domain.review.dto.response.ReviewResponse;
@@ -39,10 +40,10 @@ public class ReviewService {
         Member member = memberRepository.findById(userPrincipal.id()).orElseThrow(() ->
                 new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
-        placeService.saveOrUpdatePlace(placeId, contentTypeId);
+        Place place = placeService.saveOrUpdatePlace(placeId, contentTypeId);
+        Review createdReview = reviewRepository.save(reviewCreateRequest.to(member, place));
 
-        return ReviewCreateResponse.from(reviewRepository.save(
-                reviewCreateRequest.to(member)));
+        return ReviewCreateResponse.from(createdReview);
     }
 
     @Transactional
@@ -76,8 +77,7 @@ public class ReviewService {
         Integer placeId = reviewGetRequest.placeId();
         final int firstPage = 0;
         if (pageable.getPageNumber() == firstPage) {
-            var response = reviewAPIService.bringReview
-                    (reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId());
+            var response = reviewAPIService.bringReview(reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId());
 
 
             List<Review> reviews = ReviewGetResponse.convertToReviews(response);
@@ -88,8 +88,7 @@ public class ReviewService {
     }
 
     public ReviewRatingResponse bringReviewRatingAndCount(ReviewGetRequest reviewGetRequest) {
-        var googleReviewResponse = reviewAPIService.bringRatingCount
-                (reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId());
+        var googleReviewResponse = reviewAPIService.bringRatingCount(reviewGetRequest.placeTitle(), reviewGetRequest.contentTypeId());
 
         double googleRating = googleReviewResponse.rating();
         long googleCount = googleReviewResponse.userRatingCount();
