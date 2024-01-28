@@ -7,7 +7,6 @@ import fc.be.app.domain.space.entity.Space;
 import fc.be.app.domain.space.exception.SpaceException;
 import fc.be.app.domain.space.repository.SpaceRepository;
 import fc.be.app.domain.space.vo.VoteStatus;
-import fc.be.app.domain.vote.entity.Candidate;
 import fc.be.app.domain.vote.entity.Vote;
 import fc.be.app.domain.vote.exception.VoteException;
 import fc.be.app.domain.vote.repository.VoteRepository;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 
 import static fc.be.app.domain.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
@@ -30,7 +28,6 @@ import static fc.be.app.domain.space.exception.SpaceErrorCode.NOT_JOINED_MEMBER;
 import static fc.be.app.domain.space.exception.SpaceErrorCode.SPACE_NOT_FOUND;
 import static fc.be.app.domain.vote.exception.VoteErrorCode.VOTE_NOT_FOUND;
 import static fc.be.app.domain.vote.repository.VoteRepositoryCustom.SearchCondition;
-import static fc.be.app.domain.vote.service.dto.response.VoteResultResponse.CandidateResultResponse;
 import static fc.be.app.domain.vote.service.dto.response.VotesResponse.ViewResultVoteIds;
 import static fc.be.app.domain.vote.service.dto.response.VotesResponse.VotesResponseElement;
 
@@ -94,7 +91,7 @@ public class VoteInfoQueryService {
 
         return new VotesResponse(votesNotMemberVoted
                 .stream()
-                .filter(vote -> !vote.getSpace().isClosed(LocalDate.now()) && vote.getStatus()!= VoteStatus.DONE)
+                .filter(vote -> !vote.getSpace().isClosed(LocalDate.now()) && vote.getStatus() != VoteStatus.DONE)
                 .map(vote -> new VotesResponseElement(
                         vote.getId(),
                         vote.getTitle(),
@@ -149,21 +146,6 @@ public class VoteInfoQueryService {
         }
 
         voteManageService.changeToResultMode(vote.getSpace().getId(), voteId, memberId);
-
-        return new VoteResultResponse(
-                vote.getId(),
-                vote.getTitle(),
-                vote.getStatus().getDescription(),
-                MemberProfile.of(vote.getOwner()),
-                vote.getCandidates()
-                        .stream()
-                        .sorted(sortByVotedCount())
-                        .map(candidate -> CandidateResultResponse.of(memberId, candidate))
-                        .toList()
-        );
-    }
-
-    private static Comparator<Candidate> sortByVotedCount() {
-        return Comparator.comparingInt(Candidate::getVotedCount).reversed();
+        return VoteResultResponse.of(vote, member);
     }
 }
