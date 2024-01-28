@@ -10,6 +10,7 @@ import fc.be.app.domain.notification.entity.NotificationType;
 import fc.be.app.domain.place.Place;
 import fc.be.app.domain.place.exception.PlaceException;
 import fc.be.app.domain.place.repository.PlaceRepository;
+import fc.be.app.domain.place.service.PlaceService;
 import fc.be.app.domain.space.dto.request.*;
 import fc.be.app.domain.space.dto.response.*;
 import fc.be.app.domain.space.entity.JoinedMember;
@@ -55,6 +56,7 @@ public class SpaceService {
     private final PlaceRepository placeRepository;
     private final SelectedPlaceRepository selectedPlaceRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final PlaceService placeService;
 
     @Transactional
     public SpaceResponse createSpace(Long memberId) {
@@ -203,6 +205,26 @@ public class SpaceService {
     }
 
     @Transactional
+    public JourneyResponse addSearchedPlacesBySpace(Long spaceId, Long memberId, SearchPlacesRequest request, LocalDate currentDate) {
+        final Space space = spaceRepository.findById(spaceId)
+                .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
+
+        final Member requestMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+
+        validateSpace(space, requestMember, currentDate);
+
+        Journey journey = journeyRepository.findById(request.journeyId())
+                .orElseThrow(() -> new SpaceException(JOURNEY_NOT_FOUND));
+
+        List<SelectedPlace> selectedPlaces = insertSearchPlace(request, journey);
+
+        journey.addSelectedPlace(selectedPlaces);
+
+        return JourneyResponse.from(journey);
+    }
+
+    @Transactional
     public JourneysResponse updatePlacesForSpace(Long spaceId, Long memberId, SelectedPlacesRequest request, LocalDate currentDate) {
         final Space space = spaceRepository.findById(spaceId)
                 .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
@@ -305,6 +327,25 @@ public class SpaceService {
             lastOrder++;
             Place place = placeRepository.findById(id)
                     .orElseThrow(() -> new PlaceException(PLACE_NOT_LOADED));
+            selectedPlaces.add(SelectedPlace.create(place, lastOrder, journey));
+        }
+
+        return selectedPlaceRepository.saveAll(selectedPlaces);
+    }
+
+    private List<SelectedPlace> insertSearchPlace(SearchPlacesRequest selectedPlaceRequest, Journey journey) {
+        int lastOrder = journey.getPlace().size();
+
+        if (lastOrder + selectedPlaceRequest.places().size() > 30) {
+            throw new SpaceException(SELECTED_PLACES_COUNT_OVER);
+        }
+
+        List<SelectedPlace> selectedPlaces = new ArrayList<>();
+
+        for (SearchPlacesRequest.SearchPlace searchPlace : selectedPlaceRequest.places()) {
+            lastOrder++;
+            Place place = placeRepository.findById(searchPlace.placeId())
+                    .orElseGet(() -> placeService.saveOrUpdatePlace(searchPlace.placeId(), searchPlace.contentTypeId()));
             selectedPlaces.add(SelectedPlace.create(place, lastOrder, journey));
         }
 
