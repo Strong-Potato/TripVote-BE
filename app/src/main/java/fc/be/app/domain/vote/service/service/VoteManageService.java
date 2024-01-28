@@ -19,6 +19,7 @@ import fc.be.app.domain.vote.controller.dto.response.VoteUpdateApiResponse;
 import fc.be.app.domain.vote.entity.Candidate;
 import fc.be.app.domain.vote.entity.Vote;
 import fc.be.app.domain.vote.entity.VoteResultMember;
+import fc.be.app.domain.vote.entity.VotedMember;
 import fc.be.app.domain.vote.exception.VoteErrorCode;
 import fc.be.app.domain.vote.exception.VoteException;
 import fc.be.app.domain.vote.repository.CandidateRepository;
@@ -217,8 +218,21 @@ public class VoteManageService {
 
         validateSpace(space, requestMember);
 
-        votedMemberRepository.deleteAllByVoteId(voteId);
+        List<VotedMember> votedMembersToCancel = votedMemberRepository.findAllByMemberIdAndVoteId(memberId, voteId);
+
+        discountVoteCount(votedMembersToCancel.stream()
+                .map(VotedMember::getCandidate)
+                .collect(Collectors.toList()));
+
+        votedMemberRepository.deleteAllInBatch(votedMembersToCancel);
+
         this.resetResultMode(voteId, memberId);
+    }
+
+    private static void discountVoteCount(List<Candidate> candidates) {
+        for (Candidate candidate : candidates) {
+            candidate.decreaseVoteCount();
+        }
     }
 
     public void changeToResultMode(Long spaceId, Long voteId, Long memberId) {
