@@ -87,6 +87,16 @@ public class SpaceController {
         return ApiResponse.ok(spaceService.selectedPlacesForSpace(spaceId, userPrincipal.id(), request, LocalDate.now()));
     }
 
+    @PostMapping("/{spaceId}/places/search")
+    @PreAuthorize("isAuthenticated()")
+    public ApiResponse<JourneyResponse> selectedPlacesForSpaceSearch(
+            @PathVariable Long spaceId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @Valid @RequestBody SearchPlacesRequest request
+    ) {
+        return ApiResponse.ok(spaceService.addSearchedPlacesBySpace(spaceId, userPrincipal.id(), request, LocalDate.now()));
+    }
+
     @PutMapping("/{spaceId}/places")
     @PreAuthorize("isAuthenticated()")
     public ApiResponse<JourneysResponse> updatePlacesForSpace(
