@@ -240,15 +240,16 @@ public class SpaceService {
         Space space = spaceRepository.findById(spaceId)
                 .orElseThrow(() -> new SpaceException(SPACE_NOT_FOUND));
 
-        JoinedMember joinedMember = joinedMemberRepository.findBySpaceAndMemberId(space, memberId)
-                .orElseGet(() -> {
-                    Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
-                    return JoinedMember.create(space, member);
-                });
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
-        joinedMember.updateLeftSpace(false);
+        joinedMemberRepository.findBySpaceAndMemberId(space, memberId)
+                .ifPresentOrElse(
+                        entity -> entity.updateLeftSpace(false),
+                        () -> joinedMemberRepository.save(JoinedMember.create(space, member))
+                );
 
-        publishSpaceEvent(space, joinedMember.getMember(), NotificationType.MEMBER_INVITED);
+        publishSpaceEvent(space, member, NotificationType.MEMBER_INVITED);
     }
 
     @Transactional
