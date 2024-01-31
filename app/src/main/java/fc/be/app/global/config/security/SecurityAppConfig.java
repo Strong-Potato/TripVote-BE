@@ -15,8 +15,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +44,7 @@ public class SecurityAppConfig {
 
     @Bean
     @Profile("prod")
-    public CorsConfigurationSource prodCorsFilter() {
+    public CorsFilter prodCorsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedOrigins(corsProperties.getAllowedOrigins());
@@ -53,12 +53,12 @@ public class SecurityAppConfig {
                 Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
-        return source;
+        return new CorsFilter(source);
     }
 
     @Bean
     @Profile(value = {"default", "dev"})
-    public CorsConfigurationSource developCorsFilter() {
+    public CorsFilter developCorsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedOrigins(corsProperties.getAllowedOrigins());
@@ -67,6 +67,6 @@ public class SecurityAppConfig {
         corsConfiguration.addExposedHeader("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
-        return source;
+        return new CorsFilter(source);
     }
 }
