@@ -7,6 +7,7 @@ import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.http.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ public class NotificationTokenController {
     private final NotificationTokenRegisterService notificationTokenRegisterService;
 
     @PostMapping("/notifications/token")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Void> createFcmToken(
             @Valid @RequestBody TokenRegisterApiRequest request,
             @AuthenticationPrincipal UserPrincipal userPrincipal
