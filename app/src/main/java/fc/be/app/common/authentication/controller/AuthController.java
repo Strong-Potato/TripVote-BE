@@ -172,7 +172,6 @@ public class AuthController {
             Instant expiredInstant = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
             String expiredEmptyJwt = JWT.create().withExpiresAt(expiredInstant).sign(Algorithm.none());
             CookieUtil.addCookieNotHttpOnly(response, "join_space_token", expiredEmptyJwt, 60 * 5);
-            CookieUtil.addCookieNotHttpOnlyForLocal(response, "join_space_token", expiredEmptyJwt, 60 * 5);
             response.sendRedirect("https://tripvote.site");
             return;
         }
@@ -180,7 +179,6 @@ public class AuthController {
         JoinSpaceToken genRequest = JoinSpaceToken.unauthenticated(null, codeInfo.get("issuer"), spaceId);
         Token generatedToken = delegatingTokenManager.generate(genRequest);
         CookieUtil.addCookieNotHttpOnly(response, "join_space_token", generatedToken.getTokenValue(), 60 * 60 * 2);
-        CookieUtil.addCookieNotHttpOnlyForLocal(response, "join_space_token", generatedToken.getTokenValue(), 60 * 60 * 2);
         response.sendRedirect("https://tripvote.site");
     }
 
