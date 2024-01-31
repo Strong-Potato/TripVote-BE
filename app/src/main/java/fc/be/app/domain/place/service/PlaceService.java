@@ -8,7 +8,6 @@ import fc.be.app.domain.place.dto.*;
 import fc.be.app.domain.place.exception.PlaceException;
 import fc.be.app.domain.place.repository.PlaceRepository;
 import fc.be.openapi.algolia.SearchEngineService;
-import fc.be.openapi.google.dto.review.APIRatingResponse;
 import fc.be.openapi.google.service.ReviewAPIService;
 import fc.be.openapi.tourapi.TourAPIService;
 import fc.be.openapi.tourapi.dto.response.bone.PlaceDTO;
@@ -93,11 +92,7 @@ public class PlaceService {
             throw new PlaceException(PLACE_NOT_LOADED);
         }
 
-        List<APIRatingResponse> apiRatingResponses = places.stream()
-                .map(place -> reviewAPIService.bringRatingCount(place.getTitle(), place.getContentTypeId()))
-                .toList();
-
-        return PlaceNearbyResponse.from(places).with(apiRatingResponses);
+        return PlaceNearbyResponse.from(places);
     }
 
     public PlacePopularGetResponse bringPopularPlaces(PlacePopularGetRequest placePopularGetRequest) {
