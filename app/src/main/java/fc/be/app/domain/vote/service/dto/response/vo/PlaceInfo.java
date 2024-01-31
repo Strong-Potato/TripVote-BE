@@ -4,6 +4,7 @@ import fc.be.app.domain.place.Place;
 
 public record PlaceInfo(
         Integer placeId,
+        Integer contentTypeId,
         String placeName,
         String category,
         int areaCode,
@@ -14,6 +15,7 @@ public record PlaceInfo(
     public static PlaceInfo of(Place place) {
         return new PlaceInfo(
                 place.getId(),
+                place.getContentTypeId().getId(),
                 place.getTitle(),
                 place.getCategory(),
                 place.getLocation().getAreaCode(),
