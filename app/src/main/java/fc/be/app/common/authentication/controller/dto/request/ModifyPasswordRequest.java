@@ -7,6 +7,7 @@ public record ModifyPasswordRequest(
         @NotBlank
         String token,
         @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[!@#$%^&*()])(?=.*[0-9]).{8,16}$")
+        @NotBlank
         String newPassword
 ) {
 }
