@@ -1,13 +1,12 @@
 package fc.be.app.common.authentication.controller.dto.request;
 
+import fc.be.app.domain.member.controller.validation.Password;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 
 public record ModifyPasswordRequest(
         @NotBlank
         String token,
-        @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[!@#$%^&*()])(?=.*[0-9]).{8,16}$")
-        @NotBlank
+        @Password
         String newPassword
 ) {
 }
