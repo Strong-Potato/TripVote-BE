@@ -29,7 +29,8 @@ public class MemberQueryHandler implements MemberQuery {
                         member.getEmail(),
                         member.getNickname(),
                         member.getProfile(),
-                        member.getProvider()));
+                        member.getProvider(),
+                        member.isSubscription()));
     }
 
     @Override
@@ -42,7 +43,8 @@ public class MemberQueryHandler implements MemberQuery {
                         member.getEmail(),
                         member.getNickname(),
                         member.getProfile(),
-                        member.getProvider()));
+                        member.getProvider(),
+                        member.isSubscription()));
     }
 
     @Override
@@ -55,7 +57,8 @@ public class MemberQueryHandler implements MemberQuery {
                         member.getEmail(),
                         member.getNickname(),
                         member.getProfile(),
-                        member.getProvider()));
+                        member.getProvider(),
+                        member.isSubscription()));
     }
 
     @Override

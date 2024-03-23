@@ -42,7 +42,8 @@ public interface MemberQuery {
             String email,
             String nickname,
             String profile,
-            AuthProvider provider
+            AuthProvider provider,
+            boolean isSubscribe
     ) {
     }
 }

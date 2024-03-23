@@ -24,6 +24,9 @@ import fc.be.app.domain.wish.dto.WishGetResponse;
 import fc.be.app.domain.wish.service.WishService;
 import fc.be.app.global.config.security.model.user.UserPrincipal;
 import fc.be.app.global.http.ApiResponse;
+import fc.be.app.global.util.CookieUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -96,11 +99,13 @@ public class MemberController {
 
     @PostMapping("/sign-out")
     @PreAuthorize("isAuthenticated()")
-    public ApiResponse<Void> signOut(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody(required = false) DeleteMemberRequest request, @CookieValue(name = "access-token", required = false) String accessToken) {
+    public ApiResponse<Void> signOut(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @RequestBody(required = false) DeleteMemberRequest request, @CookieValue(name = "access-token", required = false) String accessToken, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
         if (userPrincipal.authProvider() != AuthProvider.NONE) {
             ProviderMemberDeactivateRequest deactivateRequest = new ProviderMemberDeactivateRequest(userPrincipal.id(), accessToken);
             try {
                 memberCommand.deactivate(deactivateRequest);
+                CookieUtil.deleteCookie(servletRequest, servletResponse, "access-token");
+                CookieUtil.deleteCookie(servletRequest, servletResponse, "refresh-token");
             } catch (AuthException exception) {
                 throw exception;
             }
@@ -108,6 +113,8 @@ public class MemberController {
         }
         MemberDeactivateRequest deactivateRequest = new MemberDeactivateRequest(userPrincipal.id(), request.password());
         memberCommand.deactivate(deactivateRequest);
+        CookieUtil.deleteCookie(servletRequest, servletResponse, "access-token");
+        CookieUtil.deleteCookie(servletRequest, servletResponse, "refresh-token");
         return ApiResponse.ok();
     }
 }

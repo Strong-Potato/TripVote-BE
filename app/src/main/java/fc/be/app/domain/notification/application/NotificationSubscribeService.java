@@ -10,12 +10,14 @@ import fc.be.app.domain.notification.repository.NotificationTokenRepository;
 import fc.be.app.domain.space.repository.JoinedMemberRepository;
 import fc.be.notification.application.NotificationSubscribePort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static fc.be.app.domain.notification.exception.NotificationErrorCode.NOT_FOUND_TOKEN;
 
 @Service
+@Transactional
 public class NotificationSubscribeService {
     private static final long GLOBAL_TOPIC_ID = 0;
 

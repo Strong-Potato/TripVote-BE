@@ -73,14 +73,11 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
             throw new InternalAuthenticationServiceException(ex.getMessage(), ex);
         }
         CookieUtil.addCookie(response, tokenProperties.getAccessTokenName(), accessToken, Integer.parseInt(tokenProperties.getAccessTokenExpireTime()));
-        CookieUtil.addCookieForLocal(response, tokenProperties.getAccessTokenName(), accessToken, Integer.parseInt(tokenProperties.getAccessTokenExpireTime()));
 
         String refreshToken = refreshTokenService.refresh(accessToken, userPrincipal, (AuthenticationDetails) oauth2Authentication.getDetails());
         CookieUtil.addCookie(response, tokenProperties.getRefreshTokenName(), refreshToken, Integer.parseInt(tokenProperties.getRefreshTokenCookieExpireTime()));
-        CookieUtil.addCookieForLocal(response, tokenProperties.getRefreshTokenName(), refreshToken, Integer.parseInt(tokenProperties.getRefreshTokenCookieExpireTime()));
 
         CookieUtil.addSessionCookie(response, "isLogin", "true");
-        CookieUtil.addSessionCookieForLocal(response, "isLogin", "true");
 
         response.sendRedirect("https://tripvote.site");
     }
